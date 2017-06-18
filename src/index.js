@@ -9,6 +9,7 @@ import {createMyStore} from './store'
 import reducer from './reducer'
 import {Provider} from 'react-redux'
 import routes from './routes'
+import 'common.scss'
 
 const store = createMyStore(reducer)
 ReactDOM.render(<Provider store={store}>{routes}</Provider>, document.getElementById('root'));

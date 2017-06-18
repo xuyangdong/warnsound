@@ -1,0 +1,17 @@
+@import '~variant.scss';
+
+:local(.container){
+	padding:$primary-padding;
+	.ant-row-flex{
+		margin-bottom: 30px;
+	}
+}
+:local(.title){
+	font-size: $big-font;
+	font-weight: $normal-font;
+}
+
+:local(.functionLabel){
+	font-size:$big-font;
+	color: $primary-color;
+}

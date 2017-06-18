@@ -1,0 +1,11 @@
+@import '~variant.scss';
+
+:local(.container){
+	padding: $primary-padding;
+	:local(.title){
+		font-size: $big-font;
+	}
+	:local(.functionLabel){
+		color: $primary-color;
+	}
+}

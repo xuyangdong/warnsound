@@ -1,3 +1,37 @@
 :local(.container){
-	font-size: 20px;
+	height: 100vh;
+	width: 100wn;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	:local(.navigation){
+		height:64px;
+		width: 100%;
+		flex-shrink: 0;
+		flex-grow: 0;
+		background-color: #00AECB;
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		padding:0 40px;
+		:local(.logo){
+			font-size:26px;
+			color:white;
+		}
+	}
+	:local(.content){
+		flex-grow: 1;
+		display: flex;
+		width: 100%;
+		:local(.leftPanel){
+			flex-grow:0;
+			height:inherit;
+		}
+		:local(.mainPanel){
+			flex-grow: 1;
+			background-color: #efefef;
+			padding: 20px;
+		}
+	}
 }

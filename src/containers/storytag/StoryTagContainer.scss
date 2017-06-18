@@ -1,0 +1,5 @@
+@import "~mixins.scss";
+
+:local(.container){
+	@include mainPanelContainer;
+}

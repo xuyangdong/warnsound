@@ -193,7 +193,8 @@ module.exports = {
                 loader: require.resolve('css-loader'),
                 options: {
                   importLoaders: 1,
-                  modules:true
+                  modules:true,
+                  localIdentName:'[name]__[local]___[hash:base64:9]'
                 },
               },
               {
@@ -293,9 +294,10 @@ module.exports = {
   },
   resolve: {
       extensions:['.js','.jsx'],
-      modules: [path.resolve(paths.appSrc, "utils"), "node_modules"],
+      modules: [path.resolve(paths.appSrc, "utils"), "node_modules",path.resolve(paths.rootApp,"css_modules")],
       alias:{
-          publicRes:path.resolve(paths.appSrc, "public")
+          publicRes:path.resolve(paths.appSrc, "public"),
+          actions:path.resolve(paths.appSrc,"actions")
       }
   },
   plugins: [

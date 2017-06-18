@@ -1,0 +1,16 @@
+@import '~variant.scss';
+
+:local(.container){
+	width: 100vw;
+	height: 100vh;
+	background-color: $primary-color;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	:local(.loginForm){
+		width: 300px;
+		background-color: white;
+		border-radius: $primary-border-radius;
+		padding: $primary-padding;
+	}
+}
