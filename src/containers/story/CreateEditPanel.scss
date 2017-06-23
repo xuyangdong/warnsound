@@ -2,4 +2,24 @@
 
 :local(.container){
 	@include mainPanelContainer;
+	:global(.ant-upload-list-picture-card){
+		display:inline;
+	}
+}
+
+:local(.clearfix){
+	zoom:1;
+	&::before{
+		content: " ";
+	    display: table;
+	}
+	&::after{
+		content: " ";
+	    display: table;
+		clear: both;
+		visibility: hidden;
+		font-size: 0;
+		height: 0;
+	}
+
 }

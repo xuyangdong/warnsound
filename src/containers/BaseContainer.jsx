@@ -16,12 +16,12 @@ const BaseContainer = React.createClass({
                             width: 240,
 							height: '100%'
                         }} defaultSelectedKeys={[ '1' ]} defaultOpenKeys={[ 'sub1' ]} mode="inline">
-							<Menu.Item key="1"><Link to='/controller'><Icon type="appstore" />控制台</Link></Menu.Item>
-							<Menu.Item key="2"><Link to='/stories'><Icon type="book" />Stories</Link></Menu.Item>
-							<Menu.Item key="3"><Link to='/storytags'><Icon type="tag" />StoryTags</Link></Menu.Item>
-                            <Menu.Item key="4"><Link to='/soundeffects'><Icon type="tag" />SoundEffects</Link></Menu.Item>
-							<Menu.Item key="5"><Link to='/soundeffecttags'><Icon type="notification" />Soundeffecttags</Link></Menu.Item>
-							<Menu.Item key="6"><Link to='/backgroundmusics'><Icon type="sound" />Backgroundmusics</Link></Menu.Item>
+							<Menu.Item key="1"><Link to='/dashboard'><Icon type="appstore" />控制台</Link></Menu.Item>
+							<Menu.Item key="2"><Link to='/stories'><Icon type="book" />故事管理</Link></Menu.Item>
+							<Menu.Item key="3"><Link to='/storytags'><Icon type="tag" />故事标签</Link></Menu.Item>
+                            <Menu.Item key="4"><Link to='/soundeffects'><Icon type="tag" />音效管理</Link></Menu.Item>
+							<Menu.Item key="5"><Link to='/soundeffecttags'><Icon type="notification" />音效标签</Link></Menu.Item>
+							<Menu.Item key="6"><Link to='/backgroundmusics'><Icon type="sound" />背景音乐</Link></Menu.Item>
 							<Menu.Item key="7"><Icon type="poweroff" />注销</Menu.Item>
 						</Menu>
                     </div>

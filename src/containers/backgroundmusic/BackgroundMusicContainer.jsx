@@ -17,27 +17,27 @@ class BackgroundMusicContainer extends React.Component {
 	}
 	getTableData(){
 		const columns = [{
-			title:'ID',
+			title:'编号',
 			dataIndex:'id',
 			key:'id'
 		},{
-			title:'DESCRIPTION',
+			title:'描述',
 			dataIndex:'description',
 			key:'description'
 		},{
-			title:'URL',
+			title:'地址',
 			dataIndex:'url',
 			key:'url'
 		},{
-			title:'CREATETIME',
+			title:'创建时间',
 			dataIndex:'createTime',
 			key:'createTime'
 		},{
-			title:'UPDATETIME',
+			title:'更新时间',
 			dataIndex:'updateTime',
 			key:'updateTime'
 		},{
-			title:'VALID',
+			title:'是否有效',
 			dataIndex:'valid',
 			key:'valid'
 		},{
@@ -67,10 +67,15 @@ class BackgroundMusicContainer extends React.Component {
 		return (
 			<div className={styles.container}>
 				<div className={styles.header}>
-					<TableHeader title='BackgroundMusic' functionBar={['create','refresh','search']} onCreate={this.handleCreate.bind(this)}/>
+					<TableHeader title='背景音乐' functionBar={['create','refresh']} onCreate={this.handleCreate.bind(this)}/>
 				</div>
 				<div className={styles.mainPanel}>
-					<EnhanceTable columns={columns} dataSource={dataSource} />
+					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{
+						total:this.props.backgroundMusic.getIn(['otherData','totalSize']),
+						onChange:(page,pageSize) => {
+							this.props.getBackgroundMusic(page,pageSize)
+						}
+					}}/>
 				</div>
 			</div>
 		)

@@ -2,11 +2,14 @@ import React from 'react'
 import CreateEditHeader from '../../components/common/CreateEditHeader'
 import styles from './CreateEditPanel.scss'
 import {fromJS} from 'immutable'
-import {Form,Input,Select,Checkbox,Upload,Button,Icon} from 'antd'
+import {Form,Input,Select,Checkbox,Upload,Button,Icon,Row,Col} from 'antd'
 import EnhanceInput from '../../components/common/EnhanceInput'
+
 import _ from 'lodash'
+import DraftComponent from '../../components/DraftComponent'
 const FormItem = Form.Item
 const Option = Select.Option
+const ButtonGroup = Button.Group;
 
 
 class CreateEditPanel extends React.Component {
@@ -20,30 +23,31 @@ class CreateEditPanel extends React.Component {
 			coverFileList:[],
 			previewFileList:[],
 			backgroundFileList:[],
-			audioFileList:[]
+			audioFileList:[],
+			guideSoundFileList:[]
 		}
 		this.handleSubmit = this.handleSubmit.bind(this)
 		this.handlePicDisplay = this.handlePicDisplay.bind(this)
+		this.handleSaveAsDraft = this.handleSaveAsDraft.bind(this)
 	}
-	handleSubmit(e){
+	handleSubmit(isDraft,e){
 		const {getFieldValue} = this.props.form
 		e.preventDefault()
+		console.log(isDraft)
 		const formData = new FormData()
 		formData.append('title',getFieldValue('title'))
 		formData.append('author',getFieldValue('author'))
-		formData.append('soundEffects_id',getFieldValue('soundEffect'))
-		formData.append('content',JSON.stringify(getFieldValue('content').split('\n').map((v,k)=> ({
-			order:k,
-			content:v
-		}))))
+		// formData.append('soundEffects_id',getFieldValue('soundEffect'))
+		formData.append('content',JSON.stringify(this.refs.draft.getData()))
 		// TODO: 啥意思
-		formData.append('position',2)
+		formData.append('draft',isDraft)
 		formData.append('press',getFieldValue('publish'))
 		formData.append('guide',getFieldValue('tips'))
 		formData.append('coverFile',this.state.coverFileList[0]||new File([],''))
 		formData.append('preCoverFile',this.state.previewFileList[0]||new File([],''))
 		formData.append('backgroundFile',this.state.backgroundFileList[0]||new File([],''))
 		formData.append('originSoundFile',this.state.audioFileList[0]||new File([],''))
+		formData.append('guideSoundFile',this.state.guideSoundFileList[0]||new File([],''))
 		formData.append('price',getFieldValue('price'))
 		formData.append('defaultBackGroundMusicId',getFieldValue('backgroundMusic'))
 		this.props.onSubmit(formData).then(res => {
@@ -66,6 +70,9 @@ class CreateEditPanel extends React.Component {
 			return JSON.parse(content).map(v => v.content).join('\n')
 		return content
 	}
+	handleSaveAsDraft(e){
+		this.handleSubmit(1,e)
+	}
 	render(){
 		const {storyInfo,soundEffects,backgroundMusics} = this.props
 		const { getFieldDecorator } = this.props.form;
@@ -85,7 +92,7 @@ class CreateEditPanel extends React.Component {
 					<CreateEditHeader title={this.props.title}/>
 				</div>
 				<div className={styles.formPanel}>
-				<Form onSubmit={this.handleSubmit}>
+				<Form onSubmit={this.handleSubmit.bind(this,0)}>
 					<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:4}}
@@ -107,37 +114,6 @@ class CreateEditPanel extends React.Component {
 					})(
 						<Input />
 					)}
-					</FormItem>
-					<FormItem
-					  labelCol={{span:2}}
-					  wrapperCol={{span:4}}
-					  label={<span>音效</span>}
-					>
-					{getFieldDecorator('soundEffect',{})(
-						<Select style={{width:240}}>
-						{
-							soundEffects.map((v,k)=> (
-								<Option value={''+v.get('id')} title={v.get('description')} key={v.get('id')}>{v.get('description')}</Option>
-							))
-						}
-						</Select>
-					)}
-					</FormItem>
-					<FormItem
-					  labelCol={{span:2}}
-					  wrapperCol={{span:20}}
-					  label={<span>正文</span>}
-					>
-					{getFieldDecorator('content',{
-						initialValue:this.handleContent(storyInfo.get('content'))
-					})(
-						<EnhanceInput autoBeauty={this.state.autoBeauty} type='textarea' autosize={{minRows:10,maxRows:10}}/>
-					)}
-					<Checkbox checked={this.state.autoBeauty} onChange={(e)=>{
-						this.setState({
-							autoBeauty:e.target.checked
-						})
-					}}>是否开启一键优化</Checkbox>
 					</FormItem>
 					<FormItem
 					  labelCol={{span:2}}
@@ -166,19 +142,26 @@ class CreateEditPanel extends React.Component {
 						wrapperCol={{span:4}}
 						label={<span>首页图片</span>}
 					>
+					<div className={styles.clearfix}>
 					<Upload
 						listType="picture-card"
 						fileList={!storyInfo.get('coverUrl')?this.state.coverFileList:[{
 							uid:-1,
 							url:storyInfo.get('coverUrl')
 						}]}
+						onRemove={file => {
+							this.setState({
+								coverFileList:[]
+							})
+						}}
 						beforeUpload={(file,fileList)=>{
 							this.handlePicDisplay(fileList,'coverFileList')
 							return false
 						}}
 					>
-						选择图片
+						{this.state.coverFileList.length>0?null:'选择图片'}
 					</Upload>
+					</div>
 					</FormItem>
 					<FormItem
 						labelCol={{span:2}}
@@ -210,6 +193,7 @@ class CreateEditPanel extends React.Component {
 							uid:-1,
 							url:storyInfo.get('backgroundUrl')
 						}]}
+
 						beforeUpload={(file,fileList)=>{
 							this.handlePicDisplay(fileList,'backgroundFileList')
 							return false
@@ -238,6 +222,25 @@ class CreateEditPanel extends React.Component {
 					  </Upload>
 					</FormItem>
 					<FormItem
+						labelCol={{span:2}}
+						wrapperCol={{span:4}}
+						label={<span>指导阅读</span>}
+					>
+					 <Upload
+					 	fileList={this.state.guideSoundFileList}
+						beforeUpload={(file,fileList)=>{
+							this.setState({
+								guideSoundFileList:fileList,
+							})
+							return false
+						}}
+					 >
+					    <Button>
+					      <Icon type="upload" /> Upload
+					    </Button>
+					  </Upload>
+					</FormItem>
+					<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:4}}
 					  label={<span>价格</span>}
@@ -251,7 +254,7 @@ class CreateEditPanel extends React.Component {
 					<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:4}}
-					  label={<span>音效</span>}
+					  label={<span>背景音效</span>}
 					>
 					{getFieldDecorator('backgroundMusic',{
 						initialValue:''+storyInfo.get('defaultBackGroundMusicId')
@@ -267,11 +270,23 @@ class CreateEditPanel extends React.Component {
 					</FormItem>
 					<FormItem
 						labelCol={{span:2}}
+						wrapperCol={{span:20}}
+						label={<span>内容</span>}
+					>
+						<DraftComponent ref='draft' soundEffects={soundEffects} value={storyInfo.get('content')}/>
+					</FormItem>
+					<FormItem
+						labelCol={{span:2}}
 						wrapperCol={{span:4,offset:2}}
 					>
+					<ButtonGroup>
 					  <Button type="primary" htmlType="submit">
 						保存
 					  </Button>
+					  <Button type="primary" htmlType="submit" onClick={this.handleSaveAsDraft}>
+						保存为草稿
+					  </Button>
+				  </ButtonGroup>
 					</FormItem>
 				</Form>
 				</div>

@@ -1,11 +1,13 @@
 import React from 'react'
-import {Table} from 'antd'
+import {Table,Input,Button} from 'antd'
 import TableHeader from '../../components/common/TableHeader'
 import styles from './StoryContainer.scss'
 import EnhanceTable from '../../components/common/EnhanceTable'
-import {getStories} from '../../actions/story'
+import {getStories,searchStories} from '../../actions/story'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
+import qs from 'qs'
+const Search = Input.Search
 
 class StoryContainer extends React.Component{
 	static contextTypes = {
@@ -18,8 +20,17 @@ class StoryContainer extends React.Component{
 		super()
 		this.getTableData = this.getTableData.bind(this)
 		this.handleCreate = this.handleCreate.bind(this)
+		this.handleSearch = this.handleSearch.bind(this)
+		this.hanleFilterData = this.hanleFilterData.bind(this)
 		this.state = {
-			openCreateModal:false
+			openCreateModal:false,
+			titleS:'',
+			author:'',
+			press:'',
+			content:'',
+			tag:'',
+			current:0,
+			pageSize:10,
 		}
 	}
 	componentDidMount(){
@@ -29,23 +40,23 @@ class StoryContainer extends React.Component{
 	}
 	getTableData(){
 		const columns = [{
-			title:'ID',
+			title:'编号',
 			dataIndex:'id',
-			key:'id'
+			key:'id',
 		},{
-			title:'Title',
+			title:'标题',
 			dataIndex:'title',
 			key:'title'
 		},{
-			title:'AUTHOR',
+			title:'作者',
 			dataIndex:'author',
 			key:'author'
 		},{
-			title:'press',
+			title:'出版社',
 			dataIndex:'press',
 			key:'press'
 		},{
-			title:'guide',
+			title:'阅读指导',
 			dataIndex:'guide',
 			key:'guide'
 		},{
@@ -72,15 +83,41 @@ class StoryContainer extends React.Component{
 	handleEdit(id){
 		this.context.router.push('stories/edit/'+id)
 	}
+	handleSearch(query){
+		this.props.searchStories()
+	}
+	hanleFilterData(value){
+		this.props.getStories(0,10,value)
+	}
 	render(){
 		const {columns,dataSource} = this.getTableData()
+		const {titleS,author,press,content,tag} = this.state
 		return (
 			<div className={styles.container}>
 				<div className={styles.header}>
-					<TableHeader title='Stories列表' functionBar={['create','refresh','search']} onCreate={this.handleCreate}/>
+					<TableHeader title='故事列表' functionBar={['create','refresh','search']} search={{
+						titleS,
+						author,
+						press,
+						content,
+						tag
+					}} onCreate={this.handleCreate} onChangeSearch={(value,key) => {
+						this.setState({
+							[key]:value
+						})
+					}} onSearch={this.hanleFilterData}/>
 				</div>
 				<div className={styles.mainPanel}>
-					<EnhanceTable columns={columns} dataSource={dataSource} />
+					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{
+						total:this.props.stories.getIn(['otherData','totalSize']),
+						onChange:(page,pageSize) => {
+							this.setState({
+								current:page,
+								pageSize:pageSize
+							})
+							this.props.getStories(page,pageSize)
+						}
+					}}/>
 				</div>
 			</div>
 		)

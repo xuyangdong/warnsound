@@ -3,6 +3,7 @@ import {Router, Route, hashHistory} from 'react-router'
 import BaseContainer from './containers/BaseContainer'
 import App from './App'
 import DraftComponent from './components/DraftComponent'
+import MediaTextComponent from './components/MediaTextComponent'
 
 import {LoginControlHOC} from './enhancers/AccessControlContainer'
 
@@ -23,6 +24,8 @@ import BackgroundMusicCreateEditPanel from './containers/backgroundmusic/CreateE
 
 import LoginContainer from './containers/LoginContainer'
 
+import DashBoardContainer from './containers/dashboard/DashBoardContainer'
+
 import CreateEditGetDataHOCFactory from './enhancers/CreateEditGetDataHOCFactory'
 const StoryCreateEditGetDataHOC = CreateEditGetDataHOCFactory('story')
 const StroyCreateEditPanelWithData = StoryCreateEditGetDataHOC(StoryCreateEditPanel)
@@ -38,6 +41,8 @@ const BackgroundMusicCreateEditPanelWithData = CreateEditGetDataHOCFactory('back
 const routes = (<Router history={hashHistory}>
 		<Route path="/login" component={LoginContainer}/>
 		<Route path="/" component={LoginControlHOC(BaseContainer)}>
+			<Route path="dashboard" component={DashBoardContainer}/>
+
 			<Route path="stories" component={StoryContainer} />
 			<Route path="stories/create" component={(props) => <StroyCreateEditPanelWithData type='create' {...props}/>}/>
 			<Route path="stories/edit/(:id)" component={(props) => <StroyCreateEditPanelWithData type='edit' {...props} />}/>
@@ -62,6 +67,7 @@ const routes = (<Router history={hashHistory}>
 
 		</Route>
 		<Route path="draft" component={DraftComponent} />
+		<Route path="media" component={MediaTextComponent}/>
 	</Router>)
 
 export default routes

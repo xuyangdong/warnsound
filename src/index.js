@@ -12,5 +12,6 @@ import routes from './routes'
 import 'common.scss'
 
 const store = createMyStore(reducer)
-ReactDOM.render(<Provider store={store}>{routes}</Provider>, document.getElementById('root'));
+ReactDOM.render(
+    <Provider store={store}>{routes}</Provider>, document.getElementById('root'));
 registerServiceWorker();

@@ -1,0 +1,15 @@
+@import '~variant.scss';
+
+:local(.container){
+	display: flex;
+	:local(.description){
+		color:rgb(220, 165, 25);
+	}
+}
+
+//plyr
+:global(.plyr--audio){
+	:global(.plyr__controls){
+		display: none;
+	}
+}

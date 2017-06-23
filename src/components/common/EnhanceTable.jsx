@@ -15,14 +15,7 @@ export default class EnhanceTable extends React.Component {
 	render(){
 		const {columns,dataSource,pageSize,current,total} = this.props
 		return <Table columns={columns} dataSource={dataSource}
-			pagination={{
-				current:current,
-				pageSize:pageSize,
-				total:total,
-				onChange:(page,pageSize)=>{
-					this.props.onChange()
-				}
-			}}
+			pagination={this.props.pagination}
 		/>
 	}
 }

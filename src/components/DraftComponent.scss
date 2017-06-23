@@ -1,0 +1,26 @@
+@import '~variant.scss';
+
+:local(.container){
+	display: flex;
+	flex-direction: column;
+	height: 500px;
+
+	:local(.toolBar){
+		display:flex;
+		flex-grow: 0;
+		flex-shrink: 0;
+		margin-bottom: 10px;
+		justify-content: space-between;
+	}
+	:local(.editPanel){
+		flex-grow: 1;
+		display: flex;
+		:local(.editPart){
+			border:1px #efefef solid;
+			border-radius: $primary-border-radius;
+			margin-right: 5px;
+			overflow: auto;
+			flex-grow: 1;
+		}
+	}
+}

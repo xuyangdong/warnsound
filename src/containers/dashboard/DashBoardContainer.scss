@@ -1,0 +1,47 @@
+@import '~mixins.scss';
+
+:local(.container){
+	@include mainPanelContainer;
+	background: linear-gradient(#ffffff 50%, rgba(255,255,255,0) 0) 0 0,
+		radial-gradient(circle closest-side, #FFFFFF 53%, rgba(255,255,255,0) 0) 0 0,
+		radial-gradient(circle closest-side, #FFFFFF 50%, rgba(255,255,255,0) 0) 55px 0 #48B;
+	background-size:110px 200px;
+	background-repeat:repeat-x;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	:local(.title){
+		text-align: center;
+		font-size: 500%;
+		padding-top: .2em;
+		color: #e50;
+		text-shadow: 0 2px white;
+	}
+	:local(.content){
+
+		display: flex;
+		flex-direction: row;
+		margin-top: 30px;
+		flex-grow: 1;
+		justify-content: space-around;
+		width: 100%;
+		align-items: center;
+		:local(.item){
+			font-size: 25px;
+			background-color: white;
+			width: 250px;
+			padding:60px 60px;
+			height: 250px;
+			border-radius: 130px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-around;
+			align-items: flex-start;
+			:local(.text){
+				font-weight:bold;
+			}
+		}
+	}
+
+}

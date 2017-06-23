@@ -17,27 +17,27 @@ class StoryTagContainer extends React.Component {
 	}
 	getTableData(){
 		const columns = [{
-			title:'ID',
+			title:'编号',
 			dataIndex:'id',
 			key:'id'
 		},{
-			title:'PARENT',
+			title:'父级标签',
 			dataIndex:'parent',
 			key:'parent'
 		},{
-			title:'CONTENT',
+			title:'内容',
 			dataIndex:'content',
 			key:'content'
 		},{
-			title:'CREATETIME',
+			title:'创建时间',
 			dataIndex:'createTime',
 			key:'createtime'
 		},{
-			title:'UPDATETIME',
+			title:'更新时间',
 			dataIndex:'updateTime',
 			key:'updateTime'
 		},{
-			title:'ICONURL',
+			title:'图标',
 			dataIndex:'iconURL',
 			key:'iconURL'
 		},{
@@ -67,10 +67,15 @@ class StoryTagContainer extends React.Component {
 		return (
 			<div className={styles.container}>
 				<div className={styles.header}>
-					<TableHeader title="StoryTag" functionBar={['create','refresh','search']} onCreate={this.handleCreate.bind(this)}/>
+					<TableHeader title="故事标签" functionBar={['create','refresh']} onCreate={this.handleCreate.bind(this)}/>
 				</div>
 				<div className={styles.mainPanel}>
-					<EnhanceTable columns={columns} dataSource={dataSource}/>
+					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{
+						total:this.props.storyTags.getIn(['otherData','totalSize']),
+						onChange:(page,pageSize) => {
+							this.props.getStoryTags(page,pageSize)
+						}
+					}}/>
 				</div>
 			</div>
 		)

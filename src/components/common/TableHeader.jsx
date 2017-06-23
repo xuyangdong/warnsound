@@ -1,5 +1,5 @@
 import React from 'react'
-import {Row, Col, Input, Icon} from 'antd'
+import {Row, Col, Input, Icon,Button} from 'antd'
 import styles from './TableHeader.scss'
 
 const Search = Input.Search
@@ -11,6 +11,14 @@ class TableHeader extends React.Component {
 	}
 	render(){
 		const {functionBar,title} = this.props
+		const {titleS,author,press,content,tag} = this.props.functionBar.indexOf('search')>-1?this.props.search:{
+			titleS:'',
+			author:'',
+			press:'',
+			content:'',
+			tag:''
+		}
+
 		return (
 			<div className={styles.container}>
 				<Row type='flex' justify='space-between'>
@@ -35,9 +43,43 @@ class TableHeader extends React.Component {
 					</Col>
 				</Row>
 				{
-					functionBar.indexOf('search')>-1?<Row type='flex' justify='end'>
+					functionBar.indexOf('search')>-1?<Row type='flex' justify='end' gutter={16}>
 						<Col span={4}>
-							<Search />
+							<span>标题<Icon type="enter" style={{transform:'rotate(-90deg)'}}/></span><Input value={titleS} onChange={(e)=>{
+								this.props.onChangeSearch(e.target.value,'titleS')
+							}}/>
+						</Col>
+						<Col span={4}>
+							<span>作者<Icon type="enter" style={{transform:'rotate(-90deg)'}}/></span><Input value={author} onChange={(e)=>{
+								this.props.onChangeSearch(e.target.value,'author')
+							}}/>
+						</Col>
+						<Col span={4}>
+							<span>出版社<Icon type="enter" style={{transform:'rotate(-90deg)'}}/></span><Input value={press} onChange={(e)=>{
+								this.props.onChangeSearch(e.target.value,'press')
+							}}/>
+						</Col>
+						<Col span={4}>
+							<span>内容<Icon type="enter" style={{transform:'rotate(-90deg)'}}/></span><Input value={content} onChange={(e)=>{
+								this.props.onChangeSearch(e.target.value,'content')
+							}}/>
+						</Col>
+						<Col span={4}>
+							<span>标签<Icon type="enter" style={{transform:'rotate(-90deg)'}}/></span><Input value={tag} onChange={(e)=>{
+								this.props.onChangeSearch(e.target.value,'tag')
+							}}/>
+						</Col>
+						<Col span={4}>
+							<div>&nbsp;</div>
+							<Button onClick={()=>{
+								this.props.onSearch({
+									title:titleS,
+									author:author,
+									press:press,
+									content:content,
+									tag:tag
+								})
+							}}>查询</Button>
 						</Col>
 					</Row>:null
 				}

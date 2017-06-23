@@ -16,23 +16,23 @@ class SoundEffectTagContainer extends React.Component {
 	}
 	getTableData(){
 		const columns = [{
-			title:'ID',
+			title:'编号',
 			dataIndex:'id',
 			key:'id'
 		},{
-			title:'CONTENT',
+			title:'内容',
 			dataIndex:'content',
 			key:'content'
 		},{
-			title:'CREATETIME',
+			title:'创建时间',
 			dataIndex:'createTime',
 			key:'createTime'
 		},{
-			title:'UPDATETIME',
+			title:'更新时间',
 			dataIndex:'updateTime',
 			key:'updateTime'
 		},{
-			title:'VALID',
+			title:'是否有效',
 			dataIndex:'valid',
 			key:'valid'
 		},{
@@ -62,10 +62,15 @@ class SoundEffectTagContainer extends React.Component {
 		return (
 			<div className={styles.container}>
 				<div className={styles.header}>
-					<TableHeader title="SoundEffectTags" functionBar={['create','refresh','search']} onCreate={this.handleCreate.bind(this)}/>
+					<TableHeader title="音效标签" functionBar={['create','refresh']} onCreate={this.handleCreate.bind(this)}/>
 				</div>
 				<div className={styles.mainPanel}>
-					<EnhanceTable columns={columns} dataSource={dataSource}/>
+					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{
+						total:this.props.soundEffectTag.getIn(['otherData','totalSize']),
+						onChange:(page,pageSize) => {
+							this.props.getSoundEffectTag(page,pageSize)
+						}
+					}}/>
 				</div>
 			</div>
 		)

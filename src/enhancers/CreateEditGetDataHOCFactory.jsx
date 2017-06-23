@@ -33,7 +33,15 @@ export default (type) => {
 						this.setState({
 							storyInfo:fromJS(res)
 						})
-					}):null
+					}):this.setState({
+						storyInfo:fromJS({
+							title:'缺省标题',
+							author:'佚名',
+							press:'缺省出版社',
+							guide:'0-13岁',
+							defaultBackGroundMusicId:'100055'
+						})
+					})
 					//--------------soundEffect
 					fetch(config.api.soundEffect.get(0,25),{
 						headers: {
@@ -41,7 +49,7 @@ export default (type) => {
 						},
 					}).then(res => res.json()).then(res => {
 						this.setState({
-							soundEffects:fromJS(res)
+							soundEffects:fromJS(res.obj)
 						})
 					})
 					//--------------backgroundMusic
@@ -51,7 +59,7 @@ export default (type) => {
 						},
 					}).then(res => res.json()).then(res => {
 						this.setState({
-							backgroundMusics:fromJS(res)
+							backgroundMusics:fromJS(res.obj)
 						})
 					})
 					//--------------backgroundMusicInfo
@@ -61,7 +69,7 @@ export default (type) => {
 						},
 					}).then(res => res.json()).then(res => {
 						this.setState({
-							backgroundMusicInfo:fromJS(res)
+							backgroundMusicInfo:fromJS(res.obj)
 						})
 					})
 				}
@@ -115,14 +123,18 @@ export default (type) => {
 						this.setState({
 							storyTagInfo:fromJS(res)
 						})
-					}):null
+					}):this.setState({
+						storyTagInfo:fromJS({
+							content:'缺省内容',
+						})
+					})
 					fetch(config.api.storyTag.get(0,25),{
 						headers: {
 							'authorization': sessionStorage.getItem('auth')
 						}
 					}).then(res => res.json()).then(res => {
 						this.setState({
-							storyTags:fromJS(res)
+							storyTags:fromJS(res.obj)
 						})
 					})
 				}
