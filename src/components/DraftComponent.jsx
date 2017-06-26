@@ -2,7 +2,7 @@ import React from 'react'
 import { Editor } from 'draft-js'
 import styles from './DraftComponent.scss'
 import { Button, Select } from 'antd'
-import { ContentState, EditorState, ContentBlock, Modifier, CharacterMetadata, DefaultDraftBlockRenderMap} from 'draft-js'
+import { ContentState, EditorState, ContentBlock, Modifier, CharacterMetadata, DefaultDraftBlockRenderMap, AtomicBlockUtils} from 'draft-js'
 import { Map, List } from 'immutable'
 import 'draft-js/dist/Draft.css'
 import MediaTextComponent from './MediaTextComponent'
@@ -10,6 +10,16 @@ import MediaTextComponent from './MediaTextComponent'
 const MAX_SENTENCE = 10
 const separator = /[,|.|;|，|。|；]/
 const Option = Select.Option
+
+const Media = (props) => {
+    const entity = props.contentState.getEntity(
+        props.block.getEntityAt(0)
+    )
+    const {soundEffectName,soundEffectUrl,soundEffectId} = entity.getData();
+
+    return (<MediaTextComponent soundEffectName={'asdf'} soundEffectUrl={'asdf'}/>)
+
+}
 export default class DraftComponent extends React.Component {
     constructor( ) {
         super( )
@@ -80,17 +90,38 @@ export default class DraftComponent extends React.Component {
     			soundEffectUrl:''
     		}))
             newContentState = Modifier.setBlockType(newContentState,selectState,'unstyled')
+            this.setState({
+    			editorState:EditorState.createWithContent(newContentState)
+    		})
         }else{
-            newContentState = Modifier.setBlockData(contentState,selectState,new Map({
-    			soundEffectId:this.state.soundEffectId,
-    			soundEffectUrl:this.props.soundEffects.find(v => v.get('id')==value).get('url'),
-                soundEffectName:this.props.soundEffects.find(v => v.get('id')==value).get('description')
-            }))
-    		newContentState = Modifier.setBlockType(newContentState,selectState,'mediaText')
+            // newContentState = Modifier.setBlockData(contentState,selectState,new Map({
+    		// 	soundEffectId:this.state.soundEffectId,
+    		// 	soundEffectUrl:this.props.soundEffects.find(v => v.get('id')==value).get('url'),
+            //     soundEffectName:this.props.soundEffects.find(v => v.get('id')==value).get('description')
+            // }))
+    		// newContentState = Modifier.setBlockType(newContentState,selectState,'mediaText')
+            const contentStateWithEntity = contentState.createEntity(
+                'media','MUTABLE',
+                {
+                    soundEffectId:this.state.soundEffectId,
+                    soundEffectUrl:this.props.soundEffects.find(v => v.get('id')==value).get('url'),
+                    soundEffectName:this.props.soundEffects.find(v => v.get('id')==value).get('description')
+                }
+            )
+            const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+            const newEditorState = EditorState.set(
+                this.state.editorState,
+                {currentContent: contentStateWithEntity}
+            )
+            this.setState({
+                editorState: AtomicBlockUtils.insertAtomicBlock(
+                    newEditorState,
+                    entityKey,
+                    'ABC'
+                )
+            })
         }
-		this.setState({
-			editorState:EditorState.createWithContent(newContentState)
-		})
+
 	}
 	myBlockRenderer(contentBlock){
 		const type = contentBlock.getType();
@@ -99,7 +130,12 @@ export default class DraftComponent extends React.Component {
 		      component: MediaTextComponent,
 		      editable: true,
 		    };
-		}
+		}else if(type=='atomic'){
+            return {
+                component:Media,
+                editable:false
+            }
+        }
 		return ;
 	}
 	myBlockRenderMap = DefaultDraftBlockRenderMap.merge(Map({

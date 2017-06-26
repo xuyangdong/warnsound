@@ -37,11 +37,11 @@ export default class MediaTextComponent extends React.Component{
 		<div className={styles.container}>
 			<div>
 				<Icon type={this.state.playing?"play-circle-o":"play-circle"} onClick={this.handlePlay}/>
-				<span>{this.props.block.getText()}</span>
-				<span className={styles.description}>[{this.props.block.getData().get('soundEffectName')}]</span>
+				<span>{this.props.soundEffectName}</span>
+				<span className={styles.description}>[{this.props.soundEffectName}]</span>
 			</div>
 			<audio ref='audio' controls>
-			  <source src={this.props.block.getData().get('soundEffectUrl')} type="audio/wav"/>
+			  <source src={this.props.soundEffectUrl} type="audio/wav"/>
 			</audio>
 		</div>)
 	}
