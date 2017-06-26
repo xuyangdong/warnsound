@@ -101,7 +101,7 @@ class CreateEditPanel extends React.Component {
 					{getFieldDecorator('title',{
 						initialValue:storyInfo.get('title')
 					})(
-						<Input />
+						<EnhanceInput />
 					)}
 					</FormItem>
 					<FormItem
@@ -112,7 +112,7 @@ class CreateEditPanel extends React.Component {
 					{getFieldDecorator('author',{
 						initialValue:storyInfo.get('author')
 					})(
-						<Input />
+						<EnhanceInput />
 					)}
 					</FormItem>
 					<FormItem
@@ -123,7 +123,7 @@ class CreateEditPanel extends React.Component {
 					{getFieldDecorator('publish',{
 						initialValue:storyInfo.get('press')
 					})(
-						<Input />
+						<EnhanceInput />
 					)}
 					</FormItem>
 					<FormItem
@@ -134,8 +134,27 @@ class CreateEditPanel extends React.Component {
 					{getFieldDecorator('tips',{
 						initialValue:storyInfo.get('guide')
 					})(
-						<Input />
+						<EnhanceInput />
 					)}
+					</FormItem>
+					<FormItem
+						labelCol={{span:2}}
+						wrapperCol={{span:4}}
+						label={<span>朗读指导</span>}
+					>
+					 <Upload
+					 	fileList={this.state.guideSoundFileList}
+						beforeUpload={(file,fileList)=>{
+							this.setState({
+								guideSoundFileList:fileList,
+							})
+							return false
+						}}
+					 >
+					    <Button>
+					      <Icon type="upload" /> Upload
+					    </Button>
+					  </Upload>
 					</FormItem>
 					<FormItem
 						labelCol={{span:2}}
@@ -212,25 +231,6 @@ class CreateEditPanel extends React.Component {
 						beforeUpload={(file,fileList)=>{
 							this.setState({
 								audioFileList:fileList,
-							})
-							return false
-						}}
-					 >
-					    <Button>
-					      <Icon type="upload" /> Upload
-					    </Button>
-					  </Upload>
-					</FormItem>
-					<FormItem
-						labelCol={{span:2}}
-						wrapperCol={{span:4}}
-						label={<span>朗读指导</span>}
-					>
-					 <Upload
-					 	fileList={this.state.guideSoundFileList}
-						beforeUpload={(file,fileList)=>{
-							this.setState({
-								guideSoundFileList:fileList,
 							})
 							return false
 						}}

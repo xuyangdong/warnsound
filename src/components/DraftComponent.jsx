@@ -37,7 +37,8 @@ export default class DraftComponent extends React.Component {
         }
     }
     onEditorStateChange = ( editorState ) => {
-        this.setState({ editorState });
+        const contentState = editorState.getCurrentContent()
+        this.setState({ editorState:EditorState.push(editorState,contentState,'change-block-data') });
     }
     createBlock( block, i, text ) {
         return new ContentBlock(new Map({
@@ -90,37 +91,38 @@ export default class DraftComponent extends React.Component {
     			soundEffectUrl:''
     		}))
             newContentState = Modifier.setBlockType(newContentState,selectState,'unstyled')
-            this.setState({
-    			editorState:EditorState.createWithContent(newContentState)
-    		})
+
         }else{
-            // newContentState = Modifier.setBlockData(contentState,selectState,new Map({
-    		// 	soundEffectId:this.state.soundEffectId,
-    		// 	soundEffectUrl:this.props.soundEffects.find(v => v.get('id')==value).get('url'),
-            //     soundEffectName:this.props.soundEffects.find(v => v.get('id')==value).get('description')
-            // }))
-    		// newContentState = Modifier.setBlockType(newContentState,selectState,'mediaText')
-            const contentStateWithEntity = contentState.createEntity(
-                'media','MUTABLE',
-                {
-                    soundEffectId:this.state.soundEffectId,
-                    soundEffectUrl:this.props.soundEffects.find(v => v.get('id')==value).get('url'),
-                    soundEffectName:this.props.soundEffects.find(v => v.get('id')==value).get('description')
-                }
-            )
-            const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-            const newEditorState = EditorState.set(
-                this.state.editorState,
-                {currentContent: contentStateWithEntity}
-            )
-            this.setState({
-                editorState: AtomicBlockUtils.insertAtomicBlock(
-                    newEditorState,
-                    entityKey,
-                    'ABC'
-                )
-            })
+            newContentState = Modifier.setBlockData(contentState,selectState,new Map({
+    			soundEffectId:this.state.soundEffectId,
+    			soundEffectUrl:this.props.soundEffects.find(v => v.get('id')==value).get('url'),
+                soundEffectName:this.props.soundEffects.find(v => v.get('id')==value).get('description')
+            }))
+    		newContentState = Modifier.setBlockType(newContentState,selectState,'mediaText')
+            // const contentStateWithEntity = contentState.createEntity(
+            //     'media','MUTABLE',
+            //     {
+            //         soundEffectId:this.state.soundEffectId,
+            //         soundEffectUrl:this.props.soundEffects.find(v => v.get('id')==value).get('url'),
+            //         soundEffectName:this.props.soundEffects.find(v => v.get('id')==value).get('description')
+            //     }
+            // )
+            // const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+            // const newEditorState = EditorState.set(
+            //     this.state.editorState,
+            //     {currentContent: contentStateWithEntity}
+            // )
+            // this.setState({
+            //     editorState: AtomicBlockUtils.insertAtomicBlock(
+            //         newEditorState,
+            //         entityKey,
+            //         'ABC'
+            //     )
+            // })
         }
+        this.setState({
+            editorState:EditorState.createWithContent(newContentState)
+        })
 
 	}
 	myBlockRenderer(contentBlock){
