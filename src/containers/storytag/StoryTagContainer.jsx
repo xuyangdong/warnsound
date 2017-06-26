@@ -5,6 +5,41 @@ import EnhanceTable from '../../components/common/EnhanceTable'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {getStoryTags} from 'actions/storyTag'
+import {Popover} from 'antd'
+import {fromJS} from 'immutable'
+import config from '../../config'
+
+class PopContent extends React.Component {
+	constructor(){
+		super()
+		this.state ={
+			storyTagInfo:fromJS({})
+		}
+	}
+	componentDidMount(){
+		const {id} = this.props
+		fetch(config.api.storyTag.query(id),{
+			headers: {
+				'authorization': sessionStorage.getItem('auth')
+			},
+		}).then(res => res.json()).then(res => {
+			this.setState({
+				storyTagInfo:fromJS(res)
+			})
+		})
+	}
+	render(){
+		return (
+			<div className={styles.popContent}>
+				<span>编号:{this.state.storyTagInfo.get('id')}</span>
+				<span>内容:{this.state.storyTagInfo.get('content')}</span>
+				<span>创建时间:{this.state.storyTagInfo.get('createTime')}</span>
+				<span>更新时间:{this.state.storyTagInfo.get('updateTime')}</span>
+				<span>图标:{this.state.storyTagInfo.get('iconURL')}</span>
+			</div>
+		)
+	}
+}
 
 class StoryTagContainer extends React.Component {
 	static contextTypes = {
@@ -22,8 +57,15 @@ class StoryTagContainer extends React.Component {
 			key:'id'
 		},{
 			title:'父级标签',
-			dataIndex:'parent',
-			key:'parent'
+			dataIndex:'parentId',
+			key:'parentId',
+			render:(t,r) => {
+				return (
+				<Popover content={<PopContent id={t}/>}>
+					<a>{t}</a>
+				</Popover>
+				)
+			}
 		},{
 			title:'内容',
 			dataIndex:'content',
@@ -67,7 +109,7 @@ class StoryTagContainer extends React.Component {
 		return (
 			<div className={styles.container}>
 				<div className={styles.header}>
-					<TableHeader title="故事标签" functionBar={['create','refresh']} onCreate={this.handleCreate.bind(this)}/>
+					<TableHeader title="故事标签" functionBar={['create']} onCreate={this.handleCreate.bind(this)}/>
 				</div>
 				<div className={styles.mainPanel}>
 					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{

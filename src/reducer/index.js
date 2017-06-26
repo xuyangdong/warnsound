@@ -7,6 +7,7 @@ import storyTag from './storyTag'
 import soundEffect from './soundEffect'
 import soundEffectTag from './soundEffectTag'
 import backgroundMusic from './backgroundMusic.js'
+import app from './app'
 
 const reducer = combineReducers({
 	user,
@@ -14,7 +15,8 @@ const reducer = combineReducers({
 	storyTag,
 	soundEffect,
 	soundEffectTag,
-	backgroundMusic
+	backgroundMusic,
+	app
 	// auth,
 	// alliance,
 	// affair,

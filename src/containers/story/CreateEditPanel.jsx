@@ -224,7 +224,7 @@ class CreateEditPanel extends React.Component {
 					<FormItem
 						labelCol={{span:2}}
 						wrapperCol={{span:4}}
-						label={<span>指导阅读</span>}
+						label={<span>朗读指导</span>}
 					>
 					 <Upload
 					 	fileList={this.state.guideSoundFileList}

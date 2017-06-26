@@ -1,9 +1,12 @@
 import React from 'react'
 import styles from './DashBoardContainer.scss'
-import {Icon} from 'antd'
+import {Icon,Button} from 'antd'
 import {Link} from 'react-router'
+import {bindActionCreators} from 'redux'
+import {connect} from 'react-redux'
+import {logout} from 'actions/user'
 
-export default class DashBoardContainer extends React.Component {
+class DashBoardContainer extends React.Component {
 	render(){
 		return (
 			<div className={styles.container}>
@@ -35,8 +38,21 @@ export default class DashBoardContainer extends React.Component {
 							<Icon type="notification" />
 						</div>
 					</div>
+					<div className={styles.logOut}>
+						<Button type="danger" onClick={()=>{
+							this.props.logout()
+						}}><Icon type="poweroff" />注销</Button>
+					</div>
 				</div>
 			</div>
 		)
 	}
 }
+
+export default connect(state => {
+	return {}
+},dispatch => {
+	return {
+		logout:bindActionCreators(logout,dispatch)
+	}
+})(DashBoardContainer)

@@ -26,6 +26,8 @@ import LoginContainer from './containers/LoginContainer'
 
 import DashBoardContainer from './containers/dashboard/DashBoardContainer'
 
+import PublishAppContainer from './containers/publishapp/PublishAppContainer'
+
 import CreateEditGetDataHOCFactory from './enhancers/CreateEditGetDataHOCFactory'
 const StoryCreateEditGetDataHOC = CreateEditGetDataHOCFactory('story')
 const StroyCreateEditPanelWithData = StoryCreateEditGetDataHOC(StoryCreateEditPanel)
@@ -38,6 +40,7 @@ const SoundEffectCreateEditPanelWithData = CreateEditGetDataHOCFactory('soundEff
 const SoundEffectTagCreateEditPanelWithData = CreateEditGetDataHOCFactory('soundEffectTag')(SoundEffectTagCreateEditPanel)
 
 const BackgroundMusicCreateEditPanelWithData = CreateEditGetDataHOCFactory('backgroundMusic')(BackgroundMusicCreateEditPanel)
+
 const routes = (<Router history={hashHistory}>
 		<Route path="/login" component={LoginContainer}/>
 		<Route path="/" component={LoginControlHOC(BaseContainer)}>
@@ -63,6 +66,7 @@ const routes = (<Router history={hashHistory}>
 			<Route path="backgroundmusics/create" component={(props) => <BackgroundMusicCreateEditPanelWithData type='create' {...props}/>} />
 			<Route path="backgroundmusics/edit/(:id)" component={(props) => <BackgroundMusicCreateEditPanelWithData type='edit' {...props}/>} />
 
+			<Route path="publishapp" component={PublishAppContainer} />
 			<Route path="app" component={App}/>
 
 		</Route>

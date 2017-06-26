@@ -3,3 +3,9 @@
 :local(.container){
 	@include mainPanelContainer;
 }
+
+:local(.popContent){
+	display: flex;
+	flex-direction: column;
+	
+}

@@ -95,7 +95,9 @@ class StoryContainer extends React.Component{
 		return (
 			<div className={styles.container}>
 				<div className={styles.header}>
-					<TableHeader title='故事列表' functionBar={['create','refresh','search']} search={{
+					<TableHeader title='故事列表'
+					 searchBar={['title','author','press','content','tag']}
+					 functionBar={['create','refresh','search']} search={{
 						titleS,
 						author,
 						press,

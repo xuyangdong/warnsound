@@ -62,7 +62,7 @@ class SoundEffectTagContainer extends React.Component {
 		return (
 			<div className={styles.container}>
 				<div className={styles.header}>
-					<TableHeader title="音效标签" functionBar={['create','refresh']} onCreate={this.handleCreate.bind(this)}/>
+					<TableHeader title="音效标签" functionBar={['create']} onCreate={this.handleCreate.bind(this)}/>
 				</div>
 				<div className={styles.mainPanel}>
 					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{

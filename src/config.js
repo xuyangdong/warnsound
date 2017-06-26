@@ -12,7 +12,8 @@ const config = _.extend({
 }, {
     api: {
         user: {
-            login: (id, ps) => `${baseURL}/manage/auth?username=${id}&password=${ps}`
+            login: (id, ps) => `${baseURL}/manage/auth?username=${id}&password=${ps}`,
+            logout: `${baseURL}/manage/auth`
         },
         story: {
             get: (offset, limit, query = {
@@ -56,6 +57,9 @@ const config = _.extend({
             query: (id) => `${baseURL}/manage/backgroundMusics/${id}`,
             add: `${baseURL}/manage/backgroundMusics`,
             edit: (id) => `${baseURL}/manage/backgroundMusics/${id}`
+        },
+        app: {
+            get: (offset, limit) => `${baseURL}/manage/getApps?offset=${offset}&limit=${limit}`
         }
     }
 })

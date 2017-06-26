@@ -2,6 +2,7 @@
 
 :local(.container){
 	@include mainPanelContainer;
+	position: relative;
 	background: linear-gradient(#ffffff 50%, rgba(255,255,255,0) 0) 0 0,
 		radial-gradient(circle closest-side, #FFFFFF 53%, rgba(255,255,255,0) 0) 0 0,
 		radial-gradient(circle closest-side, #FFFFFF 50%, rgba(255,255,255,0) 0) 55px 0 #48B;
@@ -43,5 +44,9 @@
 			}
 		}
 	}
-
+	:local(.logOut){
+		position: absolute;
+		bottom:10px;
+		right: 10px;
+	}
 }
