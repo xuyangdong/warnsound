@@ -1,12 +1,12 @@
 import {actionNames} from 'action-utils'
 import config from '../config'
 import {notification} from 'antd'
-export const GET_BACKGROUNDMUSIC = actionNames("GET_BACKGROUNDMUSIC")
-export function getBackgroundMusic(offset,limit){
+export const GET_BACKGROUNDMUSICTAG = actionNames("GET_BACKGROUNDMUSICTAG")
+export function getBackgroundMusicTag(offset,limit){
 	return {
-		types:GET_BACKGROUNDMUSIC,
+		types:GET_BACKGROUNDMUSICTAG,
 		callAPI:()=>{
-			return fetch(config.api.backgroundmusic.get((offset-1)*limit,limit),{
+			return fetch(config.api.backgroundMusicTag.get((offset-1)*limit,limit),{
 				headers: {
 			    	'authorization': sessionStorage.getItem('auth')
 			    },
@@ -20,9 +20,9 @@ export function getBackgroundMusic(offset,limit){
 	}
 }
 
-export function addBackgroundMusic(formData){
+export function addBackgroundMusicTag(formData){
 	return dispatch => {
-        return fetch(config.api.backgroundmusic.add, {
+        return fetch(config.api.backgroundMusicTag.add, {
             method: 'post',
             body: formData,
             headers: {
@@ -35,9 +35,9 @@ export function addBackgroundMusic(formData){
 			return res
 		}).then(res => {
             dispatch({
-                types: GET_BACKGROUNDMUSIC,
+                types: GET_BACKGROUNDMUSICTAG,
                 callAPI: () => {
-                    return fetch(config.api.backgroundmusic.get(0, 10), {
+                    return fetch(config.api.backgroundMusicTag.get(0, 10), {
                         headers: {
                             'authorization': sessionStorage.getItem('auth')
                         }
@@ -53,9 +53,9 @@ export function addBackgroundMusic(formData){
     }
 }
 
-export function editBackgroundMusic(formData,id){
+export function editBackgroundMusicTag(formData,id){
 	return dispatch => {
-        return fetch(config.api.backgroundmusic.edit(id), {
+        return fetch(config.api.backgroundMusicTag.edit(id), {
             method: 'post',
             body: formData,
             headers: {
@@ -68,9 +68,9 @@ export function editBackgroundMusic(formData,id){
 			return res
 		}).then(res => {
             dispatch({
-                types: GET_BACKGROUNDMUSIC,
+                types: GET_BACKGROUNDMUSICTAG,
                 callAPI: () => {
-                    return fetch(config.api.backgroundmusic.get(0, 10), {
+                    return fetch(config.api.backgroundMusicTag.get(0, 10), {
                         headers: {
                             'authorization': sessionStorage.getItem('auth')
                         }
@@ -86,9 +86,9 @@ export function editBackgroundMusic(formData,id){
     }
 }
 
-export function deleteBackgroundMusic(id){
+export function deleteBackgroundMusicTag(id){
 	return dispatch => {
-        return fetch(config.api.backgroundmusic.delete(id), {
+        return fetch(config.api.backgroundMusicTag.delete(id), {
             method: 'delete',
             headers: {
                 'authorization': sessionStorage.getItem('auth')
@@ -101,9 +101,9 @@ export function deleteBackgroundMusic(id){
 			return res
 		}).then(res => {
             dispatch({
-                types: GET_BACKGROUNDMUSIC,
+                types: GET_BACKGROUNDMUSICTAG,
                 callAPI: () => {
-                    return fetch(config.api.backgroundmusic.get(0, 10), {
+                    return fetch(config.api.backgroundMusicTag.get(0, 10), {
                         headers: {
                             'authorization': sessionStorage.getItem('auth')
                         }

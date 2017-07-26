@@ -1,6 +1,9 @@
 import React from 'react'
-import {Row,Col,Input,Button} from 'antd'
+import {Row,Col,Input,Button,TreeSelect} from 'antd'
 import PropTypes from 'prop-types';
+import config from '../../config'
+import _ from 'lodash'
+
 
 const dict = {
 	'title':'标题',
@@ -21,7 +24,39 @@ export default class SearchBar extends React.Component {
 		this.state = this.props.searchCondition.reduce((p,c) => {
 			p[c] = ''
 			return p
-		},{})
+		},{
+			storyTagTree:[]
+		})
+	}
+	componentDidMount(){
+		fetch(config.api.storyTag.get(0,100000),{
+			headers:{
+				authorization:sessionStorage.getItem('auth')
+			}
+		}).then(res => res.json()).then(res => {
+			let treeData = res.obj.filter(v => v.parentId == 0).map(v => ({
+				value:''+v.id,
+				key:''+v.id,
+				label:v.content,
+				otherData:v
+			}))
+			treeData = treeData.map(v => ({
+				...v,
+				children:res.obj.filter(t => t.parentId == v.value).map(t => ({
+					value:''+t.id,
+					key:''+t.id,
+					label:t.content,
+					otherData:t
+				}))
+			}))
+			this.setState({
+				storyTagTree:_.concat([{
+					value:'',
+					key:'-1',
+					label:'所有标签'
+				}],treeData)
+			})
+		})
 	}
 	handleInputChange = (key,value) => {
 		this.setState({
@@ -44,23 +79,40 @@ export default class SearchBar extends React.Component {
 		this.props.onSearch(cleanCondition)
 	}
 	render(){
+		console.log("asdf:",this.state)
 		const {searchCondition} = this.props
 		const span = Math.floor(24/(searchCondition.length+1))
 		return (
 			<Row type='flex' justify='end' gutter={16}>
 			{
-				searchCondition.map((v,k) => (
-					<Col key={k} span={span}>
-						<Input value={this.state[v]} onChange={(e)=>{
-							this.handleInputChange(v,e.target.value)
-						}}
-						onPressEnter={()=>{
-							this.handleSearch()
-						}}
-						addonBefore={<span>{dict[v]}</span>}
-						/>
-					</Col>
-				))
+				searchCondition.map((v,k) => {
+					if(v != 'tag'){
+						return (<Col key={k} span={span}>
+							<Input value={this.state[v]} onChange={(e)=>{
+								this.handleInputChange(v,e.target.value)
+							}}
+							onPressEnter={()=>{
+								this.handleSearch()
+							}}
+							addonBefore={<span>{dict[v]}</span>}
+							/>
+						</Col>)
+					}else{
+						return (<Col key={k} span={span}>
+							<TreeSelect
+					        style={{ width: '100%' }}
+					        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+							value={this.state[v]}
+					        treeData={this.state.storyTagTree}
+					        placeholder="故事标签"
+					        onChange={(value,label)=>{
+								this.handleInputChange(v,value)
+							}}
+					        />
+							</Col>
+						)
+					}
+				})
 			}
 			{searchCondition.length>0?(<Col span={span}>
 				<Button onClick={()=>{

@@ -2,14 +2,16 @@ import React from 'react'
 import CreateEditHeader from '../../components/common/CreateEditHeader'
 import styles from './CreateEditPanel.scss'
 import {fromJS} from 'immutable'
-import {Form,Input,Select,Checkbox,Upload,Button,Icon,Row,Col} from 'antd'
+import {Form,Input,Select,Checkbox,Upload,Button,Icon,Row,Col,Spin,Tag,notification,TreeSelect} from 'antd'
 import EnhanceInput from '../../components/common/EnhanceInput'
+import config from '../../config'
 
 import _ from 'lodash'
 import DraftComponent from '../../components/DraftComponent'
 const FormItem = Form.Item
 const Option = Select.Option
 const ButtonGroup = Button.Group;
+const tags =['pink','red','orange','green','cyan','blue','purple']
 
 
 class CreateEditPanel extends React.Component {
@@ -24,16 +26,43 @@ class CreateEditPanel extends React.Component {
 			previewFileList:[],
 			backgroundFileList:[],
 			audioFileList:[],
-			guideSoundFileList:[]
+			guideSoundFileList:[],
+			storyTags:[],
+			spin:false,
 		}
 		this.handleSubmit = this.handleSubmit.bind(this)
 		this.handlePicDisplay = this.handlePicDisplay.bind(this)
 		this.handleSaveAsDraft = this.handleSaveAsDraft.bind(this)
 	}
+	componentWillReceiveProps(nextProps){
+		if(!nextProps.storyInfo.isEmpty()){
+			this.setState({
+				coverFileList:nextProps.storyInfo.get('coverUrl')?[_.extend(new File([],''),{
+					uid:-1,
+					url:nextProps.storyInfo.get('coverUrl')
+				})]:[],
+				previewFileList:nextProps.storyInfo.get('preCoverUrl')?[_.extend(new File([],''),{
+					uid:-1,
+					url:nextProps.storyInfo.get('preCoverUrl')
+				})]:[],
+				backgroundFileList:nextProps.storyInfo.get('backgroundUrl')?[_.extend(new File([],''),{
+					uid:-1,
+					url:nextProps.storyInfo.get('backgroundUrl')
+				})]:[]
+			})
+		}
+		if(!nextProps.storyTagInfo.isEmpty()){
+			this.setState({
+				storyTags:nextProps.storyTagInfo.map(v => v.get('id')).toJS()
+			})
+		}
+	}
 	handleSubmit(isDraft,e){
 		const {getFieldValue} = this.props.form
+		this.setState({
+			spin:true
+		})
 		e.preventDefault()
-		console.log(isDraft)
 		const formData = new FormData()
 		formData.append('title',getFieldValue('title'))
 		formData.append('author',getFieldValue('author'))
@@ -41,18 +70,24 @@ class CreateEditPanel extends React.Component {
 		formData.append('content',JSON.stringify(this.refs.draft.getData()))
 		// TODO: 啥意思
 		formData.append('draft',isDraft)
+		formData.append('storyTags',this.state.storyTags.join(','))
 		formData.append('press',getFieldValue('publish'))
 		formData.append('guide',getFieldValue('tips'))
+		formData.append('readGuide',getFieldValue('readGuide')||'')
 		formData.append('coverFile',this.state.coverFileList[0]||new File([],''))
 		formData.append('preCoverFile',this.state.previewFileList[0]||new File([],''))
 		formData.append('backgroundFile',this.state.backgroundFileList[0]||new File([],''))
 		formData.append('originSoundFile',this.state.audioFileList[0]||new File([],''))
 		formData.append('guideSoundFile',this.state.guideSoundFileList[0]||new File([],''))
-		formData.append('price',getFieldValue('price'))
+		formData.append('price',getFieldValue('price')||0)
 		formData.append('defaultBackGroundMusicId',getFieldValue('backgroundMusic'))
 		this.props.onSubmit(formData).then(res => {
-			this.context.router.goBack(0)
+			this.setState({
+				spin:false
+			})
+			notification.success({message:'故事上传成功'})
 		})
+		this.context.router.goBack(0)
 	}
 	// TODO: 目前支持能做到单文件，不知道怎么做到fileList显示一整个列表
 	handlePicDisplay(fileList,stateName){
@@ -73,8 +108,44 @@ class CreateEditPanel extends React.Component {
 	handleSaveAsDraft(e){
 		this.handleSubmit(1,e)
 	}
+	addStoryTag(storyId,tagId){
+
+		fetch(config.api.story.tag.add(storyId,tagId),{
+			method:'post',
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			},
+		}).then(res => res.json()).then(res => {
+			console.log(res)
+			notification.success({message:'标签添加成功'})
+		})
+	}
+	deleteStoryTag(storyId,tagId){
+		fetch(config.api.story.tag.delete(storyId,tagId),{
+			method:'delete',
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			},
+		}).then(res => res).then(res => {
+			notification.success({message:'删除成功'})
+		})
+	}
+	deleteCover(storyId,coverUrl){
+		let formData = new FormData()
+		formData.append('id',storyId)
+		formData.append('query',coverUrl)
+		fetch(config.api.story.cover.delete,{
+			method:'POST',
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			},
+			body:formData
+		}).then(res => res).then(res => {
+			notification.success({message:'删除成功'})
+		})
+	}
 	render(){
-		const {storyInfo,soundEffects,backgroundMusics} = this.props
+		const {storyInfo,storyTags,soundEffects,backgroundMusics,soundEffectByTag} = this.props
 		const { getFieldDecorator } = this.props.form;
 		const formItemLayout = {
 			  	labelCol: {
@@ -87,9 +158,10 @@ class CreateEditPanel extends React.Component {
 				},
 			 };
 		return (
+
 			<div className={styles.container}>
 				<div>
-					<CreateEditHeader title={this.props.title}/>
+					<CreateEditHeader onDelete={this.props.onDelete} title={this.props.title}/>
 				</div>
 				<div className={styles.formPanel}>
 				<Form onSubmit={this.handleSubmit.bind(this,0)}>
@@ -101,7 +173,7 @@ class CreateEditPanel extends React.Component {
 					{getFieldDecorator('title',{
 						initialValue:storyInfo.get('title')
 					})(
-						<EnhanceInput />
+						this.props.type=='edit'?<Input/>:<EnhanceInput />
 					)}
 					</FormItem>
 					<FormItem
@@ -112,7 +184,7 @@ class CreateEditPanel extends React.Component {
 					{getFieldDecorator('author',{
 						initialValue:storyInfo.get('author')
 					})(
-						<EnhanceInput />
+						this.props.type=='edit'?<Input/>:<EnhanceInput />
 					)}
 					</FormItem>
 					<FormItem
@@ -123,38 +195,76 @@ class CreateEditPanel extends React.Component {
 					{getFieldDecorator('publish',{
 						initialValue:storyInfo.get('press')
 					})(
-						<EnhanceInput />
+						this.props.type=='edit'?<Input/>:<EnhanceInput />
 					)}
 					</FormItem>
 					<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:4}}
+					  label={<span>故事标签</span>}
+					>
+					{this.state.storyTags.map((v,k) => {
+						let colorIndex = _.random(0,6)
+						return <Tag onClose={(e)=>{
+							this.setState({
+								storyTags:this.state.storyTags.filter(s => s != v)
+							})
+							if(this.props.type=='edit'){
+								this.deleteStoryTag(storyInfo.get('id'),v)
+							}
+						}} closable color={tags[colorIndex%7]} key={k}>{storyTags.find(s => s.get('id')==v,fromJS({}),fromJS({})).get('content')}</Tag>
+					})}
+					{/*<TreeSelect treeData={this.props.storyTagsByParent.toJS()} onSelect={(value) => {
+						if(this.props.type=='edit'){
+							this.addStoryTag(storyInfo.get('id'),value)
+						}
+						this.setState({
+							storyTags:_.concat(this.state.storyTags,value)
+						})
+					}}/>*/}
+					<Select placeholder={'一级标签'} style={{width:240}} value={this.state.firstTag} onSelect={(value)=>{
+						this.setState({
+							firstTag:value
+						})
+					}}>
+						{this.props.storyTagsByParent.map(v => {
+							return (<Option title={v.get('label')} value={v.get('value')} key={v.get('value')}>{v.get('label')}</Option>)
+						})}
+					</Select>
+					<Select placeholder={'二级标签'} style={{width:240}} onSelect={(value)=>{
+						if(this.props.type=='edit'){
+							this.addStoryTag(storyInfo.get('id'),value)
+						}
+						this.setState({
+							storyTags:_.concat(this.state.storyTags,value)
+						})
+					}}>
+						{this.props.storyTagsByParent.find(v => v.get('value')==this.state.firstTag,fromJS({}),fromJS({})).get('children',fromJS([])).map(v => {
+							return (<Option title={v.get('label')} value={v.get('value')} key={v.get('value')}>{v.get('label')}</Option>)
+						})}
+					</Select>
+					</FormItem>
+					<FormItem
+					  labelCol={{span:2}}
+					  wrapperCol={{span:8}}
 					  label={<span>阅读指导</span>}
 					>
 					{getFieldDecorator('tips',{
 						initialValue:storyInfo.get('guide')
 					})(
-						<EnhanceInput />
+						this.props.type=='edit'?<Input type='textarea' autosize={{minRows:4}}/>:<EnhanceInput type='textarea' autosize={{minRows:4}}/>
 					)}
 					</FormItem>
 					<FormItem
-						labelCol={{span:2}}
-						wrapperCol={{span:4}}
-						label={<span>朗读指导</span>}
+					  labelCol={{span:2}}
+					  wrapperCol={{span:8}}
+					  label={<span>朗读指导</span>}
 					>
-					 <Upload
-					 	fileList={this.state.guideSoundFileList}
-						beforeUpload={(file,fileList)=>{
-							this.setState({
-								guideSoundFileList:fileList,
-							})
-							return false
-						}}
-					 >
-					    <Button>
-					      <Icon type="upload" /> Upload
-					    </Button>
-					  </Upload>
+					{getFieldDecorator('readGuide',{
+						initialValue:storyInfo.get('readGuide')
+					})(
+						this.props.type=='edit'?<Input type='textarea' autosize={{minRows:4}}/>:<EnhanceInput type='textarea' autosize={{minRows:4}}/>
+					)}
 					</FormItem>
 					<FormItem
 						labelCol={{span:2}}
@@ -164,11 +274,9 @@ class CreateEditPanel extends React.Component {
 					<div className={styles.clearfix}>
 					<Upload
 						listType="picture-card"
-						fileList={!storyInfo.get('coverUrl')?this.state.coverFileList:[{
-							uid:-1,
-							url:storyInfo.get('coverUrl')
-						}]}
+						fileList={this.state.coverFileList}
 						onRemove={file => {
+							this.deleteCover(storyInfo.get('id'),'coverUrl')
 							this.setState({
 								coverFileList:[]
 							})
@@ -189,16 +297,19 @@ class CreateEditPanel extends React.Component {
 					>
 					<Upload
 						listType="picture-card"
-						fileList={!storyInfo.get('preCoverUrl')?this.state.previewFileList:[{
-							uid:-1,
-							url:storyInfo.get('preCoverUrl')
-						}]}
+						fileList={this.state.previewFileList}
+						onRemove={file => {
+							this.deleteCover(storyInfo.get('id'),'preCoverUrl')
+							this.setState({
+								previewFileList:[]
+							})
+						}}
 						beforeUpload={(file,fileList)=>{
 							this.handlePicDisplay(fileList,'previewFileList')
 							return false
 						}}
 					>
-						选择图片
+					{this.state.previewFileList.length>0?null:'选择图片'}
 					</Upload>
 					</FormItem>
 					<FormItem
@@ -208,23 +319,25 @@ class CreateEditPanel extends React.Component {
 					>
 					<Upload
 						listType="picture-card"
-						fileList={!storyInfo.get('backgroundUrl')?this.state.backgroundFileList:[{
-							uid:-1,
-							url:storyInfo.get('backgroundUrl')
-						}]}
-
+						fileList={this.state.backgroundFileList}
+						onRemove={file => {
+							this.deleteCover(storyInfo.get('id'),'backgroundUrl')
+							this.setState({
+								backgroundFileList:[]
+							})
+						}}
 						beforeUpload={(file,fileList)=>{
 							this.handlePicDisplay(fileList,'backgroundFileList')
 							return false
 						}}
 					>
-						选择图片
+					{this.state.backgroundFileList.length>0?null:'选择图片'}
 					</Upload>
 					</FormItem>
 					<FormItem
 						labelCol={{span:2}}
 						wrapperCol={{span:4}}
-						label={<span>背景音效</span>}
+						label={<span>平台录音</span>}
 					>
 					 <Upload
 					 	fileList={this.state.audioFileList}
@@ -239,6 +352,12 @@ class CreateEditPanel extends React.Component {
 					      <Icon type="upload" /> Upload
 					    </Button>
 					  </Upload>
+					  {storyInfo.get('originSoundUrl')?<div>
+					  	  <a href={storyInfo.get('originSoundUrl')}>{storyInfo.get('originSoundUrl')}</a>
+						  <audio ref='audio' controls>
+							<source src={storyInfo.get('originSoundUrl')} type="audio/wav"/>
+						  </audio>
+					  </div>:null}
 					</FormItem>
 					<FormItem
 					  labelCol={{span:2}}
@@ -254,18 +373,16 @@ class CreateEditPanel extends React.Component {
 					<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:4}}
-					  label={<span>背景音效</span>}
+					  label={<span>背景音乐</span>}
 					>
 					{getFieldDecorator('backgroundMusic',{
 						initialValue:''+storyInfo.get('defaultBackGroundMusicId')
 					})(
-						<Select style={{width:240}}>
-						{
-							backgroundMusics.map((v,k)=> (
-								<Option value={''+v.get('id')} title={v.get('description')} key={v.get('id')}>{v.get('description')}</Option>
-							))
-						}
-						</Select>
+						<TreeSelect treeData={_.concat([{
+							value:'0',
+							label:'无',
+							key:'0'
+						}],this.props.backgroundMusicByTag.toJS())} style={{width:240}} />
 					)}
 					</FormItem>
 					<FormItem
@@ -273,20 +390,20 @@ class CreateEditPanel extends React.Component {
 						wrapperCol={{span:20}}
 						label={<span>内容</span>}
 					>
-						<DraftComponent ref='draft' soundEffects={soundEffects} value={storyInfo.get('content')}/>
+						<DraftComponent ref='draft' soundEffectByTag={soundEffectByTag} soundEffects={soundEffects} value={storyInfo.get('content')}/>
 					</FormItem>
 					<FormItem
 						labelCol={{span:2}}
 						wrapperCol={{span:4,offset:2}}
 					>
-					<ButtonGroup>
+					{this.state.spin?<Spin />:<ButtonGroup>
 					  <Button type="primary" htmlType="submit">
-						保存
+						{'保存'}
 					  </Button>
 					  <Button type="primary" htmlType="submit" onClick={this.handleSaveAsDraft}>
-						保存为草稿
+						{'保存为草稿'}
 					  </Button>
-				  </ButtonGroup>
+				  </ButtonGroup>}
 					</FormItem>
 				</Form>
 				</div>

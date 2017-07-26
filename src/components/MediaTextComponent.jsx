@@ -32,13 +32,21 @@ export default class MediaTextComponent extends React.Component{
 			}
 		})
 	}
+	handleDelete = () => {
+		this.props.onDelete(this.props.block)
+	}
 	render(){
 		return (
 		<div className={styles.container}>
-			<div>
-				<Icon type={this.state.playing?"play-circle-o":"play-circle"} onClick={this.handlePlay}/>
-				<span>{this.props.block.getText()}</span>
-				<span className={styles.description}>[{this.props.block.getData().get('soundEffectName')}]</span>
+			<div className={styles.item}>
+				<div>
+					<Icon type={this.state.playing?"play-circle-o":"play-circle"} onClick={this.handlePlay}/>
+					<span>{this.props.block.getText()}</span>
+				</div>
+				<div>
+					<span className={styles.description}>[{this.props.block.getData().get('soundEffectName')}]</span>
+					<span onClick={this.handleDelete} style={{color:'red',cursor:'pointer'}}>删除</span>
+				</div>
 			</div>
 			<audio ref='audio' controls>
 			  <source src={this.props.block.getData().get('soundEffectUrl')} type="audio/wav"/>

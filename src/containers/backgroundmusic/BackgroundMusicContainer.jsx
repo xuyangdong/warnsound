@@ -39,7 +39,10 @@ class BackgroundMusicContainer extends React.Component {
 		},{
 			title:'是否有效',
 			dataIndex:'valid',
-			key:'valid'
+			key:'valid',
+			render:(t,r) => {
+				return t==0?'否':'是'
+			}
 		},{
 			title:'操作',
 			key:'operate',

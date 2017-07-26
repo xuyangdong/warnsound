@@ -3,12 +3,20 @@ import config from '../config'
 import {fromJS} from 'immutable'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {addStory,editStory} from 'actions/story'
-import {addStoryTag} from 'actions/storyTag'
+import {addStory,editStory,deleteStory} from 'actions/story'
+import {addStoryTag,editStoryTag,deleteStoryTag} from 'actions/storyTag'
 import SoundEffectGetDataHOC from './SoundEffectGetDataHOC'
 import SoundEffectTagGetDataHOC from './SoundEffectTagGetDataHOC'
 import BackgroundMusicGetDataHOC from './BackgroundMusicGetDataHOC'
+import AppGetDataHOC from './APPGetDataHOC'
+import DiscoverGetDataHOC from './DiscoverGetDataHOC'
 
+function buildTree(listData,parentId=0){
+	let result = fromJS([])
+	listData.forEach(v => {
+		v.set('children',listData.filter(n => n.get('parentId')==parentId))
+	})
+}
 export default (type) => {
 	if(type=='story'){
 		return CreateEditPanel => {
@@ -17,9 +25,14 @@ export default (type) => {
 					super()
 					this.state = {
 						storyInfo:fromJS({}),
+						storyTags:fromJS([]),
+						storyTagsByParent:fromJS([]),
 						soundEffects:fromJS([]),
 						backgroundMusics:fromJS([]),
-						backgroundMusicInfo:fromJS({})
+						backgroundMusicInfo:fromJS({}),
+						storyTagInfo:fromJS({}),
+						soundEffectByTag:fromJS([]),
+						backgroundMusicByTag:fromJS([])
 					}
 					this.handleCreate = this.handleCreate.bind(this)
 					this.handleEdit = this.handleEdit.bind(this)
@@ -39,21 +52,64 @@ export default (type) => {
 							author:'佚名',
 							press:'缺省出版社',
 							guide:'0-13岁',
-							defaultBackGroundMusicId:'100055'
+							defaultBackGroundMusicId:'0'
+						})
+					})
+					//--------------storyTag
+					fetch(config.api.storyTag.get(0,1000),{
+						headers: {
+							'authorization':sessionStorage.getItem('auth')
+						}
+					}).then(res => res.json()).then(res => {
+						let treeData = res.obj.filter(v => v.parentId == 0).map(v => ({
+							value:''+v.id,
+							key:''+v.id,
+							label:v.content,
+							otherData:v
+						}))
+						treeData = treeData.map(v => ({
+							...v,
+							children:res.obj.filter(t => t.parentId == v.value).map(t => ({
+								value:''+t.id,
+								key:''+t.id,
+								label:t.content,
+								otherData:t
+							}))
+						}))
+						this.setState({
+							storyTags:fromJS(res.obj),
+							storyTagsByParent:fromJS(treeData)
 						})
 					})
 					//--------------soundEffect
-					fetch(config.api.soundEffect.get(0,25),{
+					fetch(config.api.soundEffectTag.get(0,1000),{
 						headers: {
 							'authorization': sessionStorage.getItem('auth')
-						},
+						}
 					}).then(res => res.json()).then(res => {
-						this.setState({
-							soundEffects:fromJS(res.obj)
+						let soundEffectList = res.obj
+						let soundEffectByTagPromise = []
+
+						soundEffectList.forEach(v => {
+							soundEffectByTagPromise.push(fetch(config.api.soundEffectTag.soundEffect.get(v.id),{
+								headers: {
+									'authorization': sessionStorage.getItem('auth')
+								}
+							}).then(res => res.json()).then(res => {
+								return {
+									soundEffectTag:v,
+									soundEffect:res.obj
+								}
+							}))
+						})
+						Promise.all(soundEffectByTagPromise).then(res => {
+							this.setState({
+								soundEffectByTag:fromJS(res)
+							})
 						})
 					})
 					//--------------backgroundMusic
-					fetch(config.api.backgroundmusic.get(0,25),{
+					fetch(config.api.backgroundmusic.get(0,1000),{
 						headers: {
 							'authorization': sessionStorage.getItem('auth')
 						},
@@ -72,6 +128,57 @@ export default (type) => {
 							backgroundMusicInfo:fromJS(res.obj)
 						})
 					})
+					//--------------storyTagInfo
+					this.props.type=='edit'?fetch(config.api.story.tag.query(this.props.params.id),{
+						headers: {
+							'authorization':sessionStorage.getItem('auth')
+						}
+					}).then(res => res.json()).then(res => {
+						this.setState({
+							storyTagInfo:fromJS(res.obj||{})
+						})
+					}):null
+					//-------------bakcgroundMubsicByTag
+					fetch(config.api.backgroundMusicTag.get(0,10000),{
+						headers:{
+							'authorization':sessionStorage.getItem('auth')
+						}
+					}).then(res => res.json()).then(res => {
+						let backgroundMusicTagList = res.obj
+						let backgroundMusicPromise = []
+						backgroundMusicTagList.forEach(v => {
+							backgroundMusicPromise.push(fetch(config.api.backgroundMusicTag.backgroundMusic.query(v.id),{
+								headers:{
+									'authorization':sessionStorage.getItem('auth')
+								}
+							}).then(res => res.json()).then(res => ({
+								backgroundMusicTag:v,
+								backgroundMusic:res.obj
+							})))
+						})
+						Promise.all(backgroundMusicPromise).then(res => {
+							let treeData = res.map(v => {
+								return {
+									label:v.backgroundMusicTag.content,
+									value:''+v.backgroundMusicTag.id,
+									key:''+v.backgroundMusicTag.id,
+									otherData:v,
+									children:v.backgroundMusic.map(t => ({
+										label:t.description,
+										value:''+t.id,
+										key:''+t.id,
+										otherData:t
+									}))
+								}
+							})
+							this.setState({
+								backgroundMusicByTag:fromJS(treeData)
+							})
+						})
+					})
+				}
+				handleDelete = () => {
+					return this.props.deleteStory(this.props.params.id)
 				}
 				handleCreate(formData){
 					return this.props.addStory(formData)
@@ -80,15 +187,20 @@ export default (type) => {
 					return this.props.editStory(formData,this.props.params.id)
 				}
 				render(){
-					const {storyInfo,soundEffects,backgroundMusics,backgroundMusicInfo} = this.state
+					const {storyInfo,storyTags,storyTagsByParent,storyTagInfo,soundEffects,backgroundMusics,backgroundMusicInfo,soundEffectByTag,backgroundMusicByTag} = this.state
 					const props = {
 						storyInfo,
+						storyTags,
+						storyTagsByParent,
+						storyTagInfo,
 						soundEffects,
 						backgroundMusics,
-						backgroundMusicInfo
+						backgroundMusicInfo,
+						soundEffectByTag,
+						backgroundMusicByTag
 					}
 					return (
-						<CreateEditPanel onSubmit={this.props.type=='create'?this.handleCreate:this.handleEdit} title={this.props.type=='create'?'新建Story':`Story ${storyInfo.get('title')}`} {...props}/>
+						<CreateEditPanel type={this.props.type} onDelete={this.handleDelete} onSubmit={this.props.type=='create'?this.handleCreate:this.handleEdit} title={this.props.type=='create'?'新建Story':`Story ${storyInfo.get('title')}`} {...props}/>
 					)
 				}
 			}
@@ -98,7 +210,8 @@ export default (type) => {
 			function mapDispatchToProps(dispatch){
 				return {
 					addStory:bindActionCreators(addStory,dispatch),
-					editStory:bindActionCreators(editStory,dispatch)
+					editStory:bindActionCreators(editStory,dispatch),
+					deleteStory:bindActionCreators(deleteStory,dispatch)
 				}
 			}
 			return connect(mapStateToProps,mapDispatchToProps)(StoryCreateEditPanel)
@@ -128,7 +241,7 @@ export default (type) => {
 							content:'缺省内容',
 						})
 					})
-					fetch(config.api.storyTag.get(0,25),{
+					fetch(config.api.storyTag.get(0,1000),{
 						headers: {
 							'authorization': sessionStorage.getItem('auth')
 						}
@@ -138,8 +251,14 @@ export default (type) => {
 						})
 					})
 				}
-				handleCreate(formData){
+				handleCreate = (formData) => {
 					return this.props.addStoryTag(formData)
+				}
+				handleEdit = (formData) => {
+					return this.props.editStoryTag(formData,this.props.params.id)
+				}
+				handleDelete = () => {
+					return this.props.deleteStoryTag(this.props.params.id)
 				}
 				render(){
 					const {storyTagInfo,storyTags} = this.state
@@ -148,7 +267,7 @@ export default (type) => {
 						storyTags,
 						type:this.props.type
 					}
-					return <CreateEditPanel onSubmit={this.props.type=='create'?this.handleCreate:null} title={this.props.type=='create'?'新建StoryTag':`StoryTag ${storyTagInfo.get('content')}`} {...props}/>
+					return <CreateEditPanel onDelete={this.handleDelete} onSubmit={this.props.type=='create'?this.handleCreate:this.handleEdit} title={this.props.type=='create'?'新建StoryTag':`StoryTag ${storyTagInfo.get('content')}`} {...props}/>
 				}
 			}
 			function mapStateToProps(state){
@@ -156,7 +275,9 @@ export default (type) => {
 			}
 			function mapDispatchToProps(dispatch){
 				return {
-					addStoryTag:bindActionCreators(addStoryTag,dispatch)
+					addStoryTag:bindActionCreators(addStoryTag,dispatch),
+					editStoryTag:bindActionCreators(editStoryTag,dispatch),
+					deleteStoryTag:bindActionCreators(deleteStoryTag,dispatch)
 				}
 			}
 			return connect(mapStateToProps,mapDispatchToProps)(StoryTagCreateEditPanel)
@@ -167,5 +288,9 @@ export default (type) => {
 		return SoundEffectTagGetDataHOC
 	}else if(type == 'backgroundMusic'){
 		return BackgroundMusicGetDataHOC
+	}else if(type == 'app'){
+		return AppGetDataHOC
+	}else if(type == 'discover'){
+		return DiscoverGetDataHOC
 	}
 }

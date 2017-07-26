@@ -1,9 +1,9 @@
 import React from 'react'
-import {Table,Input,Button} from 'antd'
+import {Table,Input,Button,notification,Popover} from 'antd'
 import TableHeader from '../../components/common/TableHeader'
 import styles from './StoryContainer.scss'
 import EnhanceTable from '../../components/common/EnhanceTable'
-import {getStories,searchStories} from '../../actions/story'
+import {getStories,searchStories,recommendStory,deRecommendStory} from '../../actions/story'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import qs from 'qs'
@@ -58,13 +58,47 @@ class StoryContainer extends React.Component{
 		},{
 			title:'阅读指导',
 			dataIndex:'guide',
-			key:'guide'
+			key:'guide',
+			// width:300,
+			render:(t,r) => {
+				const content = (
+					<p>{t}</p>
+				)
+				return (
+					<Popover content={content}>
+					  <p>{t.length>22?`${t.substring(0,10)}...${t.substring(t.length-10)}`:t}</p>
+					</Popover>
+				)
+			}
+		},{
+			title:'是否为草稿',
+			dataIndex:'draft',
+			key:'draft',
+			render:(t,r) => {
+				return t==1?<span style={{color:'red'}}>是</span>:'否'
+			}
+		},{
+			title:'编辑状态',
+			key:'editingState',
+			width:100,
+			render:(t,r) => {
+				let editingState = ""
+				if(!r.content){
+					editingState = editingState + "无内容,\n"
+				}else if(!r.guide){
+					editingState = editingState + "无阅读指导,\n"
+				}else if(!r.readGuide){
+					editingState = editingState + "无朗读指导"
+				}
+				return editingState
+			}
 		},{
 			title:'操作',
 			key:'operat',
 			render:(r,t) => (
 				<span>
-					<a onClick={this.handleEdit.bind(this,r.id)}>编辑</a>
+					<a onClick={this.handleEdit.bind(this,r.id)}>编辑</a>&nbsp;
+					<a onClick={!r.recommend?this.handleRecommend.bind(this,r.id):this.handleDeRecommend.bind(this,r.id)}>{r.recommend?'取消推荐':'推荐'}</a>
 				</span>
 			)
 		}]
@@ -88,6 +122,18 @@ class StoryContainer extends React.Component{
 	}
 	hanleFilterData(value){
 		this.props.getStories(0,10,value)
+	}
+	handleRecommend = (id) => {
+		recommendStory(id).then(res => {
+			notification.success({message:'推荐成功'})
+			this.props.getStories(this.state.current,this.state.pageSize)
+		})
+	}
+	handleDeRecommend = (id) => {
+		deRecommendStory(id).then(res => {
+			notification.success({message:'取消推荐'})
+			this.props.getStories(this.state.current,this.state.pageSize)
+		})
 	}
 	render(){
 		const {columns,dataSource} = this.getTableData()

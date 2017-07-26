@@ -22,7 +22,9 @@ const BaseContainer = React.createClass({
                             <Menu.Item key="6"><Link to='/backgroundmusics'><Icon type="sound" />背景音乐</Link></Menu.Item>
 							<Menu.Item key="3"><Link to='/storytags'><Icon type="tag" />故事标签</Link></Menu.Item>
 							<Menu.Item key="5"><Link to='/soundeffecttags'><Icon type="notification" />音效标签</Link></Menu.Item>
-                            <Menu.Item key="7"><Link to='/publishapp'><Icon type="sync" />APP管理</Link></Menu.Item>						
+                            <Menu.Item key="7"><Link to='/publishapp'><Icon type="sync" />APP管理</Link></Menu.Item>
+                            <Menu.Item key="8"><Link to='/discover'><Icon type="search" />发现管理</Link></Menu.Item>
+                            <Menu.Item key="9"><Link to='/recommend'><Icon type="search" />推荐管理</Link></Menu.Item>				
 						</Menu>
                     </div>
                     <div className={styles.mainPanel}>

@@ -1,7 +1,7 @@
 import React from 'react'
 import CreateEditHeader from '../../components/common/CreateEditHeader'
 import styles from './CreateEditPanel.scss'
-import {Form,Select,Upload,Input,Button} from 'antd'
+import {Form,Select,Upload,Input,Button,Spin,notification} from 'antd'
 import _ from 'lodash'
 const FormItem = Form.Item
 const Option = Select.Option
@@ -12,7 +12,8 @@ class CreateEditPanel extends React.Component {
 	constructor(){
 		super()
 		this.state = {
-			fileList:[]
+			fileList:[],
+			spin:false
 		}
 		this.handleSubmit = this.handleSubmit.bind(this)
 	}
@@ -27,6 +28,9 @@ class CreateEditPanel extends React.Component {
 		fileReader.readAsDataURL(fileList[0])
 	}
 	handleSubmit(e){
+		this.setState({
+			spin:true
+		})
 		const {getFieldValue} = this.props.form
 		e.preventDefault()
 		let formData = new FormData()
@@ -39,16 +43,21 @@ class CreateEditPanel extends React.Component {
 			formData.append('valid',getFieldValue('valid'))
 		}
 		this.props.onSubmit(formData).then(res => {
-			this.context.router.goBack(0)
+			this.setState({
+				spin:true
+			})
+			notification.success({message:'故事标签上传成功'})
 		})
+		this.context.router.goBack(0)
 	}
 	render(){
 		const {getFieldDecorator} = this.props.form
 		const {storyTags,storyTagInfo} = this.props
+		console.log("-->:",''+(storyTagInfo.get('parentId')||''))
 		return (
 			<div className={styles.container}>
 				<div>
-					<CreateEditHeader title={this.props.title}/>
+					<CreateEditHeader onDelete={this.props.onDelete} title={this.props.title}/>
 				</div>
 				<div>
 					<Form onSubmit={this.handleSubmit}>
@@ -58,9 +67,10 @@ class CreateEditPanel extends React.Component {
 						  label={<span>父标签</span>}
 						>
 						{getFieldDecorator('parent',{
-							initialValue:''+storyTagInfo.get('parentId')
+							initialValue:''+(storyTagInfo.get('parentId')||'0')
 						})(
 							<Select style={{width:240}}>
+							<Option value="0" key="-1" title="无">无</Option>
 							{
 								storyTags.map((v,k)=> (
 									<Option value={''+v.get('id')} title={v.get('content')} key={v.get('id')}>{v.get('content')}</Option>
@@ -101,9 +111,9 @@ class CreateEditPanel extends React.Component {
 							labelCol={{span:2}}
 							wrapperCol={{span:4,offset:2}}
 						>
-						  <Button type="primary" htmlType="submit">
-							保存
-						  </Button>
+						  {this.state.spin?<Spin/>:<Button type="primary" htmlType="submit">
+							{this.state.spin?<Spin size='small'/>:'保存'}
+						  </Button>}
 						</FormItem>
 					</Form>
 				</div>

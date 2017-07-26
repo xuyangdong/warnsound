@@ -3,6 +3,7 @@ import {Router, Route, hashHistory} from 'react-router'
 import BaseContainer from './containers/BaseContainer'
 import App from './App'
 import DraftComponent from './components/DraftComponent'
+import WeixinContainer from './containers/WeixinContainer'
 import MediaTextComponent from './components/MediaTextComponent'
 
 import {LoginControlHOC} from './enhancers/AccessControlContainer'
@@ -22,11 +23,17 @@ import SoundEffectTagCreateEditPanel from './containers/soundeffecttag/CreateEdi
 import BackgroundMusicContainer from './containers/backgroundmusic/BackgroundMusicContainer'
 import BackgroundMusicCreateEditPanel from './containers/backgroundmusic/CreateEditPanel'
 
+import DiscoverContainer from './containers/discover/DiscoverContainer'
+import DiscoverCreateEditPanel from './containers/discover/CreateEditPanel'
+
 import LoginContainer from './containers/LoginContainer'
 
 import DashBoardContainer from './containers/dashboard/DashBoardContainer'
 
 import PublishAppContainer from './containers/publishapp/PublishAppContainer'
+import AppCreateEditPanel from './containers/publishapp/CreateEditPanel'
+
+import RecommendContainer from './containers/recommend/RecommendContainer'
 
 import CreateEditGetDataHOCFactory from './enhancers/CreateEditGetDataHOCFactory'
 const StoryCreateEditGetDataHOC = CreateEditGetDataHOCFactory('story')
@@ -40,6 +47,10 @@ const SoundEffectCreateEditPanelWithData = CreateEditGetDataHOCFactory('soundEff
 const SoundEffectTagCreateEditPanelWithData = CreateEditGetDataHOCFactory('soundEffectTag')(SoundEffectTagCreateEditPanel)
 
 const BackgroundMusicCreateEditPanelWithData = CreateEditGetDataHOCFactory('backgroundMusic')(BackgroundMusicCreateEditPanel)
+
+const AppCreateEditPanelWithData = CreateEditGetDataHOCFactory('app')(AppCreateEditPanel)
+
+const DiscoverCreateEditPanelWithData = CreateEditGetDataHOCFactory('discover')(DiscoverCreateEditPanel)
 
 const routes = (<Router history={hashHistory}>
 		<Route path="/login" component={LoginContainer}/>
@@ -67,9 +78,19 @@ const routes = (<Router history={hashHistory}>
 			<Route path="backgroundmusics/edit/(:id)" component={(props) => <BackgroundMusicCreateEditPanelWithData type='edit' {...props}/>} />
 
 			<Route path="publishapp" component={PublishAppContainer} />
-			<Route path="app" component={App}/>
+			<Route path="publishapp/create" component={(props) => <AppCreateEditPanelWithData type='create' {...props} />}/>
+			<Route path="publishapp/edit/(:id)" component={(props) => <AppCreateEditPanelWithData type='create' {...props} />}/>
 
+			<Route path="discover" component={DiscoverContainer} />
+			<Route path="discover/create" component={(props) => <DiscoverCreateEditPanelWithData type='create' {...props}/>}/>
+			<Route path="discover/edit/(:id)" component={(props) => <DiscoverCreateEditPanelWithData type='edit' {...props}/>}/>
+
+			<Route path="recommend" component={RecommendContainer} />
 		</Route>
+		<Route path="/weixin">
+			<Route path="guanzhu" component={WeixinContainer}/>
+		</Route>
+		<Route path="app" component={App}/>
 		<Route path="draft" component={DraftComponent} />
 		<Route path="media" component={MediaTextComponent}/>
 	</Router>)

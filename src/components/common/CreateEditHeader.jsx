@@ -28,7 +28,11 @@ export default class CreateEditHeader extends React.Component {
 						</span>
 					</Col>):null}
 					{this.props.functionBar.indexOf('delete')>-1?(<Col span={2}>
-						<span className={cx('title','functionLabel')}>
+						<span className={cx('title','functionLabel')} onClick={()=>{
+							this.props.onDelete().then(res => {
+								this.context.router.goBack()
+							})
+						}}>
 						<Icon type="delete" />删除
 						</span>
 					</Col>):null}

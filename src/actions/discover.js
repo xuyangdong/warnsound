@@ -2,15 +2,15 @@ import {actionNames} from 'action-utils'
 import config from '../config'
 import {notification} from 'antd'
 
-export const GET_APPLIST = actionNames('GET_APPLIST')
-export function getAppList(offset,limit){
+export const GET_DISCOVERLIST = actionNames('GET_DISCOVERLIST')
+export function getDiscoverList(offset,limit){
 	return {
-		types:GET_APPLIST,
+		types:GET_DISCOVERLIST,
 		callAPI:() => {
-			return fetch(config.api.app.get((offset-1)*limit,limit),{
+			return fetch(config.api.discover.get((offset-1)*limit,limit),{
 				headers: {
 					'authorization': sessionStorage.getItem('auth')
-				}
+				},
 			}).then(res => res.json()).then(res => {
 				if(res.status!=1){
 					notification.error({message:'服务器出错'})
@@ -21,31 +21,31 @@ export function getAppList(offset,limit){
 	}
 }
 
-export function addApp(formdata){
+export function addDiscover(formData){
 	return dispatch => {
-		return fetch(config.api.app.add,{
-			method: 'post',
-            body: formdata,
+		return fetch(config.api.discover.add,{
 			headers: {
 				'authorization': sessionStorage.getItem('auth')
-			}
+			},
+			method:'POST',
+			body:formData
 		}).then(res => res.json()).then(res => {
-			if(res.status!=1){
-				notification.error({message:'服务器出错'})
-			}
+			// if(res.status!=1){
+			// 	notification.error({message:'服务器出错'})
+			// }
 			return res
 		}).then(res => {
 			return dispatch({
-				type:GET_APPLIST,
+				types:GET_DISCOVERLIST,
 				callAPI:() => {
-					return fetch(config.api.app.get(0,10),{
+					return fetch(config.api.discover.get(0,10),{
 						headers: {
 							'authorization': sessionStorage.getItem('auth')
-						}
+						},
 					}).then(res => res.json()).then(res => {
-						// if(res.status!=1){
-						// 	notification.error({message:'服务器出错'})
-						// }
+						if(res.status!=1){
+							notification.error({message:'服务器出错'})
+						}
 						return res
 					})
 				}
@@ -54,28 +54,28 @@ export function addApp(formdata){
 	}
 }
 
-export function updateApp(formdata,id){
-	formdata.append('appId',id)
+export function editDiscover(formData,id){
+	formData.append('id',id)
 	return dispatch => {
-		return fetch(config.api.app.edit,{
-			method: 'post',
-            body: formdata,
+		return fetch(config.api.discover.edit,{
 			headers: {
 				'authorization': sessionStorage.getItem('auth')
-			}
+			},
+			method:'POST',
+			body:formData
 		}).then(res => res.json()).then(res => {
-			if(res.status!=1){
-				notification.error({message:'服务器出错'})
-			}
+			// if(res.status!=1){
+			// 	notification.error({message:'服务器出错'})
+			// }
 			return res
 		}).then(res => {
 			return dispatch({
-				type:GET_APPLIST,
+				types:GET_DISCOVERLIST,
 				callAPI:() => {
-					return fetch(config.api.app.get(0,10),{
+					return fetch(config.api.discover.get(0,10),{
 						headers: {
 							'authorization': sessionStorage.getItem('auth')
-						}
+						},
 					}).then(res => res.json()).then(res => {
 						// if(res.status!=1){
 						// 	notification.error({message:'服务器出错'})

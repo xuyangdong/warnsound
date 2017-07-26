@@ -23,4 +23,11 @@
 			flex-grow: 1;
 		}
 	}
+	:local(.displayPart){
+		width: 40%;
+		flex-shrink: 0;
+		border:1px #efefef solid;
+		overflow: auto;
+		border-radius: $primary-border-radius;
+	}
 }

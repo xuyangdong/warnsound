@@ -5,10 +5,16 @@
 	:local(.description){
 		color:rgb(220, 165, 25);
 	}
+	:local(.item){
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+	}
 }
 
 //plyr
 :global(.plyr--audio){
+	display: none;
 	:global(.plyr__controls){
 		display: none;
 	}

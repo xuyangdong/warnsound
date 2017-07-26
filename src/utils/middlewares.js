@@ -30,10 +30,11 @@ export function callAPIMiddleware({dispatch, getState}) {
             failureType] = types
         dispatch(_.extend({}, payload, {type: requestType}))
 
-        return callAPI().then(response => dispatch(_.extend({}, payload, {
+        return callAPI(getState).then(response => dispatch(_.extend({}, payload, {
             response: response.obj,
             otherData: {
-                totalSize: response.count
+                totalSize: response.count,
+                ..._.omit(response,['obj','count'])
             },
             type: successType
         })), error => dispatch(_.extend({}, payload, {error, type: failureType})))

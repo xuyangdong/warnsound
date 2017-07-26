@@ -110,7 +110,7 @@
   },
   "proxy": {
     "/": {
-      "target": "http://120.27.219.173",
+      "target": "http://120.27.219.173/",
       "changeOrigin": true
     }
   }

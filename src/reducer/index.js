@@ -8,6 +8,8 @@ import soundEffect from './soundEffect'
 import soundEffectTag from './soundEffectTag'
 import backgroundMusic from './backgroundMusic.js'
 import app from './app'
+import discover from './discover'
+import recommend from './recommend'
 
 const reducer = combineReducers({
 	user,
@@ -16,7 +18,9 @@ const reducer = combineReducers({
 	soundEffect,
 	soundEffectTag,
 	backgroundMusic,
-	app
+	app,
+	discover,
+	recommend
 	// auth,
 	// alliance,
 	// affair,
