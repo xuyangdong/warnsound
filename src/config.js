@@ -110,8 +110,8 @@ const config = _.extend({
             add: `${baseURL}/manage/saveDiscovery`,
             edit: `${baseURL}/manage/updateDiscovery`
         },
-        recomend: {
-            get: (offset, limit) => ''
+        recommend: {
+            get:(offset, limit) => `${baseURL}/manage/getRecommendStoryListByPage?offset=${offset}&limit=${limit}`,
         }
     }
 })

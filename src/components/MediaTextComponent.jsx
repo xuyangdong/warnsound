@@ -41,7 +41,7 @@ export default class MediaTextComponent extends React.Component{
 			<div className={styles.item}>
 				<div>
 					<Icon type={this.state.playing?"play-circle-o":"play-circle"} onClick={this.handlePlay}/>
-					<span>{this.props.block.getText()}</span>
+					<span>{this.props.block.getText().length>15?this.props.block.getText().substring(0,15)+'...':this.props.block.getText()}</span>
 				</div>
 				<div>
 					<span className={styles.description}>[{this.props.block.getData().get('soundEffectName')}]</span>

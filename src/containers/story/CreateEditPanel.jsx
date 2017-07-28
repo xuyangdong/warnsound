@@ -201,6 +201,13 @@ class CreateEditPanel extends React.Component {
 					<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:4}}
+					  label={<span>故事角色</span>}
+					>
+					{}
+					</FormItem>
+					<FormItem
+					  labelCol={{span:2}}
+					  wrapperCol={{span:4}}
 					  label={<span>故事标签</span>}
 					>
 					{this.state.storyTags.map((v,k) => {
@@ -222,7 +229,7 @@ class CreateEditPanel extends React.Component {
 							storyTags:_.concat(this.state.storyTags,value)
 						})
 					}}/>*/}
-					<Select placeholder={'一级标签'} style={{width:240}} value={this.state.firstTag} onSelect={(value)=>{
+					<Select placeholder={'一级标签'} style={{width:240,marginBottom:10}} value={this.state.firstTag} onSelect={(value)=>{
 						this.setState({
 							firstTag:value
 						})
@@ -231,6 +238,7 @@ class CreateEditPanel extends React.Component {
 							return (<Option title={v.get('label')} value={v.get('value')} key={v.get('value')}>{v.get('label')}</Option>)
 						})}
 					</Select>
+
 					<Select placeholder={'二级标签'} style={{width:240}} onSelect={(value)=>{
 						if(this.props.type=='edit'){
 							this.addStoryTag(storyInfo.get('id'),value)

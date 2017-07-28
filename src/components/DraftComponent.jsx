@@ -230,7 +230,7 @@ export default class DraftComponent extends React.Component {
         const blockMap = contentState.getBlockMap()
         return (blockMap.map((v,k) => {
             if(v.get('data').isEmpty()||v.get('data').get('soundEffectUrl')===''){
-                return (<div key={k}>&nbsp;</div>)
+                return (null)
             }else{
                 return <MediaTextComponent onDelete={this.handleClearSoundEffectByBlock} key={k} block={v}/>
             }
