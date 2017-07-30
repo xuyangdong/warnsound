@@ -85,7 +85,7 @@ class CreateEditPanel extends React.Component {
 			this.setState({
 				spin:false
 			})
-			notification.success({message:'故事上传成功'})
+			
 		})
 		this.context.router.goBack(0)
 	}

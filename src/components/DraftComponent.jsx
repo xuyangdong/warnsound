@@ -1,7 +1,7 @@
 import React from 'react'
 import { Editor } from 'draft-js'
 import styles from './DraftComponent.scss'
-import { Button, Select,TreeSelect } from 'antd'
+import { Button, Select,TreeSelect, Cascader} from 'antd'
 import { ContentState, EditorState, ContentBlock, Modifier, CharacterMetadata, DefaultDraftBlockRenderMap, AtomicBlockUtils, convertFromHTML, convertFromRaw} from 'draft-js'
 import { Map, List } from 'immutable'
 import 'draft-js/dist/Draft.css'
@@ -12,8 +12,31 @@ import {fromJS} from 'immutable'
 const MAX_SENTENCE = 10
 const separator = /[,|.|;|，|。|；]/
 const Option = Select.Option
-
+class TreeData {
+    constructor(treeData){
+        this.treeData = treeData
+    }
+    findPath(value){
+		let path = []
+        function walk(treeData,tempPath = []){
+            if(treeData){
+				for(let treeNode of treeData){
+					if(treeNode.value == value){
+						path = path.concat(tempPath,treeNode)
+					}else{
+						tempPath.push(treeNode)
+						walk(treeNode.children,tempPath)
+						tempPath.pop()
+					}
+				}
+			}
+		}
+		walk(this.treeData,[])
+		return path
+    }
+}
 export default class DraftComponent extends React.Component {
+    _treeData = []
     constructor( ) {
         super( )
         this.state = {
@@ -111,10 +134,11 @@ export default class DraftComponent extends React.Component {
         })
     }
     handleSelectSoundEffect( value, node ) {
+
 		let selectState = this.state.editorState.getSelection();
 		let contentState = this.state.editorState.getCurrentContent();
         this.setState({
-            soundEffectId:value
+            soundEffectId:value[value.length-1]
         })
         let newContentState = null;
         if(value=='-1'){
@@ -126,11 +150,11 @@ export default class DraftComponent extends React.Component {
             // newContentState = Modifier.setBlockType(newContentState,selectState,'unstyled')
         }else{
             newContentState = Modifier.setBlockData(contentState,selectState,new Map({
-    			soundEffectId:value,
+    			soundEffectId:value[value.length-1],
     			// soundEffectUrl:this.props.soundEffects.find(v => v.get('id')==value).get('url'),
                 soundEffectUrl:this.props.soundEffectByTag.reduce((p,c) => {
                     let soundEffect = c.get('soundEffect')
-                    let result = soundEffect.find(v => v.get('id')==value)
+                    let result = soundEffect.find(v => v.get('id')==value[value.length-1])
                     if(result){
                         p = result.get('url')
                     }
@@ -139,7 +163,7 @@ export default class DraftComponent extends React.Component {
                 // soundEffectName:this.props.soundEffects.find(v => v.get('id')==value).get('description')
                 soundEffectName:this.props.soundEffectByTag.reduce((p,c) => {
                     let soundEffect = c.get('soundEffect')
-                    let result = soundEffect.find(v => v.get('id')==value)
+                    let result = soundEffect.find(v => v.get('id')==value[value.length-1])
                     if(result){
                         p = result.get('description')
                     }
@@ -256,20 +280,24 @@ export default class DraftComponent extends React.Component {
         treeData = _.concat([{
             label:'无音效',
             value:'-1',
-            key:'-1'
+            key:'-1',
         }],treeData)
+        this._treeData = new TreeData(treeData)
         return (
-            <TreeSelect
-                style={{ width: 300 }}
-                defaultValue='-1'
-                value={this.state.soundEffectId||'-1'}
-                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                treeData={treeData}
-                placeholder="Please select"
-                onSelect={this
-                    .handleSelectSoundEffect
-                    .bind( this )}
-              />
+            <Cascader options={treeData} style={{ width: 300 }} expandTrigger="hover"
+            value={this._treeData.findPath(this.state.soundEffectId||'-1').map(v => v.value)}
+            onChange={this.handleSelectSoundEffect.bind(this)} />
+            // <TreeSelect
+            //     style={{ width: 300 }}
+            //     defaultValue='-1'
+            //     value={this.state.soundEffectId||'-1'}
+            //     dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+            //     treeData={treeData}
+            //     placeholder="Please select"
+            //     onSelect={this
+            //         .handleSelectSoundEffect
+            //         .bind( this )}
+            //   />
         )
     }
     render( ) {

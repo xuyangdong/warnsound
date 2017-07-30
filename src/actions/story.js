@@ -23,8 +23,8 @@ export function getStories(offset, limit, query = {
             }).then(res => {
                 return res
             }).then(res => res.json()).then(res => {
-				if(res.status!=1){
-					notification.error({message:'服务器出错'})
+				if(res.status==2){
+					notification.error({message:res.errorMes})
 				}
                 res.offset = offset
                 res.limit = limit
@@ -60,8 +60,8 @@ export function addStory(formData) {
                             'authorization': sessionStorage.getItem('auth')
                         }
                     }).then(res => res.json()).then(res => {
-        				if(res.status!=1){
-        					notification.error({message:'服务器出错'})
+        				if(res.status==2){
+        					notification.error({message:res.errorMes})
         				}
         				return res
         			})
@@ -80,9 +80,9 @@ export function editStory(formData, id) {
                 'authorization': sessionStorage.getItem('auth')
             }
         }).then(res => res.json()).then(res => {
-			// if(res.status!=1){
-			// 	notification.error({message:'服务器出错'})
-			// }
+			if(res.status==2){
+				notification.error({message:res.errorMes})
+			}
 			return res
 		}).then(res => {
             dispatch({
@@ -96,8 +96,8 @@ export function editStory(formData, id) {
                             'authorization': sessionStorage.getItem('auth')
                         }
                     }).then(res => res.json()).then(res => {
-        				if(res.status!=1){
-        					notification.error({message:'服务器出错'})
+        				if(res.status==2){
+        					notification.error({message:res.errorMes})
         				}
                         res.offset = offset
                         res.limit = limit
@@ -117,6 +117,9 @@ export function deleteStory(id){
                 'authorization': sessionStorage.getItem('auth')
             }
         }).then(res => {
+            if(res.status==2){
+                notification.error({message:res.errorMes})
+            }
             notification.success({message:'删除成功'})
             return res
         }).then(res => {
@@ -128,8 +131,8 @@ export function deleteStory(id){
                             'authorization': sessionStorage.getItem('auth')
                         }
                     }).then(res => res.json()).then(res => {
-        				if(res.status!=1){
-        					notification.error({message:'服务器出错'})
+        				if(res.status==2){
+        					notification.error({message:res.errorMes})
         				}
         				return res
         			})
