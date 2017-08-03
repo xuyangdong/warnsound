@@ -4,6 +4,7 @@ import CreateEditHeader from '../../components/common/CreateEditHeader'
 import {Form,Input,Upload,Button,Icon,Select,Spin,notification} from 'antd'
 import _ from 'lodash'
 import PropTypes from 'prop-types'
+import UploadAvatar from '../../components/common/UploadAvatar'
 const FormItem = Form.Item
 const Option = Select.Option
 
@@ -18,6 +19,17 @@ class CreateEditPanel extends React.Component {
 			spin:false
 		}
 		this.handleSubmit = this.handleSubmit.bind(this)
+	}
+	componentWillReceiveProps(nextProps){
+		if(!nextProps.soundEffectInfo.isEmpty()
+		&&this.props.soundEffectInfo.get('coverUrl')!=nextProps.soundEffectInfo.get('coverUrl')){
+			this.setState({
+				coverFileList:nextProps.soundEffectInfo.get('coverUrl')?[_.extends(new File([],''),{
+					uid:-1,
+					url:nextProps.soundEffectInfo.get('coverUrl')
+				})]:[]
+			})
+		}
 	}
 	handleSubmit(e){
 		e.preventDefault()
@@ -43,7 +55,6 @@ class CreateEditPanel extends React.Component {
 	render(){
 		const {getFieldDecorator} = this.props.form
 		const {soundEffectInfo,tagList,soundEffectTag} = this.props
-		console.log("--->:",soundEffectTag.toJS())
 		return (
 			<div className={styles.container}>
 				<div>
@@ -103,6 +114,21 @@ class CreateEditPanel extends React.Component {
 						 <Icon type="upload" /> Upload
 					   </Button>
 					 </Upload>
+					</FormItem>
+					<FormItem
+						labelCol={{span:2}}
+				  		wrapperCol={{span:4}}
+				  		label={<span>音效图片</span>}
+					>
+						<UploadAvatar fileList={this.state.fileList} onChange={(file,fileList) => {
+							this.setState({
+								coverFileList:fileList
+							})
+						}} onRemove={()=>{
+							this.setState({
+								coverFileList:[]
+							})
+						}}/>
 					</FormItem>
 					<FormItem
 						labelCol={{span:2}}

@@ -1,0 +1,20 @@
+:local(.header){
+	display: flex;
+	justify-content: flex-start;
+	flex-direction: column;
+	align-items: flex-start;
+	:local(.firstField){
+		width:50%;
+		display:flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 10px;
+	}
+	:local(.secondField){
+		width:50%;
+		display:flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 10px;
+	}
+}

@@ -112,6 +112,9 @@ const config = _.extend({
         },
         recommend: {
             get:(offset, limit) => `${baseURL}/manage/getRecommendStoryListByPage?offset=${offset}&limit=${limit}`,
+        },
+        logo: {
+            get:(page, pageSize) => `${baseURL}/manage/getAllBadgeTypeByPage?page=${page}&pageSize=${pageSize}`
         }
     }
 })

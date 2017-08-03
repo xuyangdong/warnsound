@@ -5,6 +5,7 @@ import {fromJS} from 'immutable'
 import {Form,Input,Select,Checkbox,Upload,Button,Icon,Row,Col,Spin,Tag,notification,TreeSelect} from 'antd'
 import EnhanceInput from '../../components/common/EnhanceInput'
 import config from '../../config'
+import AddStoryRoleModal from '../../components/story/AddStoryRoleModal'
 
 import _ from 'lodash'
 import DraftComponent from '../../components/DraftComponent'
@@ -35,7 +36,10 @@ class CreateEditPanel extends React.Component {
 		this.handleSaveAsDraft = this.handleSaveAsDraft.bind(this)
 	}
 	componentWillReceiveProps(nextProps){
-		if(!nextProps.storyInfo.isEmpty()){
+		if(!nextProps.storyInfo.isEmpty()
+		&&this.props.storyInfo.get('coverUrl')!=nextProps.storyInfo.get('coverUrl')
+		&&this.props.storyInfo.get('preCoverUrl')!=nextProps.storyInfo.get('preCoverUrl')
+		&&this.props.storyInfo.get('backgroundUrl')!=nextProps.storyInfo.get('backgroundUrl')){
 			this.setState({
 				coverFileList:nextProps.storyInfo.get('coverUrl')?[_.extend(new File([],''),{
 					uid:-1,
@@ -85,7 +89,7 @@ class CreateEditPanel extends React.Component {
 			this.setState({
 				spin:false
 			})
-			
+
 		})
 		this.context.router.goBack(0)
 	}
@@ -144,6 +148,15 @@ class CreateEditPanel extends React.Component {
 			notification.success({message:'删除成功'})
 		})
 	}
+	renderStoryRole(){
+		return (
+			<Button size='small' type='primary' onClick={()=>{
+				this.setState({
+					addStoryRoleDisplay:true
+				})
+			}}>添加故事角色</Button>
+		)
+	}
 	render(){
 		const {storyInfo,storyTags,soundEffects,backgroundMusics,soundEffectByTag} = this.props
 		const { getFieldDecorator } = this.props.form;
@@ -198,13 +211,7 @@ class CreateEditPanel extends React.Component {
 						this.props.type=='edit'?<Input/>:<EnhanceInput />
 					)}
 					</FormItem>
-					<FormItem
-					  labelCol={{span:2}}
-					  wrapperCol={{span:4}}
-					  label={<span>故事角色</span>}
-					>
-					{}
-					</FormItem>
+
 					<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:4}}
@@ -401,6 +408,13 @@ class CreateEditPanel extends React.Component {
 						<DraftComponent ref='draft' soundEffectByTag={soundEffectByTag} soundEffects={soundEffects} value={storyInfo.get('content')}/>
 					</FormItem>
 					<FormItem
+					  labelCol={{span:2}}
+					  wrapperCol={{span:4}}
+					  label={<span>故事角色</span>}
+					>
+					{this.renderStoryRole()}
+					</FormItem>
+					<FormItem
 						labelCol={{span:2}}
 						wrapperCol={{span:4,offset:2}}
 					>
@@ -414,6 +428,14 @@ class CreateEditPanel extends React.Component {
 				  </ButtonGroup>}
 					</FormItem>
 				</Form>
+				{this.state.addStoryRoleDisplay?<AddStoryRoleModal
+					onOk={()=>{}}
+					onCancel={()=>{this.setState({
+						addStoryRoleDisplay:false
+					})}}
+					storyRoleInfo={this.state.storyRoleInfo}
+					content={this.refs.draft.getData()}
+					 />:null}
 				</div>
 			</div>
 		)

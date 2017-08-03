@@ -35,6 +35,8 @@ import AppCreateEditPanel from './containers/publishapp/CreateEditPanel'
 
 import RecommendContainer from './containers/recommend/RecommendContainer'
 
+import LogoContainer from './containers/logo/LogoContainer'
+
 import CreateEditGetDataHOCFactory from './enhancers/CreateEditGetDataHOCFactory'
 const StoryCreateEditGetDataHOC = CreateEditGetDataHOCFactory('story')
 const StroyCreateEditPanelWithData = StoryCreateEditGetDataHOC(StoryCreateEditPanel)
@@ -86,6 +88,8 @@ const routes = (<Router history={hashHistory}>
 			<Route path="discover/edit/(:id)" component={(props) => <DiscoverCreateEditPanelWithData type='edit' {...props}/>}/>
 
 			<Route path="recommend" component={RecommendContainer} />
+
+			<Route path="logo" component={LogoContainer} />
 		</Route>
 		<Route path="/weixin">
 			<Route path="guanzhu" component={WeixinContainer}/>
