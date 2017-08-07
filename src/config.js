@@ -46,6 +46,9 @@ const config = _.extend({
             },
             cover:{
                 delete:`${baseURL}/manage/deleteCover`
+            },
+            role: {
+                query:(id) => `${baseURL}/manage/getStoryRoleListByStoryId?storyId=${id}`
             }
         },
         storyTag: {
@@ -114,7 +117,12 @@ const config = _.extend({
             get:(offset, limit) => `${baseURL}/manage/getRecommendStoryListByPage?offset=${offset}&limit=${limit}`,
         },
         logo: {
-            get:(page, pageSize) => `${baseURL}/manage/getAllBadgeTypeByPage?page=${page}&pageSize=${pageSize}`
+            get:(page, pageSize) => `${baseURL}/manage/getBadgeTypeListByPage?page=${page}&pageSize=${pageSize}`
+        },
+        role: {
+            edit:(id) => `${baseURL}/manage/storyRoles/${id}`,
+            audio:`${baseURL}/manage/uploadAudio`,
+            icon:`${baseURL}/manage/uploadIcon`
         }
     }
 })

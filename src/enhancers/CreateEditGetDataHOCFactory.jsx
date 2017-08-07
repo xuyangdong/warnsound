@@ -10,6 +10,7 @@ import SoundEffectTagGetDataHOC from './SoundEffectTagGetDataHOC'
 import BackgroundMusicGetDataHOC from './BackgroundMusicGetDataHOC'
 import AppGetDataHOC from './APPGetDataHOC'
 import DiscoverGetDataHOC from './DiscoverGetDataHOC'
+import IndividualityGetDataHOC from './IndividualityGetDataHOC'
 
 function buildTree(listData,parentId=0){
 	let result = fromJS([])
@@ -32,7 +33,8 @@ export default (type) => {
 						backgroundMusicInfo:fromJS({}),
 						storyTagInfo:fromJS({}),
 						soundEffectByTag:fromJS([]),
-						backgroundMusicByTag:fromJS([])
+						backgroundMusicByTag:fromJS([]),
+						storyRoleInfo:fromJS({})
 					}
 					this.handleCreate = this.handleCreate.bind(this)
 					this.handleEdit = this.handleEdit.bind(this)
@@ -176,6 +178,20 @@ export default (type) => {
 							})
 						})
 					})
+
+					//-------------storyRoleInfo
+					this.props.type=='edit'?fetch(config.api.story.role.query(this.props.params.id),{
+						headers:{
+							'authorization':sessionStorage.getItem('auth')
+						}
+					}).then(res => res.json()).then(res => {
+						this.setState({
+							storyRoleInfo:fromJS({
+								...res.obj[0],
+								extra:res.obj[0]?JSON.parse(res.obj[0].extra||'[]'):[]
+							})
+						})
+					}):null
 				}
 				handleDelete = () => {
 					return this.props.deleteStory(this.props.params.id)
@@ -187,7 +203,7 @@ export default (type) => {
 					return this.props.editStory(formData,this.props.params.id)
 				}
 				render(){
-					const {storyInfo,storyTags,storyTagsByParent,storyTagInfo,soundEffects,backgroundMusics,backgroundMusicInfo,soundEffectByTag,backgroundMusicByTag} = this.state
+					const {storyInfo,storyTags,storyTagsByParent,storyTagInfo,soundEffects,backgroundMusics,backgroundMusicInfo,soundEffectByTag,backgroundMusicByTag,storyRoleInfo} = this.state
 					const props = {
 						storyInfo,
 						storyTags,
@@ -197,7 +213,8 @@ export default (type) => {
 						backgroundMusics,
 						backgroundMusicInfo,
 						soundEffectByTag,
-						backgroundMusicByTag
+						backgroundMusicByTag,
+						storyRoleInfo
 					}
 					return (
 						<CreateEditPanel type={this.props.type} onDelete={this.handleDelete} onSubmit={this.props.type=='create'?this.handleCreate:this.handleEdit} title={this.props.type=='create'?'新建Story':`Story ${storyInfo.get('title')}`} {...props}/>
@@ -292,5 +309,7 @@ export default (type) => {
 		return AppGetDataHOC
 	}else if(type == 'discover'){
 		return DiscoverGetDataHOC
+	}else if(type == 'individuality'){
+		return IndividualityGetDataHOC
 	}
 }

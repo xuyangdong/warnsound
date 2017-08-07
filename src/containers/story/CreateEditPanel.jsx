@@ -55,6 +55,11 @@ class CreateEditPanel extends React.Component {
 				})]:[]
 			})
 		}
+		if(!nextProps.storyRoleInfo.isEmpty()){
+			this.setState({
+				storyRoleInfo:nextProps.storyRoleInfo
+			})
+		}
 		if(!nextProps.storyTagInfo.isEmpty()){
 			this.setState({
 				storyTags:nextProps.storyTagInfo.map(v => v.get('id')).toJS()
@@ -85,6 +90,13 @@ class CreateEditPanel extends React.Component {
 		formData.append('guideSoundFile',this.state.guideSoundFileList[0]||new File([],''))
 		formData.append('price',getFieldValue('price')||0)
 		formData.append('defaultBackGroundMusicId',getFieldValue('backgroundMusic'))
+		if(this.props.type=='create'){
+			const roleData = this.roleData
+			formData.append('roleName',roleData.roleName)
+			formData.append('roleIconFile',roleData.roleIconFile)
+			formData.append('roleAudioFile',roleData.roleAudioFile)
+			formData.append('roleExtra',JSON.stringify(roleData.roleExtra))
+		}
 		this.props.onSubmit(formData).then(res => {
 			this.setState({
 				spin:false
@@ -146,6 +158,55 @@ class CreateEditPanel extends React.Component {
 			body:formData
 		}).then(res => res).then(res => {
 			notification.success({message:'删除成功'})
+		})
+	}
+	handleEditStoryRole = roleData => {
+		let audioForm = new FormData()
+		audioForm.append('audio',roleData.roleAudioFile)
+		let iconForm = new FormData()
+		iconForm.append('icon',roleData.roleIconFile)
+		const uploadPromise = [roleData.roleAudioFile.size>0?fetch(config.api.role.audio,{
+			method:'POST',
+			headers:{
+				'authorization':sessionStorage.getItem('auth'),
+			},
+			body:audioForm
+		}).then(res => res.json()):null,
+		roleData.roleIconFile.size>0?fetch(config.api.role.icon,{
+			method:'POST',
+			headers:{
+				'authorization':sessionStorage.getItem('auth'),
+			},
+			body:iconForm
+		}).then(res => res.json()):null]
+		Promise.all(uploadPromise).then(res => {
+			fetch(config.api.role.edit(this.props.storyRoleInfo.get('id')),{
+				method:'PUT',
+				headers:{
+					'authorization':sessionStorage.getItem('auth'),
+					'content-type':'application/json'
+				},
+				body:JSON.stringify({
+					id:this.props.storyRoleInfo.get('id'),
+					storyId:this.props.storyInfo.get('id'),
+					name:roleData.roleName,
+					audio:roleData.roleAudioFile.size>0?res[0].obj.url:roleData.roleAudioFile.url,
+					icon:roleData.roleIconFile.size>0?res[1].obj.url:roleData.roleIconFile.url,
+					extra:JSON.stringify(roleData.roleExtra),
+				})
+			}).then(res => {
+				return res.json()
+			}).then(res => {
+				if(res.status == 2){
+					notification.error({
+						message:res.errorMes
+					})
+				}else{
+					notification.success({
+						message:'角色修改成功'
+					})
+				}
+			})
 		})
 	}
 	renderStoryRole(){
@@ -429,11 +490,22 @@ class CreateEditPanel extends React.Component {
 					</FormItem>
 				</Form>
 				{this.state.addStoryRoleDisplay?<AddStoryRoleModal
-					onOk={()=>{}}
+					ref='addStoryRole'
+					onOk={(roleData)=>{
+						console.log(roleData)
+						if(this.props.type=='create'){
+							this.roleData = roleData
+						}else{
+							this.handleEditStoryRole(roleData)
+						}
+						this.setState({
+							addStoryRoleDisplay:false
+						})
+					}}
 					onCancel={()=>{this.setState({
 						addStoryRoleDisplay:false
 					})}}
-					storyRoleInfo={this.state.storyRoleInfo}
+					storyRoleInfo={this.props.storyRoleInfo}
 					content={this.refs.draft.getData()}
 					 />:null}
 				</div>

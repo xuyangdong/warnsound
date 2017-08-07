@@ -44,12 +44,30 @@ export default class DraftComponent extends React.Component {
             beautyEditorState: EditorState.createEmpty( )
         }
     }
+    preProcess(rawContentArray){
+        let contentArray = []
+        for(let content of rawContentArray){
+            let contentSoundEffectId = content.soundEffectId
+            let tempArray = content.content.split('*')
+            for(let temp of tempArray){
+                contentArray.push({
+                    content:temp,
+                    soundEffectId:contentSoundEffectId
+                })
+            }
+            contentArray.push({
+                content:'',
+            })
+        }
+        return contentArray
+    }
     componentWillReceiveProps( nextProps ) {
 
         if ( nextProps.value && !nextProps.soundEffectByTag.isEmpty()) {
-            let contentState = ContentState.createFromText(JSON.parse( nextProps.value || '[]' ).map( v => v.content ).join( '\n' ))
+            let contentState = ContentState.createFromText(this.preProcess(JSON.parse( nextProps.value || '[]' )).map( v => v.content ).join( '\n' ))
             let contentArray = JSON.parse( nextProps.value || '[]' )
             let blockArray = contentState.getBlocksAsArray()
+            contentArray = this.preProcess(contentArray)
             for(let index in contentArray){
                 if(contentArray[index].soundEffectId){
                     let value = contentArray[index].soundEffectId
@@ -192,14 +210,38 @@ export default class DraftComponent extends React.Component {
 			element:'div'
 		}
 	}))
+    prePostProcess(rawContentArray){
+        let result = []
+        let contentBlock = {}
+        rawContentArray.forEach((v,k) => {
+            if(v.content){
+                if(contentBlock.content){
+                    contentBlock.content = contentBlock.content + '*' + v.content
+                }else{
+                    contentBlock.content = v.content
+                }
+                if(v.soundEffectId){
+                    contentBlock.soundEffectId = v.soundEffectId
+                }
+            }else{
+                result.push(contentBlock)
+                contentBlock = {}
+            }
+        })
+        return result.map((v,k) => ({
+            ...v,
+            key: k
+        }))
+    }
 	getData(){
 		let contentState = this.state.editorState.getCurrentContent()
 		let blockArray = contentState.getBlocksAsArray()
-		return blockArray.map((v,k) => ({
+        let rawContentArray = blockArray.map((v,k) => ({
 			order:k,
 			content:v.getText(),
 			soundEffectId:v.getData().get('soundEffectId')
 		}))
+        return this.prePostProcess(rawContentArray)
 	}
     handleClearSoundEffect = () => {
         const {editorState} = this.state
@@ -253,6 +295,7 @@ export default class DraftComponent extends React.Component {
         const contentState = editorState.getCurrentContent()
         const blockMap = contentState.getBlockMap()
         return (blockMap.map((v,k) => {
+            console.log(v.toJS())
             if(v.get('data').isEmpty()||v.get('data').get('soundEffectUrl')===''){
                 return (null)
             }else{

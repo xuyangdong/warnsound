@@ -1,0 +1,20 @@
+@import '~mixins.scss';
+
+:local(.container){
+	@include mainPanelContainer;
+	position: relative;
+	:local(.itemContent){
+		display: flex;
+		justify-content: space-between;
+	}
+	:local(.dynamicDeleteButton){
+		cursor: pointer;
+		top: 4px;
+		font-size: 24px;
+		color: #999;
+		transition: all .3s;
+		position: absolute;
+		top: 0;
+		right: -24px;
+	}
+}

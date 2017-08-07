@@ -4,23 +4,22 @@ import _ from 'lodash'
 import {notification} from 'antd'
 
 export const GET_LOGOS = actionNames('GET_LOGOS')
-export function getLogo(){
+export function getLogo(page,pageSize){
 	return {
         types: GET_LOGOS,
         callAPI: (getState) => {
-            return fetch(config.api.story.get((offset-1)*limit, limit, query), {
-                headers: {
+            return fetch(config.api.logo.get(page,pageSize),{
+				headers: {
                     'authorization': sessionStorage.getItem('auth')
                 },
-                redirect: 'manual'
-            }).then(res => {
-                return res
-            }).then(res => res.json()).then(res => {
-				if(res.status==2){
-					notification.error({message:res.errorMes})
+			}).then(res => {
+				return res
+			}).then(res => res.json()).then(res => {
+				if(res.status == 2){
+					notification.error({message: res.error})
 				}
-                res.offset = offset
-                res.limit = limit
+				res.offset = page,
+				res.limit = pageSize
 				return res
 			})
         }

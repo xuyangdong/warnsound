@@ -1,11 +1,26 @@
 import React from 'react'
 import {Upload,Icon} from 'antd'
+import _ from 'lodash'
 
 export default class UploadAvatar extends React.Component {
 	constructor(){
 		super()
 		this.state = {
 			fileList:[]
+		}
+	}
+	componentDidMount(){
+		if(this.props.value){
+			this.setState({
+				fileList:this.props.value
+			})
+		}
+	}
+	componentWillReceiveProps(nextProps){
+		if(nextProps.value){
+			this.setState({
+				fileList:nextProps.value
+			})
 		}
 	}
 	handlePicDisplay = (fileList) => {
@@ -30,6 +45,7 @@ export default class UploadAvatar extends React.Component {
 	    );
 		return (
 		<Upload
+		  key='avatar'
           listType="picture-card"
           fileList={this.state.fileList}
 		  beforeUpload={(file,fileList)=>{

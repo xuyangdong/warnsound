@@ -37,6 +37,8 @@ import RecommendContainer from './containers/recommend/RecommendContainer'
 
 import LogoContainer from './containers/logo/LogoContainer'
 
+import IndividualCreateEditPanel from './containers/individuality/CreateEditPanel'
+
 import CreateEditGetDataHOCFactory from './enhancers/CreateEditGetDataHOCFactory'
 const StoryCreateEditGetDataHOC = CreateEditGetDataHOCFactory('story')
 const StroyCreateEditPanelWithData = StoryCreateEditGetDataHOC(StoryCreateEditPanel)
@@ -53,6 +55,8 @@ const BackgroundMusicCreateEditPanelWithData = CreateEditGetDataHOCFactory('back
 const AppCreateEditPanelWithData = CreateEditGetDataHOCFactory('app')(AppCreateEditPanel)
 
 const DiscoverCreateEditPanelWithData = CreateEditGetDataHOCFactory('discover')(DiscoverCreateEditPanel)
+
+const IndividualCreateEditPanelWithData = CreateEditGetDataHOCFactory('individuality')(IndividualCreateEditPanel)
 
 const routes = (<Router history={hashHistory}>
 		<Route path="/login" component={LoginContainer}/>
@@ -90,6 +94,11 @@ const routes = (<Router history={hashHistory}>
 			<Route path="recommend" component={RecommendContainer} />
 
 			<Route path="logo" component={LogoContainer} />
+			<Route path="logo/create" component={null} />
+			<Route path="logo/edit" component={null} />
+			<Route path="logo/detail" component={null} />
+
+			<Route path='individuality/create' component={(props) => <IndividualCreateEditPanelWithData type='create' {...props}/>}/>
 		</Route>
 		<Route path="/weixin">
 			<Route path="guanzhu" component={WeixinContainer}/>

@@ -10,6 +10,7 @@ import backgroundMusic from './backgroundMusic.js'
 import app from './app'
 import discover from './discover'
 import recommend from './recommend'
+import logo from './logo'
 
 const reducer = combineReducers({
 	user,
@@ -20,7 +21,8 @@ const reducer = combineReducers({
 	backgroundMusic,
 	app,
 	discover,
-	recommend
+	recommend,
+	logo
 	// auth,
 	// alliance,
 	// affair,
