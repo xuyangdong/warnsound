@@ -117,12 +117,27 @@ const config = _.extend({
             get:(offset, limit) => `${baseURL}/manage/getRecommendStoryListByPage?offset=${offset}&limit=${limit}`,
         },
         logo: {
-            get:(page, pageSize) => `${baseURL}/manage/getBadgeTypeListByPage?page=${page}&pageSize=${pageSize}`
+            get:(page, pageSize) => `${baseURL}/manage/getBadgeTypeListByPage?page=${page}&pageSize=${pageSize}`,
+            add:`${baseURL}/manage/badgeTypes`,
+            edit:(id) => `${baseURL}/manage/badgeTypes/${id}`,
+            delete:(id) => `${baseURL}/manage/badgeTypes/${id}`,
+            detail:{
+                query:(typeId) => `${baseURL}/manage/getBadgeListByTypeId?typeId=${typeId}`,
+                add:`${baseURL}/manage/badges`,
+                edit:(id) => `${baseURL}/manage/badges/${id}`,
+                delete:(id) => `${baseURL}/manage/badges/${id}`
+            }
         },
         role: {
             edit:(id) => `${baseURL}/manage/storyRoles/${id}`,
             audio:`${baseURL}/manage/uploadAudio`,
             icon:`${baseURL}/manage/uploadIcon`
+        },
+        icon: {
+            post:`${baseURL}/manage/uploadIcon`
+        },
+        individual:{
+            add:`${baseURL}/manage/questions`
         }
     }
 })

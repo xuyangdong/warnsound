@@ -36,6 +36,8 @@ import AppCreateEditPanel from './containers/publishapp/CreateEditPanel'
 import RecommendContainer from './containers/recommend/RecommendContainer'
 
 import LogoContainer from './containers/logo/LogoContainer'
+import LogoCreateEditPanel from './containers/logo/CreateEditPanel'
+import LogoDetailPage from './containers/logo/LogoDetailPage'
 
 import IndividualCreateEditPanel from './containers/individuality/CreateEditPanel'
 
@@ -58,6 +60,7 @@ const DiscoverCreateEditPanelWithData = CreateEditGetDataHOCFactory('discover')(
 
 const IndividualCreateEditPanelWithData = CreateEditGetDataHOCFactory('individuality')(IndividualCreateEditPanel)
 
+const LogoCreateEditPanelWithData = CreateEditGetDataHOCFactory('logo')(LogoCreateEditPanel)
 const routes = (<Router history={hashHistory}>
 		<Route path="/login" component={LoginContainer}/>
 		<Route path="/" component={LoginControlHOC(BaseContainer)}>
@@ -94,9 +97,9 @@ const routes = (<Router history={hashHistory}>
 			<Route path="recommend" component={RecommendContainer} />
 
 			<Route path="logo" component={LogoContainer} />
-			<Route path="logo/create" component={null} />
-			<Route path="logo/edit" component={null} />
-			<Route path="logo/detail" component={null} />
+			<Route path="logo/create" component={(props) => <LogoCreateEditPanelWithData type='create' {...props}/>} />
+			<Route path="logo/edit/(:id)" component={(props) => <LogoCreateEditPanelWithData type='edit' {...props}/>} />
+			<Route path="logo/detail/(:id)" component={LogoDetailPage} />
 
 			<Route path='individuality/create' component={(props) => <IndividualCreateEditPanelWithData type='create' {...props}/>}/>
 		</Route>

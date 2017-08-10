@@ -5,6 +5,7 @@ import EnhanceTable from '../../components/common/EnhanceTable'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import { getLogo } from  'actions/logo'
+import {Link} from 'react-router'
 
 class LogoContainer extends React.Component {
 	static contextTypes = {
@@ -36,7 +37,13 @@ class LogoContainer extends React.Component {
 			title:'详情',
 			key:'detail',
 			render:(t,r) => {
-				return (<a>查看</a>)
+				return (<Link to={`/logo/detail/${r.id}`}>查看</Link>)
+			}
+		},{
+			title:'操作',
+			key:'operate',
+			render:(t,r) => {
+				return (<Link to={`/logo/edit/${r.id}`}>编辑</Link>)
 			}
 		}]
 		const dataSource = this.props.logo.get('data').map((v,k) => ({

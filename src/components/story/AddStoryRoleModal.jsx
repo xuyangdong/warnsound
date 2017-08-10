@@ -10,6 +10,7 @@ import EditableCell from '../common/EditableCell'
 import {fromJS} from 'immutable'
 
 export default class AddStoryRoleModal extends React.Component {
+	_init = false
 	static propTypes = {
 		content:PropTypes.array.isRequired,
 	}
@@ -27,79 +28,54 @@ export default class AddStoryRoleModal extends React.Component {
 		if(!storyRoleInfo.isEmpty()){
 			this.setState({
 				roleName:storyRoleInfo.get('name'),
-				roleIconFileList:[_.extend(new File([],''),{
+				roleIconFileList:storyRoleInfo.get('icon')?[_.extend(new File([],''),{
 					uid:-1,
 					url:storyRoleInfo.get('icon')
-				})],
-				roleAudioFileList:[_.extend(new File([],''),{
+				})]:[],
+				roleAudioFileList:storyRoleInfo.get('audio')?[_.extend(new File([],''),{
 					uid:-1,
 					url:storyRoleInfo.get('audio')
-				})],
+				})]:[],
 				roleExtra:storyRoleInfo.get('extra')
 			})
 		}
 	}
 	componentWillReceiveProps(nextProps){
 		const {storyRoleInfo} = nextProps
-		if(!storyRoleInfo.isEmpty()){
-			this.setState({
-				roleName:storyRoleInfo.get('name'),
-				roleIconFileList:[_.extend(new File([],''),{
-					uid:-1,
-					url:storyRoleInfo.get('icon')
-				})],
-				roleAudioFileList:[_.extend(new File([],''),{
-					uid:-1,
-					url:storyRoleInfo.get('audio')
-				})],
-				roleExtra:storyRoleInfo.get('extra')
-			})
+		if(!this._init){
+			if(!storyRoleInfo.isEmpty()){
+				this._init = true
+				this.setState({
+					roleName:storyRoleInfo.get('name'),
+					roleIconFileList:[_.extend(new File([],''),{
+						uid:-1,
+						url:storyRoleInfo.get('icon')
+					})],
+					roleAudioFileList:[_.extend(new File([],''),{
+						uid:-1,
+						url:storyRoleInfo.get('audio')
+					})],
+					roleExtra:storyRoleInfo.get('extra')
+				})
+			}
 		}
 	}
 	handleCancel = () => {
 		this.props.onCancel()
 	}
 	handleOk = () => {
-		console.log({
-			roleName:this.state.roleName,
-			roleIconFileList:this.state.iconFileList,
-			roleAudioFileList:this.state.audioFileList,
-			roleExtra:this.refs.editableTable.getData()
-		})
+		// console.log({
+		// 	roleName:this.state.roleName,
+		// 	roleIconFileList:this.state.iconFileList,
+		// 	roleAudioFileList:this.state.audioFileList,
+		// 	roleExtra:this.refs.editableTable.getData()
+		// })
 		this.props.onOk({
 			roleName:this.state.roleName,
 			roleIconFile:this.state.roleIconFileList[0],
 			roleAudioFile:this.state.roleAudioFileList[0],
 			roleExtra:this.refs.editableTable.getData()
 		})
-	}
-	renderContentList(){
-		const columns = [{
-			title:'故事内容',
-			dataIndex:'content',
-			width:550,
-			key:'content'
-		},{
-			title:'插入时间',
-			key:'time',
-			width:100,
-			render:(t,r) => {
-				return <Input placeholder='xx:xx，时间以:分开'/>
-			}
-		}]
-		const dataSource = this.props.content.map((v,k) => ({
-			...v,
-			key:k
-		}))
-		return (<Table
-		scroll={{ x: '130%', y: 240 }}
-		showHeader={false}
-		columns={columns}
-		dataSource={dataSource}
-		size="small"
-		rowSelection={{type:'checkbox'}}
-		pagination={false}
-		/>)
 	}
 	getData(){
 		return {
@@ -123,6 +99,11 @@ export default class AddStoryRoleModal extends React.Component {
 							roleName:e.target.value
 						})
 					}}/>
+					<Input style={{marginLeft:10}} addonBefore='朗读指导' value={this.state.readGuide} onChange={(e) => {
+						this.setState({
+							readGuide:e.target.value
+						})
+					}}/>
 				</div>
 				<div className={styles.secondField}>
 					<UploadOtherFile key='1' hint='上传音频' value={this.state.roleAudioFileList} onChange={(file,fileList) => {
@@ -131,7 +112,6 @@ export default class AddStoryRoleModal extends React.Component {
 						})
 					}}
 					onRemove={()=>{
-						console.log("other")
 						this.setState({
 							roleAudioFileList:[]
 						})
@@ -143,7 +123,6 @@ export default class AddStoryRoleModal extends React.Component {
 						})
 					}}
 					onRemove={() => {
-						console.log('avatar')
 						this.setState({
 							roleIconFileList:[]
 						})

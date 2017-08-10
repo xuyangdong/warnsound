@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {fromJS} from 'immutable'
-import CreateEditPanel from '../containers/publishapp/PublishAppContainer'
+import CreateEditPanel from '../containers/publishapp/CreateEditPanel'
 import config from '../config'
 import {getAppList,addApp,updateApp} from 'actions/app'
 

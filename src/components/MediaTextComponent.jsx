@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './MediaTextComponent.scss'
 import plyr from 'plyr'
 import ReactDOM from 'react-dom'
-import {Icon} from 'antd'
+import {Icon,Popover} from 'antd'
 import 'plyr/dist/plyr.css'
 
 
@@ -35,16 +35,28 @@ export default class MediaTextComponent extends React.Component{
 	handleDelete = () => {
 		this.props.onDelete(this.props.block)
 	}
+	handleDeleteReadGuide = () => {
+		this.props.onDeleteReadGuide(this.props.block)
+	}
 	render(){
+		const PopContent = (
+			<div>
+				<div>{this.props.block.getData().get('readGuide')}</div>
+				<a onClick={this.handleDeleteReadGuide}>删除</a>
+			</div>
+		)
 		return (
 		<div className={styles.container}>
 			<div className={styles.item}>
 				<div>
-					<Icon type={this.state.playing?"play-circle-o":"play-circle"} onClick={this.handlePlay}/>
+					{this.props.block.getData().get('soundEffectUrl')?<Icon style={{marginRight:10}} type={this.state.playing?"play-circle-o":"play-circle"} onClick={this.handlePlay}/>:null}
+					{this.props.block.getData().get('readGuide')?<Popover content={PopContent}>
+						<Icon style={{fontSize:14,marginRight:10}} type="eye" />
+					</Popover>:null}
 					<span>{this.props.block.getText().length>15?this.props.block.getText().substring(0,15)+'...':this.props.block.getText()}</span>
 				</div>
 				<div>
-					<span className={styles.description}>[{this.props.block.getData().get('soundEffectName')}]</span>
+					{this.props.block.getData().get('soundEffectUrl')?<span className={styles.description}>[{this.props.block.getData().get('soundEffectName')}]</span>:null}
 					<span onClick={this.handleDelete} style={{color:'red',cursor:'pointer'}}>删除</span>
 				</div>
 			</div>

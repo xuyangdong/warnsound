@@ -25,6 +25,13 @@ class CreateEditPanel extends React.Component {
 			keys: nextKeys
 		})
 	}
+	handleSave = () => {
+		const {getFieldValue} = this.props.form
+		let jsonData = {
+			name:getFieldValue('question')
+		}
+		this.props.onSubmit(jsonData)
+	}
 	render(){
 		const {getFieldDecorator,getFieldValue} = this.props.form
 		//just for data bind, to bind keys -> []
@@ -85,6 +92,15 @@ class CreateEditPanel extends React.Component {
 						>
 							<Button type="dashed" onClick={this.handleAdd}>
 				            	<Icon type="plus" /> 添加一个答案
+				          	</Button>
+						</FormItem>
+						<FormItem
+						  label=""
+						  labelCol={{span:2}}
+						  wrapperCol={{span:4,offset:2}}
+						>
+							<Button type="primary" onClick={this.handleSave}>
+				            	保存
 				          	</Button>
 						</FormItem>
 					</Form>

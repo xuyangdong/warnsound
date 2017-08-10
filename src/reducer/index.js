@@ -11,6 +11,7 @@ import app from './app'
 import discover from './discover'
 import recommend from './recommend'
 import logo from './logo'
+import logoDetail from './logoDetail'
 
 const reducer = combineReducers({
 	user,
@@ -22,7 +23,8 @@ const reducer = combineReducers({
 	app,
 	discover,
 	recommend,
-	logo
+	logo,
+	logoDetail
 	// auth,
 	// alliance,
 	// affair,

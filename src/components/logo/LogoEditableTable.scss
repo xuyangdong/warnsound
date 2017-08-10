@@ -1,0 +1,42 @@
+:global(.editable-cell) {
+  position: relative;
+}
+
+:global(.editable-cell-input-wrapper),
+:global(.editable-cell-text-wrapper) {
+  padding-right: 24px;
+}
+
+:global(.editable-cell-text-wrapper) {
+  padding: 5px 24px 5px 5px;
+}
+
+:global(.editable-cell-icon),
+:global(.editable-cell-icon-check) {
+  position: absolute;
+  right: 0;
+  width: 20px;
+  cursor: pointer;
+}
+
+:global(.editable-cell-icon) {
+  line-height: 18px;
+  // display: none;
+}
+
+:global(.editable-cell-icon-check) {
+  line-height: 28px;
+}
+
+:global(.editable-cell:hover) :global(.editable-cell-icon) {
+  display: inline-block;
+}
+
+:global(.editable-cell-icon:hover),
+:global(.editable-cell-icon-check:hover) {
+  color: #108ee9;
+}
+
+:global(.editable-add-btn) {
+  margin-bottom: 8px;
+}

@@ -11,6 +11,7 @@ import BackgroundMusicGetDataHOC from './BackgroundMusicGetDataHOC'
 import AppGetDataHOC from './APPGetDataHOC'
 import DiscoverGetDataHOC from './DiscoverGetDataHOC'
 import IndividualityGetDataHOC from './IndividualityGetDataHOC'
+import LogoGetDataHOC from './LogoGetDataHOC'
 
 function buildTree(listData,parentId=0){
 	let result = fromJS([])
@@ -311,5 +312,7 @@ export default (type) => {
 		return DiscoverGetDataHOC
 	}else if(type == 'individuality'){
 		return IndividualityGetDataHOC
+	}else if(type == 'logo'){
+		return LogoGetDataHOC
 	}
 }

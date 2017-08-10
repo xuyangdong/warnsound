@@ -4,6 +4,7 @@ import EditableCell from './EditableCell'
 import './EditableTable.scss'
 
 export default class EditableTable extends React.Component {
+  _init = false
   constructor(props) {
     super(props);
     this.columns = [{
@@ -55,14 +56,18 @@ export default class EditableTable extends React.Component {
 	  })
   }
   componentWillReceiveProps(nextProps){
-	  console.log(nextProps)
-	  this.setState({
-		  dataSource:nextProps.data.map((v,k) => ({
-			  name:v.get('hint'),
-			  time:v.get('time'),
-			  key:k
-		  })).toJS()
-	  })
+      if(!this._init){
+          if(!nextProps.data.isEmpty()){
+              this._init = true
+              this.setState({
+        		  dataSource:nextProps.data.map((v,k) => ({
+        			  name:v.get('hint'),
+        			  time:v.get('time'),
+        			  key:k
+        		  })).toJS()
+        	  })
+          }
+      }
   }
   onCellChange = (index, key) => {
     return (value) => {

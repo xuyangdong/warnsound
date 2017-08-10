@@ -91,11 +91,11 @@ class CreateEditPanel extends React.Component {
 		formData.append('price',getFieldValue('price')||0)
 		formData.append('defaultBackGroundMusicId',getFieldValue('backgroundMusic'))
 		if(this.props.type=='create'){
-			const roleData = this.roleData
-			formData.append('roleName',roleData.roleName)
-			formData.append('roleIconFile',roleData.roleIconFile)
-			formData.append('roleAudioFile',roleData.roleAudioFile)
-			formData.append('roleExtra',JSON.stringify(roleData.roleExtra))
+			const roleData = this.roleData||{}
+			formData.append('roleName',roleData.roleName||'')
+			formData.append('roleIconFile',roleData.roleIconFile||'')
+			formData.append('roleAudioFile',roleData.roleAudioFile||'')
+			formData.append('roleExtra',JSON.stringify(roleData.roleExtra)||'')
 		}
 		this.props.onSubmit(formData).then(res => {
 			this.setState({
@@ -165,14 +165,14 @@ class CreateEditPanel extends React.Component {
 		audioForm.append('audio',roleData.roleAudioFile)
 		let iconForm = new FormData()
 		iconForm.append('icon',roleData.roleIconFile)
-		const uploadPromise = [roleData.roleAudioFile.size>0?fetch(config.api.role.audio,{
+		const uploadPromise = [roleData.roleAudioFile&&roleData.roleAudioFile.size>0?fetch(config.api.role.audio,{
 			method:'POST',
 			headers:{
 				'authorization':sessionStorage.getItem('auth'),
 			},
 			body:audioForm
 		}).then(res => res.json()):null,
-		roleData.roleIconFile.size>0?fetch(config.api.role.icon,{
+		roleData.roleIconFile&&roleData.roleIconFile.size>0?fetch(config.api.role.icon,{
 			method:'POST',
 			headers:{
 				'authorization':sessionStorage.getItem('auth'),
@@ -180,7 +180,7 @@ class CreateEditPanel extends React.Component {
 			body:iconForm
 		}).then(res => res.json()):null]
 		Promise.all(uploadPromise).then(res => {
-			fetch(config.api.role.edit(this.props.storyRoleInfo.get('id')),{
+			fetch(config.api.role.edit(this.props.storyRoleInfo.get('id')||''),{
 				method:'PUT',
 				headers:{
 					'authorization':sessionStorage.getItem('auth'),
@@ -190,8 +190,8 @@ class CreateEditPanel extends React.Component {
 					id:this.props.storyRoleInfo.get('id'),
 					storyId:this.props.storyInfo.get('id'),
 					name:roleData.roleName,
-					audio:roleData.roleAudioFile.size>0?res[0].obj.url:roleData.roleAudioFile.url,
-					icon:roleData.roleIconFile.size>0?res[1].obj.url:roleData.roleIconFile.url,
+					audio:roleData.roleAudioFile&&roleData.roleAudioFile.size>0?res[0].obj.url:roleData.roleAudioFile?roleData.roleAudioFile.url:'',
+					icon:roleData.roleIconFile&&roleData.roleIconFile.size>0?res[1].obj.url:roleData.roleIconFile?roleData.roleIconFile.url:'',
 					extra:JSON.stringify(roleData.roleExtra),
 				})
 			}).then(res => {
