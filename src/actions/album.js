@@ -2,12 +2,12 @@ import {actionNames} from 'action-utils'
 import {notification} from 'antd'
 import config from '../config'
 
-export const GET_INDIVIDUALITY = actionNames('GET_INDIVIDUALITY')
-export function getIndividuality(page,pageSize){
+export const GET_ALBUM = actionNames('GET_ALBUM')
+export function getAlbum(page,pageSize){
 	return {
-        types: GET_INDIVIDUALITY,
+        types: GET_ALBUM,
         callAPI: (getState) => {
-            return fetch(config.api.individual.get(page,pageSize),{
+            return fetch(config.api.album.get(page,pageSize),{
 				headers: {
                     'authorization': sessionStorage.getItem('auth')
                 },
@@ -25,38 +25,40 @@ export function getIndividuality(page,pageSize){
     }
 }
 
-export function createQuestion(jsonData){
-	return dispath => {
-		return fetch(config.api.individual.add,{
-			method:'POST',
+export function editAlbum(jsonData,id){
+	return dispatch => {
+		return fetch(config.api.album.edit(id),{
+			method:'PUT',
 			headers:{
-				'authorization':sessionStorage.getItem('auth'),
+				authorization:sessionStorage.getItem('auth'),
 				'content-type':'application/json'
 			},
 			body:JSON.stringify(jsonData)
 		}).then(res => res.json()).then(res => {
-			if(res.status == 2){
+			if(res.status==2){
 				notification.error({message:res.errorMes})
+			}else{
+				console.log(res)
 			}
-			console.log(res)
 		})
 	}
 }
 
-export function editQuestion(jsonData,id){
-	return dispath => {
-		return fetch(config.api.individual.edit(id),{
-			method:'PUT',
+export function addAlbum(jsonData){
+	return dispatch => {
+		return fetch(config.api.album.add,{
+			method:'post',
 			headers:{
-				'authorization':sessionStorage.getItem('auth'),
+				authorization:sessionStorage.getItem('auth'),
 				'content-type':'application/json'
 			},
 			body:JSON.stringify(jsonData)
 		}).then(res => res.json()).then(res => {
 			if(res.status == 2){
 				notification.error({message:res.errorMes})
+			}else{
+				console.log(res)
 			}
-			console.log(res)
 		})
 	}
 }

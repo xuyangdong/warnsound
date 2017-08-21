@@ -12,6 +12,7 @@ import AppGetDataHOC from './APPGetDataHOC'
 import DiscoverGetDataHOC from './DiscoverGetDataHOC'
 import IndividualityGetDataHOC from './IndividualityGetDataHOC'
 import LogoGetDataHOC from './LogoGetDataHOC'
+import AlbumGetDataHOC from './AlbumGetDataHOC'
 
 function buildTree(listData,parentId=0){
 	let result = fromJS([])
@@ -35,7 +36,8 @@ export default (type) => {
 						storyTagInfo:fromJS({}),
 						soundEffectByTag:fromJS([]),
 						backgroundMusicByTag:fromJS([]),
-						storyRoleInfo:fromJS({})
+						storyRoleInfo:fromJS({}),
+						albumList:fromJS([])
 					}
 					this.handleCreate = this.handleCreate.bind(this)
 					this.handleEdit = this.handleEdit.bind(this)
@@ -193,6 +195,18 @@ export default (type) => {
 							})
 						})
 					}):null
+					//-------------storyRoleInfo
+					fetch(config.api.album.get(0,10000),{
+						headers:{
+							'authorization':sessionStorage.getItem('auth')
+						}
+					}).then(res => res.json()).then(res => {
+						this.setState({
+							albumList:fromJS(
+								res.obj
+							)
+						})
+					})
 				}
 				handleDelete = () => {
 					return this.props.deleteStory(this.props.params.id)
@@ -204,7 +218,7 @@ export default (type) => {
 					return this.props.editStory(formData,this.props.params.id)
 				}
 				render(){
-					const {storyInfo,storyTags,storyTagsByParent,storyTagInfo,soundEffects,backgroundMusics,backgroundMusicInfo,soundEffectByTag,backgroundMusicByTag,storyRoleInfo} = this.state
+					const {storyInfo,storyTags,storyTagsByParent,storyTagInfo,soundEffects,backgroundMusics,backgroundMusicInfo,soundEffectByTag,backgroundMusicByTag,storyRoleInfo,albumList} = this.state
 					const props = {
 						storyInfo,
 						storyTags,
@@ -215,7 +229,8 @@ export default (type) => {
 						backgroundMusicInfo,
 						soundEffectByTag,
 						backgroundMusicByTag,
-						storyRoleInfo
+						storyRoleInfo,
+						albumList
 					}
 					return (
 						<CreateEditPanel type={this.props.type} onDelete={this.handleDelete} onSubmit={this.props.type=='create'?this.handleCreate:this.handleEdit} title={this.props.type=='create'?'新建Story':`Story ${storyInfo.get('title')}`} {...props}/>
@@ -314,5 +329,7 @@ export default (type) => {
 		return IndividualityGetDataHOC
 	}else if(type == 'logo'){
 		return LogoGetDataHOC
+	}else if(type == 'album'){
+		return AlbumGetDataHOC
 	}
 }

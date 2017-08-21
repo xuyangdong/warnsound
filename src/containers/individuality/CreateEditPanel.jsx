@@ -3,11 +3,27 @@ import styles from './CreateEditPanel.scss'
 import CreateEditHeader from '../../components/common/CreateEditHeader'
 import {Form,Input,Icon, Button } from 'antd'
 import UploadAvatar from '../../components/common/UploadAvatar'
-
+import _ from 'lodash'
 const FormItem = Form.Item
 
 class CreateEditPanel extends React.Component {
 	uuid = 0
+	constructor(){
+		super()
+		this.state = {
+			questionFileList:[]
+		}
+	}
+	componentWillReceiveProps(nextProps){
+		if(!nextProps.individualityInfo.isEmpty()){
+			this.setState({
+				questionFileList:nextProps.individualityInfo.get('icon')?[_.extend(new File([],''),{
+					uid:-1,
+					url:nextProps.individualityInfo.get('icon')
+				})]:[]
+			})
+		}
+	}
 	handleAdd = () => {
 		const {getFieldDecorator,getFieldValue,setFieldsValue} = this.props.form
 		const keys = getFieldValue('keys')
@@ -27,15 +43,43 @@ class CreateEditPanel extends React.Component {
 	}
 	handleSave = () => {
 		const {getFieldValue} = this.props.form
+		const {individualityInfo} = this.props
+		let answerItemsRemote = []
+		try{
+			answerItemsRemote = JSON.parse(individualityInfo.get('extra'))
+		}catch(e){
+			// console.log(e)
+		}
+		let questionName = getFieldValue('question')
+		let questionFile = this.state.questionFileList[0]
+		let answerItems = []
+		let keys = getFieldValue('keys')
+		keys.forEach(v => {
+			answerItems.push({
+				answerName:getFieldValue(`answer-${v}`),
+				answerFile:this.state[`answer-${v}`]?this.state[`answer-${v}`][0]:new File([],''),
+				icon:answerItemsRemote[v]?answerItemsRemote[v].icon:''
+			})
+		})
 		let jsonData = {
-			name:getFieldValue('question')
+			questionName,
+			questionFile,
+			icon:this.state.questionFileList[0]?this.state.questionFileList[0].size>0?'':this.state.questionFileList[0].url:'',
+			answerItems
 		}
 		this.props.onSubmit(jsonData)
 	}
 	render(){
 		const {getFieldDecorator,getFieldValue} = this.props.form
-		//just for data bind, to bind keys -> []
-		getFieldDecorator('keys', { initialValue: [] });
+		const {individualityInfo} = this.props
+		let answerItemsRemote = []
+		try{
+			answerItemsRemote = JSON.parse(individualityInfo.get('extra'))
+			getFieldDecorator('keys', { initialValue: answerItemsRemote.map((v,k) => k) });
+		}catch(e){
+			//just for data bind, to bind keys -> []
+			getFieldDecorator('keys', { initialValue: [] });
+		}
 
 		const keys = getFieldValue('keys')
 		const answerItems = keys.map(v => {
@@ -48,11 +92,26 @@ class CreateEditPanel extends React.Component {
 				>
 				<div className={styles.itemContent}>
 					{getFieldDecorator(`answer-${v}`,{
-						// initialValue:soundEffectInfo.get('description')
+						initialValue:answerItemsRemote[v]?answerItemsRemote[v].answerName:''
 					})(
 						<Input style={{width:150}}/>
 					)}
-					<UploadAvatar />
+					<UploadAvatar
+						value={this.state[`answer-${v}`]||(answerItemsRemote[v]&&answerItemsRemote[v].icon?[_.extend(new File([],''),{
+							uid:-1,
+							url:answerItemsRemote[v].icon
+						})]:[])}
+						onChange={(file,fileList)=>{
+							this.setState({
+								[`answer-${v}`]:fileList
+							})
+						}}
+						onRemove={(file,fileList)=>{
+							this.setState({
+								[`answer-${v}`]:[]
+							})
+						}}
+					/>
 					<Icon
 		              className={styles.dynamicDeleteButton}
 		              type="minus-circle-o"
@@ -77,11 +136,23 @@ class CreateEditPanel extends React.Component {
 						>
 						<div className={styles.itemContent}>
 							{getFieldDecorator('question',{
-								// initialValue:soundEffectInfo.get('description')
+								initialValue:individualityInfo.get('name')
 							})(
 								<Input style={{width:150}}/>
 							)}
-							<UploadAvatar />
+							<UploadAvatar
+							value={this.state.questionFileList}
+							onChange={(file,fileList)=>{
+								this.setState({
+									questionFileList:fileList
+								})
+							}}
+							onRemove={()=>{
+								this.setState({
+									questionFileList:[]
+								})
+							}}
+							/>
 						</div>
 						</FormItem>
 						{answerItems}

@@ -1,0 +1,19 @@
+:local(.container){
+	position: relative;
+	:local(.playerWrapper){
+		:local(.progressBarWrapper){
+			width:250px;
+			height: 250px;
+		}
+	}
+	:local(.playerButtonWrapper){
+		position:absolute;
+		width: 100px;
+		height: 100px;
+	}
+	:local(.progressBarWrapper){
+		:global(.ant-progress-text){
+			display:none;
+		}
+	}
+}

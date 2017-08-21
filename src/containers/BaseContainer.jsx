@@ -26,7 +26,8 @@ const BaseContainer = React.createClass({
                             <Menu.Item key="8"><Link to='/discover'><Icon type="search" />发现管理</Link></Menu.Item>
                             <Menu.Item key="9"><Link to='/recommend'><Icon type="search" />推荐管理</Link></Menu.Item>
                             <Menu.Item key="10"><Link to='/logo'><Icon type="trademark" />徽标管理</Link></Menu.Item>
-                            <Menu.Item key="11"><Link to='/individuality/create'><Icon type="star-o" />个性化</Link></Menu.Item>
+                            <Menu.Item key="11"><Link to='/individuality'><Icon type="star-o" />个性化</Link></Menu.Item>
+                            <Menu.Item key="12"><Link to='/individuality'><Icon type="star-o" />专辑管理</Link></Menu.Item>
 						</Menu>
                     </div>
                     <div className={styles.mainPanel}>

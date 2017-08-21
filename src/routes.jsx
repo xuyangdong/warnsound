@@ -39,7 +39,13 @@ import LogoContainer from './containers/logo/LogoContainer'
 import LogoCreateEditPanel from './containers/logo/CreateEditPanel'
 import LogoDetailPage from './containers/logo/LogoDetailPage'
 
+import IndividualityContainer from './containers/individuality/IndividualityContainer'
 import IndividualCreateEditPanel from './containers/individuality/CreateEditPanel'
+
+import AlbumContainer from './containers/album/AlbumContainer'
+import AlbumCreateEditPanel from './containers/album/CreateEditPanel'
+
+import SharePage from './containers/weixin/SharePage'
 
 import CreateEditGetDataHOCFactory from './enhancers/CreateEditGetDataHOCFactory'
 const StoryCreateEditGetDataHOC = CreateEditGetDataHOCFactory('story')
@@ -61,6 +67,8 @@ const DiscoverCreateEditPanelWithData = CreateEditGetDataHOCFactory('discover')(
 const IndividualCreateEditPanelWithData = CreateEditGetDataHOCFactory('individuality')(IndividualCreateEditPanel)
 
 const LogoCreateEditPanelWithData = CreateEditGetDataHOCFactory('logo')(LogoCreateEditPanel)
+
+const AlbumCreateEditPanelWithData = CreateEditGetDataHOCFactory('album')(AlbumCreateEditPanel)
 const routes = (<Router history={hashHistory}>
 		<Route path="/login" component={LoginContainer}/>
 		<Route path="/" component={LoginControlHOC(BaseContainer)}>
@@ -101,10 +109,17 @@ const routes = (<Router history={hashHistory}>
 			<Route path="logo/edit/(:id)" component={(props) => <LogoCreateEditPanelWithData type='edit' {...props}/>} />
 			<Route path="logo/detail/(:id)" component={LogoDetailPage} />
 
+			<Route path='individuality' component={IndividualityContainer} />
 			<Route path='individuality/create' component={(props) => <IndividualCreateEditPanelWithData type='create' {...props}/>}/>
+			<Route path='individuality/edit/(:id)' component={(props) => <IndividualCreateEditPanelWithData type='edit' {...props}/>}/>
+
+			<Route path='album' component={AlbumContainer} />
+			<Route path='album/create' component={(props) => <AlbumCreateEditPanelWithData type='create' {...props}/>}/>
+			<Route path='album/edit/(:id)' component={(props) => <AlbumCreateEditPanelWithData type='edit' {...props}/>}/>
 		</Route>
 		<Route path="/weixin">
 			<Route path="guanzhu" component={WeixinContainer}/>
+			<Route path="share(/:id)" component={SharePage}/>
 		</Route>
 		<Route path="app" component={App}/>
 		<Route path="draft" component={DraftComponent} />

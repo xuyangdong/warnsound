@@ -72,14 +72,18 @@ export default class SearchBar extends React.Component {
 	}
 	clean = () => {
 		let cleanCondition = Object.keys(this.state).reduce((p,c) => {
-			p[c] = ''
+			if(c != 'storyTagTree'){
+				p[c] = ''
+			}
 			return p
 		},{})
-		this.state = cleanCondition
+		// this.state = cleanCondition
+		this.setState({
+			...cleanCondition
+		})
 		this.props.onSearch(cleanCondition)
 	}
 	render(){
-		console.log("asdf:",this.state)
 		const {searchCondition} = this.props
 		const span = Math.floor(24/(searchCondition.length+1))
 		return (

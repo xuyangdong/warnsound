@@ -6,7 +6,7 @@ import {Form,Input,Select,Checkbox,Upload,Button,Icon,Row,Col,Spin,Tag,notificat
 import EnhanceInput from '../../components/common/EnhanceInput'
 import config from '../../config'
 import AddStoryRoleModal from '../../components/story/AddStoryRoleModal'
-
+import plyr from 'plyr'
 import _ from 'lodash'
 import DraftComponent from '../../components/DraftComponent'
 const FormItem = Form.Item
@@ -34,6 +34,9 @@ class CreateEditPanel extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this)
 		this.handlePicDisplay = this.handlePicDisplay.bind(this)
 		this.handleSaveAsDraft = this.handleSaveAsDraft.bind(this)
+	}
+	componentDidMount(){
+		this.player = plyr.setup(this.refs.backgroundMusic)
 	}
 	componentWillReceiveProps(nextProps){
 		if(!nextProps.storyInfo.isEmpty()
@@ -79,7 +82,7 @@ class CreateEditPanel extends React.Component {
 		formData.append('content',JSON.stringify(this.refs.draft.getData()))
 		// TODO: 啥意思
 		formData.append('draft',isDraft)
-		formData.append('storyTags',this.state.storyTags.join(','))
+		formData.append('tagList',this.state.storyTags.join(','))
 		formData.append('press',getFieldValue('publish'))
 		formData.append('guide',getFieldValue('tips'))
 		formData.append('readGuide',getFieldValue('readGuide')||'')
@@ -90,6 +93,7 @@ class CreateEditPanel extends React.Component {
 		formData.append('guideSoundFile',this.state.guideSoundFileList[0]||new File([],''))
 		formData.append('price',getFieldValue('price')||0)
 		formData.append('defaultBackGroundMusicId',getFieldValue('backgroundMusic'))
+		formData.append('album',getFieldValue('album'))
 		if(this.props.type=='create'){
 			const roleData = this.roleData||{}
 			formData.append('roleName',roleData.roleName||'')
@@ -180,6 +184,7 @@ class CreateEditPanel extends React.Component {
 			body:iconForm
 		}).then(res => res.json()):null]
 		Promise.all(uploadPromise).then(res => {
+			console.log(res)
 			fetch(config.api.role.edit(this.props.storyRoleInfo.get('id')||''),{
 				method:'PUT',
 				headers:{
@@ -207,7 +212,51 @@ class CreateEditPanel extends React.Component {
 					})
 				}
 			})
+
 		})
+	}
+	getBackgroundMusicInfo = () => {
+		const {getFieldValue} = this.props.form
+		const backgroundMusicId = getFieldValue('backgroundMusic')
+		const backgroundMusicAudio = plyr.get(this.refs.backgroundMusic)
+		let musicInfo = fromJS({})
+		this.props.backgroundMusicByTag.forEach(v => {
+			let _musicInfo = v.getIn(['otherData','backgroundMusic']).find(v2 => v2.get('id')==backgroundMusicId)
+			if(_musicInfo){
+				musicInfo = _musicInfo
+			}
+		})
+		return musicInfo
+	}
+	renderBackgroundMusicPlayer = () => {
+		const backgroundMusic = this.getBackgroundMusicInfo()
+		if(this.player && this.player[0]){
+			this.player[0].source({
+				type:'audio',
+				title:'backgroundMusic',
+				sources:[{
+					src:backgroundMusic.get('url')
+				}]
+			})
+		}
+		const that = this
+		const handleClick = (() =>{
+			let isStart = false
+			return (e) => {
+				if(!isStart){
+					this.player[0].play()
+					isStart = true
+				}else{
+					this.player[0].pause()
+					isStart = false
+				}
+			}
+		})()
+		return (
+			<div>
+			<Icon onClick={handleClick} style={{fontSize:16}} type="play-circle" />
+			</div>
+		)
 	}
 	renderStoryRole(){
 		return (
@@ -219,7 +268,7 @@ class CreateEditPanel extends React.Component {
 		)
 	}
 	render(){
-		const {storyInfo,storyTags,soundEffects,backgroundMusics,soundEffectByTag} = this.props
+		const {storyInfo,storyTags,soundEffects,backgroundMusics,soundEffectByTag,albumList} = this.props
 		const { getFieldDecorator } = this.props.form;
 		const formItemLayout = {
 			  	labelCol: {
@@ -272,7 +321,23 @@ class CreateEditPanel extends React.Component {
 						this.props.type=='edit'?<Input/>:<EnhanceInput />
 					)}
 					</FormItem>
-
+					<FormItem
+					  labelCol={{span:2}}
+					  wrapperCol={{span:4}}
+					  label={<span>专辑</span>}
+					>
+					{getFieldDecorator('album',{
+						initialValue:storyInfo.get('album')
+					})(
+						<Select>
+						{albumList.map(v => {
+							return (
+								<Option title={v.get('name')} value={''+v.get('id')} key={v.get('id')}>{v.get('name')}</Option>
+							)
+						})}
+						</Select>
+					)}
+					</FormItem>
 					<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:4}}
@@ -313,6 +378,8 @@ class CreateEditPanel extends React.Component {
 						}
 						this.setState({
 							storyTags:_.concat(this.state.storyTags,value)
+						},()=>{
+							console.log("标签测试:",this.state.storyTags)
 						})
 					}}>
 						{this.props.storyTagsByParent.find(v => v.get('value')==this.state.firstTag,fromJS({}),fromJS({})).get('children',fromJS([])).map(v => {
@@ -460,6 +527,7 @@ class CreateEditPanel extends React.Component {
 							key:'0'
 						}],this.props.backgroundMusicByTag.toJS())} style={{width:240}} />
 					)}
+					{this.renderBackgroundMusicPlayer()}
 					</FormItem>
 					<FormItem
 						labelCol={{span:2}}
@@ -509,6 +577,8 @@ class CreateEditPanel extends React.Component {
 					content={this.refs.draft.getData()}
 					 />:null}
 				</div>
+				<audio ref='backgroundMusic'>
+				</audio>
 			</div>
 		)
 	}

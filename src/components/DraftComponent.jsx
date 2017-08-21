@@ -11,7 +11,7 @@ import {fromJS} from 'immutable'
 import ForkBlockData from '../model/ForkBlockData'
 import AddReadGuideModal from '../components/story/AddReadGuideModal'
 
-const MAX_SENTENCE = 10
+const MAX_SENTENCE = 18
 const separator = /[,|.|;|，|。|；]/
 const Option = Select.Option
 class TreeData {
@@ -56,7 +56,7 @@ export default class DraftComponent extends React.Component {
             let tempArray = content.content?content.content.split('*'):''
             for(let temp of tempArray){
                 contentArray.push({
-                    content:temp,
+                    content:''+temp,
                     soundEffectId:contentSoundEffectId,
                     readGuide:readGuide
                 })
@@ -125,9 +125,12 @@ export default class DraftComponent extends React.Component {
         })
         // this.setState({ editorState:EditorState.push(editorState,contentState,'change-block-data') });
 
+        // this.setState({
+        //     editorState:EditorState.forceSelection(editorState,selectState)
+        // });
         this.setState({
-            editorState:EditorState.forceSelection(editorState,selectState)
-        });
+            editorState
+        })
     }
     createBlock( block, i, text ) {
         return new ContentBlock(new Map({
@@ -146,17 +149,21 @@ export default class DraftComponent extends React.Component {
             let temp = [ ]
             let i = 0
             let sentence = ''
-            for ( ; i < length; i++ ) {
-                if (sentence.length <= MAX_SENTENCE && !separator.test(text.charAt( i ))) {
-                    sentence = sentence + text.charAt( i )
-                } else {
-                    sentence = sentence + text.charAt( i )
-                    temp.push(this.createBlock( c, i, sentence ))
-                    sentence = ''
+            if(text.length==0){
+                temp.push(this.createBlock( c, i, '' ))
+            }else{
+                for ( ; i < length; i++ ) {
+                    if (sentence.length <= MAX_SENTENCE && !separator.test(text.charAt( i ))) {
+                        sentence = sentence + text.charAt( i )
+                    } else {
+                        sentence = sentence + text.charAt( i )
+                        temp.push(this.createBlock( c, i, sentence ))
+                        sentence = ''
+                    }
                 }
-            }
-            if ( sentence ) {
-                temp.push(this.createBlock( c, i, sentence ))
+                if ( sentence ) {
+                    temp.push(this.createBlock( c, i, sentence ))
+                }
             }
             return p.concat( temp )
         }, [ ])
@@ -284,7 +291,7 @@ export default class DraftComponent extends React.Component {
 		let blockArray = contentState.getBlocksAsArray()
         let rawContentArray = blockArray.map((v,k) => ({
 			order:k,
-			content:v.getText(),
+			content:v.getText().trim(),
 			soundEffectId:v.getData().get('soundEffectId'),
             readGuide:v.getData().get('readGuide'),
 		}))
@@ -489,6 +496,13 @@ export default class DraftComponent extends React.Component {
 						blockRendererFn={this.myBlockRenderer}
 						blockRenderMap={this.myBlockRenderMap}
                         handlePastedText={this.handlePastedText}
+                        blockStyleFn={(contentBlock)=>{
+                           const type = contentBlock.getType();
+                        //    console.log('->',type)
+                              if (type === 'unstyled') {
+                                  return styles.unstyled;
+                            }
+                        }}
 						/>
                     </div>
                     <div className={styles.displayPart}>

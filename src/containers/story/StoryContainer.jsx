@@ -121,6 +121,7 @@ class StoryContainer extends React.Component{
 		this.props.searchStories()
 	}
 	hanleFilterData(value){
+		this._condition = value
 		this.props.getStories(0,10,value)
 	}
 	handleRecommend = (id) => {
@@ -163,7 +164,7 @@ class StoryContainer extends React.Component{
 								current:page,
 								pageSize:pageSize
 							})
-							this.props.getStories(page,pageSize)
+							this.props.getStories(page,pageSize,this._condition)
 						}
 					}}/>
 				</div>

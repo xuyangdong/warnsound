@@ -136,8 +136,23 @@ const config = _.extend({
         icon: {
             post:`${baseURL}/manage/uploadIcon`
         },
+        file: {
+            post:`${baseURL}/manage/uploadMulti`
+        },
         individual:{
-            add:`${baseURL}/manage/questions`
+            get:(page,pageSize) => `${baseURL}/manage/getQuestionListByPage?page=${page}&pageSize=${pageSize}`,
+            query:id => `${baseURL}/manage/questions/${id}`,
+            add:`${baseURL}/manage/questions`,
+            edit:id => `${baseURL}/manage/questions/${id}`
+        },
+        works:{
+            query:(id) => `${baseURL}`
+        },
+        album:{
+            get:(page,pageSize) => `${baseURL}/manage/getAlbumListByPage?page=${page}&pageSize=${pageSize}`,
+            query:id => `${baseURL}/manage/albums/${id}`,
+            add:`${baseURL}/manage/albums`,
+            edit:id => `${baseURL}/manage/albums/${id}`
         }
     }
 })

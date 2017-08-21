@@ -15,12 +15,15 @@
 	:local(.editPanel){
 		flex-grow: 1;
 		display: flex;
+		// width: 306px;
+		// flex-shrink: 0;
 		:local(.editPart){
 			border:1px #efefef solid;
 			border-radius: $primary-border-radius;
 			margin-right: 5px;
 			overflow: auto;
-			flex-grow: 1;
+			flex-grow: 0;
+			width: 306px;
 		}
 	}
 	:local(.displayPart){
@@ -30,4 +33,10 @@
 		overflow: auto;
 		border-radius: $primary-border-radius;
 	}
+}
+
+:local(.unstyled){
+	font-size: 16px;
+	text-indent:2em;
+    font-family: fantasy;
 }
