@@ -1,5 +1,6 @@
 import React from 'react'
 import config from '../config'
+import {notification} from 'antd'
 import {fromJS} from 'immutable'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
@@ -13,6 +14,7 @@ import DiscoverGetDataHOC from './DiscoverGetDataHOC'
 import IndividualityGetDataHOC from './IndividualityGetDataHOC'
 import LogoGetDataHOC from './LogoGetDataHOC'
 import AlbumGetDataHOC from './AlbumGetDataHOC'
+import StorySetGetDataHOC from './StorySetGetDataHOC'
 
 function buildTree(listData,parentId=0){
 	let result = fromJS([])
@@ -37,7 +39,9 @@ export default (type) => {
 						soundEffectByTag:fromJS([]),
 						backgroundMusicByTag:fromJS([]),
 						storyRoleInfo:fromJS({}),
-						albumList:fromJS([])
+						albumList:fromJS([]),
+						storySetList:fromJS([]),
+						storySetInfo:fromJS([])
 					}
 					this.handleCreate = this.handleCreate.bind(this)
 					this.handleEdit = this.handleEdit.bind(this)
@@ -207,6 +211,31 @@ export default (type) => {
 							)
 						})
 					})
+					//-------------storySetList
+					fetch(config.api.storySet.get(0,10000),{
+						headers:{
+							'authorization':sessionStorage.getItem('auth')
+						}
+					}).then(res => res.json()).then(res => {
+						this.setState({
+							storySetList:fromJS(res.obj)
+						})
+					})
+					//-------------storySetInfo
+					this.props.type=='edit'?fetch(config.api.story.storySet.query(this.props.params.id),{
+						headers:{
+							'authorization':sessionStorage.getItem('auth')
+						}
+					}).then(res => res.json()).then(res => {
+						if(res.status == 2){
+							notification.error({message:res.errorMes})
+						}else{
+							this.setState({
+								storySetInfo:fromJS(res)
+							})
+						}
+
+					}):null
 				}
 				handleDelete = () => {
 					return this.props.deleteStory(this.props.params.id)
@@ -218,7 +247,7 @@ export default (type) => {
 					return this.props.editStory(formData,this.props.params.id)
 				}
 				render(){
-					const {storyInfo,storyTags,storyTagsByParent,storyTagInfo,soundEffects,backgroundMusics,backgroundMusicInfo,soundEffectByTag,backgroundMusicByTag,storyRoleInfo,albumList} = this.state
+					const {storyInfo,storyTags,storyTagsByParent,storyTagInfo,soundEffects,backgroundMusics,backgroundMusicInfo,soundEffectByTag,backgroundMusicByTag,storyRoleInfo,albumList,storySetList,storySetInfo} = this.state
 					const props = {
 						storyInfo,
 						storyTags,
@@ -230,7 +259,8 @@ export default (type) => {
 						soundEffectByTag,
 						backgroundMusicByTag,
 						storyRoleInfo,
-						albumList
+						albumList,
+						storySetList,storySetInfo
 					}
 					return (
 						<CreateEditPanel type={this.props.type} onDelete={this.handleDelete} onSubmit={this.props.type=='create'?this.handleCreate:this.handleEdit} title={this.props.type=='create'?'新建Story':`Story ${storyInfo.get('title')}`} {...props}/>
@@ -331,5 +361,7 @@ export default (type) => {
 		return LogoGetDataHOC
 	}else if(type == 'album'){
 		return AlbumGetDataHOC
+	}else if(type == 'storyset'){
+		return StorySetGetDataHOC
 	}
 }

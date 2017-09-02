@@ -1,18 +1,39 @@
 import React from 'react'
 import styles from './CreateEditPanel.scss'
 import CreateEditHeader from '../../components/common/CreateEditHeader'
-import {Form,Upload,Button,Icon} from 'antd'
+import {Form,Upload,Button,Icon,notification} from 'antd'
 import EnhanceInput from '../../components/common/EnhanceInput'
 import _ from 'lodash'
+import UploadAvatar from '../../components/common/UploadAvatar'
+import PropTypes from 'prop-types'
 const FormItem = Form.Item
 
 
 class CreateEditPanel extends React.Component {
+	static contextTypes = {
+		router:PropTypes.object
+	}
 	constructor(){
 		super()
 		this.state = {
 			fileList:[],
 			zipFileList:[]
+		}
+	}
+	componentWillReceiveProps(nextProps){
+		if(!nextProps.discoverInfo.isEmpty()){
+
+			this.setState({
+				fileList:nextProps.discoverInfo.get('pictureUrl')?[_.extend(new File([],''),{
+					uid:-1,
+					url:nextProps.discoverInfo.get('pictureUrl')
+				})]:[],
+				zipFileList:nextProps.discoverInfo.get('webUrl')?[_.extend({},{
+					uid:-1,
+					url:nextProps.discoverInfo.get('webUrl'),
+					name:nextProps.discoverInfo.get('webUrl')
+				})]:[]
+			})
 		}
 	}
 	handlePicDisplay(fileList,stateName){
@@ -32,12 +53,19 @@ class CreateEditPanel extends React.Component {
 		formData.append('title',getFieldValue('title'))
 		formData.append('description',getFieldValue('description'))
 		formData.append('picture',this.state.fileList[0]||new File([],''))
-		formData.append('zip',this.state.zipFileList[0]||new File([],''))
+		if(this.state.zipFileList[0] && this.state.zipFileList[0].size >0){
+			formData.append('zip',this.state.zipFileList[0])
+		}else{
+			formData.append('zip',new File([],''))
+		}
+		notification.info({message:'请求已发送'})
 		this.props.onSubmit(formData)
+		this.context.router.goBack(0)
+
 	}
 	render(){
 		const {discoverInfo} = this.props
-		console.log(discoverInfo.toJS())
+		console.log("asdf",discoverInfo.toJS())
 		const {getFieldDecorator} = this.props.form
 		return (
 			<div className={styles.container}>
@@ -68,24 +96,18 @@ class CreateEditPanel extends React.Component {
 						labelCol={{span:2}}
 						wrapperCol={{span:4}}
 					>
-					<Upload
-						listType="picture-card"
-						fileList={!discoverInfo.get('pictureUrl')?this.state.fileList:[{
-							uid:-1,
-							url:discoverInfo.get('pictureUrl')
-						}]}
-						onRemove={file => {
-							this.setState({
-								fileList:[]
-							})
-						}}
-						beforeUpload={(file,fileList)=>{
-							this.handlePicDisplay(fileList,'fileList')
-							return false
-						}}
-					>
-						选择图片
-					</Upload>
+
+					<UploadAvatar value={this.state.fileList} onChange={(file,fileList) => {
+						this.setState({
+							fileList:fileList
+						})
+					}}
+					onRemove={() => {
+						this.setState({
+							fileList:[]
+						})
+					}}
+					/>
 					</FormItem>
 					<FormItem
 						label='压缩包'
@@ -94,6 +116,11 @@ class CreateEditPanel extends React.Component {
 					>
 					<Upload
 					   fileList={this.state.zipFileList}
+					   onRemove={() => {
+						   this.setState({
+							   zipFileList:[]
+						   })
+					   }}
 					   beforeUpload={(file,fileList)=>{
 						   this.setState({
 							   zipFileList:fileList,

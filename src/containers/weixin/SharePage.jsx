@@ -4,21 +4,28 @@ import config from '../../config'
 import plyr from 'plyr'
 import musicSrc from './陈一发儿-童话镇.mp3'
 import PlayerComponent from './PlayerComponent'
-import { Circle } from 'rc-progress'
+import {Button} from 'antd'
 export default class SharePage extends React.Component {
+	constructor(){
+		super()
+		this.state = {
+			currentTime:0,
+			duration:0,
+		}
+	}
+	played = false
 	componentDidMount(){
-		// fetch(config.api.works.query(this.props.params.id)).then(res => res.json()).then(res => {
-		// 	console.log(res)
-		// })
-
-		const player = plyr.setup(this.refs.audio)[0];
-		console.log(player)
-		player.source({
-			type:'audio',
-			title:'Example title',
-			sources:[{
-				src:musicSrc
-			}]
+		const audio = document.getElementById('audio1')
+		this.player = plyr.setup(this.refs.audio)[0];
+		fetch(config.api.works.query(this.props.params.id||1)).then(res => res.json()).then(res => {
+			console.log(res)
+			this.player.source({
+				type:'audio',
+				title:'Example title',
+				sources:[{
+					src:musicSrc
+				}]
+			})
 		})
 	}
 	render(){
@@ -28,11 +35,35 @@ export default class SharePage extends React.Component {
 					打开该链接的APP导航栏
 				</div>
 				<div className={styles.body}>
-					<PlayerComponent width={100} height={100}/>
+					<div className={styles.info}>
+						<div className={styles.title}>故事会</div>
+						<div className={styles.author}>佚名</div>
+					</div>
+					<PlayerComponent onClick={()=>{
+						if(!this.played){
+							this.player.play()
+							this.intervalId = setInterval(() => {
+								this.setState({
+									currentTime:this.player.getCurrentTime(),
+									duration:this.player.getDuration()
+								})
+							},1000)
+							this.played = true
+						}else{
+							this.player.pause()
+							clearInterval(this.intervalId)
+							this.played = false
+						}
+
+					}} currentTime={this.state.currentTime} duration={this.state.duration}/>
+					<div className={styles.operate}>
+						<Button type='ghost'>打开</Button>
+						<Button type='primary'>下载</Button>
+					</div>
 				</div>
 				<div className={styles.footer}>
 				</div>
-				<audio ref='audio' id='audio' controls></audio>
+				<audio ref='audio' id='audio1' controls></audio>
 			</div>
 		)
 	}

@@ -56,7 +56,19 @@ class IndividualityContainer extends React.Component {
 					 }} search={{}} />
 				</div>
 				<div className={styles.mainPanel}>
-					<EnhanceTable columns={columns} dataSource={dataSource}/>
+					<EnhanceTable columns={columns} dataSource={dataSource}
+					pagination={{
+						total:this.props.individuality.getIn(['otherData','totalSize']),
+						// current:this.props.individuality.getIn(['otherData','offset']),
+						onChange:(page,pageSize) => {
+							this.setState({
+								current:page,
+								pageSize:pageSize
+							})
+							this.props.getIndividuality(page-1,pageSize,this._condition)
+						}
+					}}
+					/>
 				</div>
 			</div>
 		)

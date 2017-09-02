@@ -35,6 +35,10 @@ export function addDiscover(formData){
 			// }
 			return res
 		}).then(res => {
+			console.log("------>",res)
+			if(res.status == 2){
+				notification.error({message:res.errorMes})
+			}
 			return dispatch({
 				types:GET_DISCOVERLIST,
 				callAPI:() => {

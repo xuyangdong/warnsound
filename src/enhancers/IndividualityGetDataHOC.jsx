@@ -2,9 +2,8 @@ import React from 'react'
 import config from '../config'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {addDiscover,editDiscover} from 'actions/discover'
 import {fromJS} from 'immutable'
-import {createQuestion,editQuestion} from 'actions/individual'
+import {createQuestion,editQuestion,deleteQuestion} from 'actions/individual'
 import {notification} from 'antd'
 
 export default (CreateEditPanel) => {
@@ -12,10 +11,20 @@ export default (CreateEditPanel) => {
 		constructor(){
 			super()
 			this.state = {
-				individualityInfo:fromJS({})
+				individualityInfo:fromJS({}),
+				storyTags:fromJS([])
 			}
 		}
 		componentDidMount(){
+			fetch(config.api.storyTag.get(0,100000),{
+				headers:{
+					authorization:sessionStorage.getItem('auth')
+				}
+			}).then(res => res.json()).then(res => {
+				this.setState({
+					storyTags:fromJS(res.obj)
+				})
+			})
 			if(this.props.type=='edit'){
 				fetch(config.api.individual.query(this.props.params.id),{
 					headers:{
@@ -29,7 +38,6 @@ export default (CreateEditPanel) => {
 			}
 		}
 		uploadIcon = (data) => {
-			console.log("data",data)
 			const fileList = data.questionFile&&data.questionFile.size>0?[data.questionFile]:[]
 			const answerItems = data.answerItems
 			answerItems.forEach(item => {
@@ -65,12 +73,14 @@ export default (CreateEditPanel) => {
 								console.log(":asdfasdfasdf:",iconUrls)
 								return {
 									answerName:v.answerName,
-									icon:iconUrls[fileIndex++]
+									icon:iconUrls[fileIndex++],
+									tagId:v.tagId
 								}
 							}else{
 								return {
 									answerName:v.answerName,
-									icon:v.icon
+									icon:v.icon,
+									tagId:v.tagId
 								}
 							}
 						})
@@ -85,7 +95,8 @@ export default (CreateEditPanel) => {
 					icon:data.icon,
 					extra:JSON.stringify(answerItems.map(v => ({
 						answerName:v.answerName,
-						icon:v.icon
+						icon:v.icon,
+						tagId:v.tagId
 					})))
 				}
 				return Promise.resolve(jsonData)
@@ -101,18 +112,23 @@ export default (CreateEditPanel) => {
 				this.props.editQuestion(res,this.props.params.id)
 			})
 		}
+		handleDelete = () => {
+			return this.props.deleteQuestion(this.props.params.id)
+		}
 		render(){
-			const {individualityInfo} = this.state
+			const {individualityInfo,storyTags} = this.state
 			const props = {
 				individualityInfo,
+				storyTags
 			}
 			return (
-				<CreateEditPanel title='创建个性推荐' onSubmit={this.props.type=='create'?this.handleCreate:this.handleEdit} {...props}/>
+				<CreateEditPanel title='创建个性推荐' onSubmit={this.props.type=='create'?this.handleCreate:this.handleEdit} onDelete={this.handleDelete} {...props}/>
 			)
 		}
 	}
 	return connect(state => ({}),dispatch => ({
 		createQuestion:bindActionCreators(createQuestion,dispatch),
-		editQuestion:bindActionCreators(editQuestion,dispatch)
+		editQuestion:bindActionCreators(editQuestion,dispatch),
+		deleteQuestion:bindActionCreators(deleteQuestion,dispatch)
 	}))(IndividualCreateEditPanel)
 }

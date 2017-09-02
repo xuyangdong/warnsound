@@ -4,6 +4,7 @@ import styles from './CreateEditPanel.scss'
 import {fromJS} from 'immutable'
 import {Form,Input,Select,Checkbox,Upload,Button,Icon,Row,Col,Spin,Tag,notification,TreeSelect} from 'antd'
 import EnhanceInput from '../../components/common/EnhanceInput'
+import EnhanceSelect from '../../components/common/EnhanceSelect'
 import config from '../../config'
 import AddStoryRoleModal from '../../components/story/AddStoryRoleModal'
 import plyr from 'plyr'
@@ -93,13 +94,16 @@ class CreateEditPanel extends React.Component {
 		formData.append('guideSoundFile',this.state.guideSoundFileList[0]||new File([],''))
 		formData.append('price',getFieldValue('price')||0)
 		formData.append('defaultBackGroundMusicId',getFieldValue('backgroundMusic'))
-		formData.append('album',getFieldValue('album'))
+		formData.append('albumId',getFieldValue('album').join(',')||'')
+		formData.append('setId',getFieldValue('storySet'))
+		formData.append('readTime',getFieldValue('readTime'))
 		if(this.props.type=='create'){
 			const roleData = this.roleData||{}
 			formData.append('roleName',roleData.roleName||'')
 			formData.append('roleIconFile',roleData.roleIconFile||'')
 			formData.append('roleAudioFile',roleData.roleAudioFile||'')
 			formData.append('roleExtra',JSON.stringify(roleData.roleExtra)||'')
+			formData.append('roleReadGuide',roleData.roleReadGuide)
 		}
 		this.props.onSubmit(formData).then(res => {
 			this.setState({
@@ -186,7 +190,7 @@ class CreateEditPanel extends React.Component {
 		Promise.all(uploadPromise).then(res => {
 			console.log(res)
 			fetch(config.api.role.edit(this.props.storyRoleInfo.get('id')||''),{
-				method:'PUT',
+				method:'POST',
 				headers:{
 					'authorization':sessionStorage.getItem('auth'),
 					'content-type':'application/json'
@@ -194,10 +198,12 @@ class CreateEditPanel extends React.Component {
 				body:JSON.stringify({
 					id:this.props.storyRoleInfo.get('id'),
 					storyId:this.props.storyInfo.get('id'),
+					roleReadGuide:roleData.roleReadGuide,
 					name:roleData.roleName,
 					audio:roleData.roleAudioFile&&roleData.roleAudioFile.size>0?res[0].obj.url:roleData.roleAudioFile?roleData.roleAudioFile.url:'',
 					icon:roleData.roleIconFile&&roleData.roleIconFile.size>0?res[1].obj.url:roleData.roleIconFile?roleData.roleIconFile.url:'',
 					extra:JSON.stringify(roleData.roleExtra),
+					readTime:roleData.readTime
 				})
 			}).then(res => {
 				return res.json()
@@ -268,7 +274,7 @@ class CreateEditPanel extends React.Component {
 		)
 	}
 	render(){
-		const {storyInfo,storyTags,soundEffects,backgroundMusics,soundEffectByTag,albumList} = this.props
+		const {storyInfo,storyTags,soundEffects,backgroundMusics,soundEffectByTag,albumList,storySetList,storySetInfo} = this.props
 		const { getFieldDecorator } = this.props.form;
 		const formItemLayout = {
 			  	labelCol: {
@@ -321,23 +327,32 @@ class CreateEditPanel extends React.Component {
 						this.props.type=='edit'?<Input/>:<EnhanceInput />
 					)}
 					</FormItem>
-					<FormItem
+					{<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:4}}
 					  label={<span>专辑</span>}
-					>
-					{getFieldDecorator('album',{
-						initialValue:storyInfo.get('album')
+					>{getFieldDecorator('album',{
+						initialValue:albumList.map(v => v.get('id')).toJS()
 					})(
-						<Select>
-						{albumList.map(v => {
-							return (
-								<Option title={v.get('name')} value={''+v.get('id')} key={v.get('id')}>{v.get('name')}</Option>
-							)
-						})}
-						</Select>
-					)}
-					</FormItem>
+						<EnhanceSelect options={albumList.map(v => ({
+							value:v.get('id'),
+							title:v.get('name')
+						})).toJS()}/>
+					)
+					}</FormItem>}
+					<FormItem
+					  labelCol={{span:2}}
+					  wrapperCol={{span:4}}
+					  label={<span>故事集</span>}
+					>{getFieldDecorator('storySet',{
+						initialValue:storySetInfo.get('id')?[storySetInfo.get('id')]:[]
+					})(
+						<EnhanceSelect mode='single' options={storySetList.map(v => ({
+							value:v.get('id'),
+							title:v.get('title')
+						})).toJS()}/>
+					)
+					}</FormItem>
 					<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:4}}
@@ -407,6 +422,17 @@ class CreateEditPanel extends React.Component {
 						initialValue:storyInfo.get('readGuide')
 					})(
 						this.props.type=='edit'?<Input type='textarea' autosize={{minRows:4}}/>:<EnhanceInput type='textarea' autosize={{minRows:4}}/>
+					)}
+					</FormItem>
+					<FormItem
+					  labelCol={{span:2}}
+					  wrapperCol={{span:4}}
+					  label={<span>朗读时间</span>}
+					>
+					{getFieldDecorator('readTime',{
+						initialValue:storyInfo.get('readTime')
+					})(
+						this.props.type=='edit'?<Input />:<EnhanceInput />
 					)}
 					</FormItem>
 					<FormItem

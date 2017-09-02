@@ -92,7 +92,7 @@ class CreateEditPanel extends React.Component {
 						labelCol={{span:2}}
 						wrapperCol={{span:4}}
 					>
-						<UploadAvatar value={this.state.fileList}
+						<UploadAvatar widthEdit={true} imageRatio={1.6} value={this.state.fileList}
 						onChange={(file,fileList)=>{
 							this.setState({
 								fileList:fileList

@@ -45,6 +45,11 @@ import IndividualCreateEditPanel from './containers/individuality/CreateEditPane
 import AlbumContainer from './containers/album/AlbumContainer'
 import AlbumCreateEditPanel from './containers/album/CreateEditPanel'
 
+import StorySetContainer from './containers/storySet/StorySetContainer'
+import StorySetCreateEditPanel from './containers/storySet/CreateEditPanel'
+
+import UserContainer from './containers/user/UserContainer'
+
 import SharePage from './containers/weixin/SharePage'
 
 import CreateEditGetDataHOCFactory from './enhancers/CreateEditGetDataHOCFactory'
@@ -69,6 +74,9 @@ const IndividualCreateEditPanelWithData = CreateEditGetDataHOCFactory('individua
 const LogoCreateEditPanelWithData = CreateEditGetDataHOCFactory('logo')(LogoCreateEditPanel)
 
 const AlbumCreateEditPanelWithData = CreateEditGetDataHOCFactory('album')(AlbumCreateEditPanel)
+
+const StorySetCreateEditPanelWithData = CreateEditGetDataHOCFactory('storyset')(StorySetCreateEditPanel)
+
 const routes = (<Router history={hashHistory}>
 		<Route path="/login" component={LoginContainer}/>
 		<Route path="/" component={LoginControlHOC(BaseContainer)}>
@@ -116,6 +124,12 @@ const routes = (<Router history={hashHistory}>
 			<Route path='album' component={AlbumContainer} />
 			<Route path='album/create' component={(props) => <AlbumCreateEditPanelWithData type='create' {...props}/>}/>
 			<Route path='album/edit/(:id)' component={(props) => <AlbumCreateEditPanelWithData type='edit' {...props}/>}/>
+
+			<Route path='storyset' component={StorySetContainer}/>
+			<Route path='storyset/create' component={(props) => <StorySetCreateEditPanelWithData type='create' {...props} />}/>
+			<Route path='storyset/edit/(:id)' component={(props) => <StorySetCreateEditPanelWithData type='edit' {...props} />}/>
+
+			<Route path='user' component={UserContainer} />
 		</Route>
 		<Route path="/weixin">
 			<Route path="guanzhu" component={WeixinContainer}/>

@@ -22,11 +22,12 @@ class CreateEditPanel extends React.Component {
 	}
 	componentWillReceiveProps(nextProps){
 		if(!nextProps.soundEffectInfo.isEmpty()
-		&&this.props.soundEffectInfo.get('coverUrl')!=nextProps.soundEffectInfo.get('coverUrl')){
+		&&this.props.soundEffectInfo.get('icon')!=nextProps.soundEffectInfo.get('icon')){
+			console.log("-->:",nextProps.soundEffectInfo.toJS())
 			this.setState({
-				coverFileList:nextProps.soundEffectInfo.get('coverUrl')?[_.extends(new File([],''),{
+				coverFileList:nextProps.soundEffectInfo.get('icon')?[_.extend(new File([],''),{
 					uid:-1,
-					url:nextProps.soundEffectInfo.get('coverUrl')
+					url:nextProps.soundEffectInfo.get('icon')
 				})]:[]
 			})
 		}
@@ -44,6 +45,9 @@ class CreateEditPanel extends React.Component {
 		})
 		// formData.append('uploadFile',this.state.fileList[0]||new File([],''))
 		formData.append('tagId',getFieldValue('tag'))
+		if(this.state.coverFileList[0]&& this.state.coverFileList[0].size>0){
+			formData.append('icon',this.state.coverFileList[0])
+		}
 		this.props.onSubmit(formData).then(res => {
 			this.setState({
 				spin:false
@@ -55,6 +59,7 @@ class CreateEditPanel extends React.Component {
 	render(){
 		const {getFieldDecorator} = this.props.form
 		const {soundEffectInfo,tagList,soundEffectTag} = this.props
+		console.log("ppppp:",this.state.coverFileList)
 		return (
 			<div className={styles.container}>
 				<div>
@@ -120,7 +125,7 @@ class CreateEditPanel extends React.Component {
 				  		wrapperCol={{span:4}}
 				  		label={<span>音效图片</span>}
 					>
-						<UploadAvatar fileList={this.state.fileList} onChange={(file,fileList) => {
+						<UploadAvatar value={this.state.coverFileList} onChange={(file,fileList) => {
 							this.setState({
 								coverFileList:fileList
 							})

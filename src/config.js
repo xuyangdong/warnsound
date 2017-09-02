@@ -49,6 +49,9 @@ const config = _.extend({
             },
             role: {
                 query:(id) => `${baseURL}/manage/getStoryRoleListByStoryId?storyId=${id}`
+            },
+            storySet:{
+                query:storyId => `${baseURL}/manage/getStorySetByStoryId?storyId=${storyId}`
             }
         },
         storyTag: {
@@ -121,6 +124,7 @@ const config = _.extend({
             add:`${baseURL}/manage/badgeTypes`,
             edit:(id) => `${baseURL}/manage/badgeTypes/${id}`,
             delete:(id) => `${baseURL}/manage/badgeTypes/${id}`,
+            query:(id) => `${baseURL}/manage/badgeTypes/${id}`,
             detail:{
                 query:(typeId) => `${baseURL}/manage/getBadgeListByTypeId?typeId=${typeId}`,
                 add:`${baseURL}/manage/badges`,
@@ -143,16 +147,28 @@ const config = _.extend({
             get:(page,pageSize) => `${baseURL}/manage/getQuestionListByPage?page=${page}&pageSize=${pageSize}`,
             query:id => `${baseURL}/manage/questions/${id}`,
             add:`${baseURL}/manage/questions`,
-            edit:id => `${baseURL}/manage/questions/${id}`
+            edit:id => `${baseURL}/manage/questions/${id}`,
+            delete:id => `${baseURL}/manage/questions/${id}`
         },
         works:{
-            query:(id) => `${baseURL}`
+            query:(id) => `${baseURL}/user/getShareWorksById?id=${id}`
         },
         album:{
             get:(page,pageSize) => `${baseURL}/manage/getAlbumListByPage?page=${page}&pageSize=${pageSize}`,
             query:id => `${baseURL}/manage/albums/${id}`,
             add:`${baseURL}/manage/albums`,
             edit:id => `${baseURL}/manage/albums/${id}`
+        },
+        storySet:{
+            get:(page,pageSize) => `${baseURL}/manage/getAllStorySetByPage?page=${page}&pageSize=${pageSize}`,
+            add:`${baseURL}/manage/storySets`,
+            edit:id => `${baseURL}/manage/storySets/${id}`,
+            query:id => `${baseURL}/manage/storySets/${id}`,
+            delete:id => `${baseURL}/manage/storySets/${id}`,
+            recommend:{
+                add:id => `${baseURL}/manage/storySets/${id}/recommendations`,
+                delete:id => `${baseURL}/manage/storySets/${id}/recommendations`
+            }
         }
     }
 })

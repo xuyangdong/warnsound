@@ -24,7 +24,7 @@ export default class EditableTable extends React.Component {
       render: (text, record, index) => (
         <EditableCell
           value={text}
-          onChange={this.onCellChange(index, 'name')}
+          onChange={this.onCellChange(index, 'time')}
         />
       ),
     }, {
@@ -94,19 +94,19 @@ export default class EditableTable extends React.Component {
     });
   }
   getData = () => {
-	  return this.state.dataSource.map(v => ({
+	  return this.state.dataSource.map((v,k) => ({
 		  hint:v.name,
-		  time:v.time
+		  time:v.time,
+          order:k
 	  }))
   }
   render() {
     const { dataSource } = this.state;
-	console.log("asdfasdf",dataSource)
     const columns = this.columns;
     return (
       <div>
-        <Button className="editable-add-btn" onClick={this.handleAdd}>Add</Button>
-        <Table bordered dataSource={dataSource} columns={columns} />
+        <Table pagination={false} bordered dataSource={dataSource} columns={columns} />
+        <Button style={{marginTop:10}} className="editable-add-btn" onClick={this.handleAdd}>Add</Button>
       </div>
     );
   }

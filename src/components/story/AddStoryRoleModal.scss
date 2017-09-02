@@ -4,10 +4,10 @@
 	flex-direction: column;
 	align-items: flex-start;
 	:local(.firstField){
-		width:50%;
+		width:90%;
 		display:flex;
 		justify-content: space-between;
-		align-items: center;
+		align-items: flex-start;
 		margin-bottom: 10px;
 	}
 	:local(.secondField){

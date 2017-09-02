@@ -38,10 +38,11 @@ class CreateEditPanel extends React.Component {
 	}
 	render(){
 		const {getFieldDecorator} = this.props.form
+		const {logoInfo} = this.props
 		return (
 			<div className={styles.container}>
 				<div>
-					<CreateEditHeader title={this.props.title}/>
+					<CreateEditHeader title={this.props.title} onDelete={this.props.onDelete}/>
 				</div>
 				<div className={styles.formPanel}>
 					<Form>
@@ -50,7 +51,7 @@ class CreateEditPanel extends React.Component {
 						  labelCol={{span:2}}
 						  wrapperCol={{span:4}}
 						>{getFieldDecorator('name',{
-							// initialValue:soundEffectInfo.get('description')
+							initialValue:logoInfo.get('name')
 						})(
 							<Input />
 						)}
@@ -60,7 +61,7 @@ class CreateEditPanel extends React.Component {
 						  labelCol={{span:2}}
 						  wrapperCol={{span:4}}
 						>{getFieldDecorator('description',{
-							// initialValue:soundEffectInfo.get('description')
+							initialValue:logoInfo.get('description')
 						})(
 							<Input />
 						)}

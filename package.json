@@ -57,6 +57,7 @@
     "prop-types": "^15.5.10",
     "qs": "^6.4.0",
     "react": "^15.5.4",
+    "react-avatar-editor": "^10.2.1",
     "react-codemirror": "^1.0.0",
     "react-dom": "^15.5.4",
     "react-draft-wysiwyg": "^1.10.0",

@@ -295,7 +295,10 @@ export default class DraftComponent extends React.Component {
 			soundEffectId:v.getData().get('soundEffectId'),
             readGuide:v.getData().get('readGuide'),
 		}))
-        return this.prePostProcess(rawContentArray).map(v => _.omit(v,'keyArray'))
+        return this.prePostProcess(rawContentArray).map(v => ({
+            ...v,
+            order:v.key
+        })).map(v => _.omit(v,['keyArray','key']))
 	}
     handleClearSoundEffect = () => {
         const {editorState} = this.state

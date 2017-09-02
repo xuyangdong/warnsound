@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux'
 import {fromJS} from 'immutable'
 import CreateEditPanel from '../containers/logo/CreateEditPanel'
 import config from '../config'
-import {createLogo} from 'actions/logo'
+import {createLogo,deleteLogo} from 'actions/logo'
 
 export default (CreateEditPanel) => {
 	class LogoCreateEditPanel extends React.Component {
@@ -12,19 +12,21 @@ export default (CreateEditPanel) => {
 			super()
 			this.state = {
 				// appInfo : fromJS({})
+				logoInfo:fromJS({})
 			}
 		}
 		componentDidMount(){
-			// if(this.props.type=='edit'){
-			// 	if(this.props.app.get('data').isEmpty()){
-			// 		// TODO: 缺少一个获取app的接口，先用getList代替
-			// 		this.props.getAppList(0,100)
-			// 	}else{
-			// 		this.setState({
-			// 			appInfo:this.props.app.get('data').find(v => v.get('appId')==this.props.params.id)
-			// 		})
-			// 	}
-			// }
+			if(this.props.type=='edit'){
+				fetch(config.api.logo.query(this.props.params.id),{
+					headers:{
+						authorization:sessionStorage.getItem('auth')
+					}
+				}).then(res => res.json()).then(res => {
+					this.setState({
+						logoInfo:fromJS(res)
+					})
+				})
+			}
 		}
 		handleCreate = (formdata) => {
 
@@ -33,9 +35,13 @@ export default (CreateEditPanel) => {
 		handleEdit = (formdata) => {
 			// return this.props.updateApp(formdata,this.props.params.id)
 		}
+		handleDelete = () => {
+			return this.props.deleteLogo(this.props.params.id)
+		}
 		render() {
-			const props = {}
-			return <CreateEditPanel onSubmit={this.props.type=='edit'?this.handleEdit:this.handleCreate} title={this.props.type=='edit'?'更新徽章':'新建徽章'} {...props}/>
+			const {logoInfo} = this.state
+			const props = {logoInfo}
+			return <CreateEditPanel onDelete={this.handleDelete} onSubmit={this.props.type=='edit'?this.handleEdit:this.handleCreate} title={this.props.type=='edit'?'更新徽章':'新建徽章'} {...props}/>
 		}
 	}
 	return connect(state => {
@@ -45,6 +51,7 @@ export default (CreateEditPanel) => {
 	}, dispatch => {
 		return {
 			createLogo:bindActionCreators(createLogo,dispatch),
+			deleteLogo:bindActionCreators(deleteLogo,dispatch)
 			// addApp:bindActionCreators(addApp,dispatch),
 			// updateApp:bindActionCreators(updateApp,dispatch)
 		}

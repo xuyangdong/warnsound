@@ -53,7 +53,6 @@ class CreateEditPanel extends React.Component {
 	render(){
 		const {getFieldDecorator} = this.props.form
 		const {storyTags,storyTagInfo} = this.props
-		console.log("-->:",''+(storyTagInfo.get('parentId')||''))
 		return (
 			<div className={styles.container}>
 				<div>

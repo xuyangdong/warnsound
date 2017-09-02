@@ -20,7 +20,8 @@ export default class AddStoryRoleModal extends React.Component {
 			roleName:'',
 			roleIconFileList:[],
 			roleAudioFileList:[],
-			roleExtra:fromJS([])
+			roleExtra:fromJS([]),
+			readTime:''
 		}
 	}
 	componentDidMount(){
@@ -28,6 +29,7 @@ export default class AddStoryRoleModal extends React.Component {
 		if(!storyRoleInfo.isEmpty()){
 			this.setState({
 				roleName:storyRoleInfo.get('name'),
+				readGuide:storyRoleInfo.get('roleReadGuide'),
 				roleIconFileList:storyRoleInfo.get('icon')?[_.extend(new File([],''),{
 					uid:-1,
 					url:storyRoleInfo.get('icon')
@@ -36,17 +38,20 @@ export default class AddStoryRoleModal extends React.Component {
 					uid:-1,
 					url:storyRoleInfo.get('audio')
 				})]:[],
-				roleExtra:storyRoleInfo.get('extra')
+				roleExtra:storyRoleInfo.get('extra'),
+				readTime:storyRoleInfo.get('readTime')
 			})
 		}
 	}
 	componentWillReceiveProps(nextProps){
 		const {storyRoleInfo} = nextProps
+
 		if(!this._init){
 			if(!storyRoleInfo.isEmpty()){
 				this._init = true
 				this.setState({
 					roleName:storyRoleInfo.get('name'),
+
 					roleIconFileList:[_.extend(new File([],''),{
 						uid:-1,
 						url:storyRoleInfo.get('icon')
@@ -55,7 +60,8 @@ export default class AddStoryRoleModal extends React.Component {
 						uid:-1,
 						url:storyRoleInfo.get('audio')
 					})],
-					roleExtra:storyRoleInfo.get('extra')
+					roleExtra:storyRoleInfo.get('extra'),
+					readTime:storyRoleInfo.get('readTime')
 				})
 			}
 		}
@@ -74,7 +80,9 @@ export default class AddStoryRoleModal extends React.Component {
 			roleName:this.state.roleName,
 			roleIconFile:this.state.roleIconFileList[0],
 			roleAudioFile:this.state.roleAudioFileList[0],
-			roleExtra:this.refs.editableTable.getData()
+			roleExtra:this.refs.editableTable.getData(),
+			roleReadGuide:this.state.readGuide,
+			readTime:this.state.readTime
 		})
 	}
 	getData(){
@@ -82,7 +90,9 @@ export default class AddStoryRoleModal extends React.Component {
 			roleName:this.state.roleName,
 			roleIconFile:this.state.roleIconFileList[0],
 			roleAudioFile:this.state.roleAudioFileList[0],
-			roleExtra:this.refs.editableTable.getData()
+			roleExtra:this.refs.editableTable.getData(),
+			roleReadGuide:this.state.readGuide,
+			readTime:this.state.readTime
 		}
 	}
 	render(){
@@ -94,12 +104,17 @@ export default class AddStoryRoleModal extends React.Component {
 			>
 			<div className={styles.header}>
 				<div className={styles.firstField}>
-					<Input addonBefore='角色名称' value={this.state.roleName} onChange={(e) => {
+					<Input addonBefore='角色名称' style={{width:200,flexShrink:0}} value={this.state.roleName} onChange={(e) => {
 						this.setState({
 							roleName:e.target.value
 						})
 					}}/>
-					<Input style={{marginLeft:10}} addonBefore='朗读指导' value={this.state.readGuide} onChange={(e) => {
+					<Input addonBefore='朗读时间' style={{ marginLeft:10,width:200,flexShrink:0}} value={this.state.readTime} onChange={(e) => {
+						this.setState({
+							readTime:e.target.value
+						})
+					}}/>
+					<Input type='textarea' style={{width:200}} placeholder='朗读指导' autosize={{minRows:4,maxRows:4}} style={{marginLeft:10}} addonBefore='朗读指导' value={this.state.readGuide} onChange={(e) => {
 						this.setState({
 							readGuide:e.target.value
 						})

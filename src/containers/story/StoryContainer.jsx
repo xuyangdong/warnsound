@@ -159,6 +159,7 @@ class StoryContainer extends React.Component{
 				<div className={styles.mainPanel}>
 					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{
 						total:this.props.stories.getIn(['otherData','totalSize']),
+						current:this.props.stories.getIn(['otherData','offset']),
 						onChange:(page,pageSize) => {
 							this.setState({
 								current:page,

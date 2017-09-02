@@ -14,6 +14,7 @@ import logo from './logo'
 import logoDetail from './logoDetail'
 import individuality from './individuality'
 import album from './album'
+import storySet from './storySet'
 
 const reducer = combineReducers({
 	user,
@@ -28,7 +29,8 @@ const reducer = combineReducers({
 	logo,
 	logoDetail,
 	individuality,
-	album
+	album,
+	storySet
 	// auth,
 	// alliance,
 	// affair,

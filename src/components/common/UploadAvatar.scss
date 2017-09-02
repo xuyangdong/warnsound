@@ -1,0 +1,8 @@
+:local(.avatarContainer){
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	:local(.scaleBar){
+		position: relative;
+	}
+}

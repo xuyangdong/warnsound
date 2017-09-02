@@ -1,12 +1,16 @@
 import React from 'react'
 import styles from './CreateEditPanel.scss'
 import CreateEditHeader from '../../components/common/CreateEditHeader'
-import {Form,Input,Icon, Button } from 'antd'
+import {Form,Input,Icon, Button, notification } from 'antd'
 import UploadAvatar from '../../components/common/UploadAvatar'
 import _ from 'lodash'
+import StoryTagSelector from '../../components/storyTag/StoryTagSelector'
 const FormItem = Form.Item
 
 class CreateEditPanel extends React.Component {
+	static contextTypes = {
+		router:React.PropTypes.object
+	}
 	uuid = 0
 	constructor(){
 		super()
@@ -57,6 +61,7 @@ class CreateEditPanel extends React.Component {
 		keys.forEach(v => {
 			answerItems.push({
 				answerName:getFieldValue(`answer-${v}`),
+				tagId:getFieldValue(`tagId-${v}`),
 				answerFile:this.state[`answer-${v}`]?this.state[`answer-${v}`][0]:new File([],''),
 				icon:answerItemsRemote[v]?answerItemsRemote[v].icon:''
 			})
@@ -67,21 +72,36 @@ class CreateEditPanel extends React.Component {
 			icon:this.state.questionFileList[0]?this.state.questionFileList[0].size>0?'':this.state.questionFileList[0].url:'',
 			answerItems
 		}
+		notification.info({message:'请求已提交'})
 		this.props.onSubmit(jsonData)
+		this.context.router.goBack(0)
 	}
 	render(){
 		const {getFieldDecorator,getFieldValue} = this.props.form
-		const {individualityInfo} = this.props
+		const {individualityInfo,storyTags} = this.props
 		let answerItemsRemote = []
 		try{
 			answerItemsRemote = JSON.parse(individualityInfo.get('extra'))
+			answerItemsRemote = answerItemsRemote.map((v,k) => {
+				if(typeof v.tagId === 'string'){
+					let tagArray = v.tagId.split(',')
+					return {
+						..._.omit(v,'tagId'),
+						tagId:_.concat([],tagArray)
+					}
+				}else{
+					return v
+				}
+			})
 			getFieldDecorator('keys', { initialValue: answerItemsRemote.map((v,k) => k) });
 		}catch(e){
 			//just for data bind, to bind keys -> []
 			getFieldDecorator('keys', { initialValue: [] });
 		}
+		this.uuid = answerItemsRemote.length
 
 		const keys = getFieldValue('keys')
+		// console.log("-->:",answerItemsRemote)
 		const answerItems = keys.map(v => {
 			return (
 				<FormItem
@@ -118,14 +138,18 @@ class CreateEditPanel extends React.Component {
 		              disabled={keys.length === 1}
 		              onClick={() => this.handleRemove(v)}
 		            />
+
 				</div>
+				{getFieldDecorator(`tagId-${v}`,{
+					initialValue:(answerItemsRemote[v]&&answerItemsRemote[v].tagId)?answerItemsRemote[v].tagId:[]
+				})(<StoryTagSelector mode='multiple' options={storyTags.toJS()}/>)}
 				</FormItem>
 			)
 		})
 		return (
 			<div className={styles.container}>
 				<div>
-					<CreateEditHeader title={this.props.title}/>
+					<CreateEditHeader onDelete={this.props.onDelete} title={this.props.title}/>
 				</div>
 				<div className={styles.formPanel}>
 					<Form>
