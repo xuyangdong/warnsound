@@ -41,7 +41,7 @@ export default class MediaTextComponent extends React.Component{
 	render(){
 		const PopContent = (
 			<div>
-				<div>{this.props.block.getData().get('readGuide')}</div>
+				<div style={{maxWidth:'500px'}}>{this.props.block.getData().get('readGuide')}</div>
 				<a onClick={this.handleDeleteReadGuide}>删除</a>
 			</div>
 		)

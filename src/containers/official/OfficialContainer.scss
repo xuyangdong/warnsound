@@ -1,0 +1,7 @@
+:local(.container){
+	width: 100vw;
+	>img {
+		width: 100vw;
+		object-fit: scale-down;
+	}
+}

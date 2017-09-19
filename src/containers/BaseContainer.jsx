@@ -32,6 +32,7 @@ const BaseContainer = React.createClass({
                             {PermissionControlEnhance(user.get('permission'),'individuality')(<Menu.Item key="11"><Link to='/individuality'><Icon type="star-o" />个性化</Link></Menu.Item>)}
                             {PermissionControlEnhance(user.get('permission'),'album')(<Menu.Item key="12"><Link to='/album'><Icon type="star-o" />专辑管理</Link></Menu.Item>)}
                             {PermissionControlEnhance(user.get('permission'),'storySet')(<Menu.Item key="13"><Link to='/storyset'><Icon type="book" />故事集管理</Link></Menu.Item>)}
+                            {PermissionControlEnhance(user.get('permission'),'user')(<Menu.Item key="14"><Link to='/user'><Icon type="book" />用户管理</Link></Menu.Item>)}
 						</Menu>
                     </div>
                     <div className={styles.mainPanel}>

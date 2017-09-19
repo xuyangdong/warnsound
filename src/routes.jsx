@@ -49,9 +49,20 @@ import StorySetContainer from './containers/storySet/StorySetContainer'
 import StorySetCreateEditPanel from './containers/storySet/CreateEditPanel'
 
 import UserContainer from './containers/user/UserContainer'
+import UserCreateEditPanel from './containers/user/CreateEditPanel'
+import UserWorkPage from './containers/user/work/UserWorkPage'
+import UserWorkCreateEditPanel from './containers/user/work/CreateEditPanel'
 
+/** -------------------- weixin share ------------------- **/
 import SharePage from './containers/weixin/SharePage'
+import SharePage2 from './containers/weixin/share2/SharePage2'
+/** -------------------- weixin share ------------------- **/
 
+/** -------------------- official ------------------- **/
+import OfficialContainer from './containers/official/OfficialContainer'
+/** -------------------- official ------------------- **/
+
+/** -------------------- HOC ------------------- **/
 import CreateEditGetDataHOCFactory from './enhancers/CreateEditGetDataHOCFactory'
 const StoryCreateEditGetDataHOC = CreateEditGetDataHOCFactory('story')
 const StroyCreateEditPanelWithData = StoryCreateEditGetDataHOC(StoryCreateEditPanel)
@@ -76,6 +87,11 @@ const LogoCreateEditPanelWithData = CreateEditGetDataHOCFactory('logo')(LogoCrea
 const AlbumCreateEditPanelWithData = CreateEditGetDataHOCFactory('album')(AlbumCreateEditPanel)
 
 const StorySetCreateEditPanelWithData = CreateEditGetDataHOCFactory('storyset')(StorySetCreateEditPanel)
+
+const UserCreateEditPanelWidthData = CreateEditGetDataHOCFactory('user')(UserCreateEditPanel)
+
+const UserWorkCreateEditPanelWithData = CreateEditGetDataHOCFactory('userWork')(UserWorkCreateEditPanel)
+/** -------------------- HOC ------------------- **/
 
 const routes = (<Router history={hashHistory}>
 		<Route path="/login" component={LoginContainer}/>
@@ -130,10 +146,21 @@ const routes = (<Router history={hashHistory}>
 			<Route path='storyset/edit/(:id)' component={(props) => <StorySetCreateEditPanelWithData type='edit' {...props} />}/>
 
 			<Route path='user' component={UserContainer} />
+			<Route path='user/create' component={(props) => <UserCreateEditPanelWidthData type='create' {...props}/>}/>
+			<Route path='user/edit/(:id)' component={(props) => <UserCreateEditPanelWidthData type='edit' {...props}/>}/>
+			<Route path='user/work/show/(:id)' component={UserWorkPage} />
+			<Route path='user/(:userId)/work/edit/(:id)' component={(props) => <UserWorkCreateEditPanelWithData type='edit' {...props}/>}/>
+			<Route path='user/(:userId)/work/create' component={(props) => <UserWorkCreateEditPanelWithData type='create' {...props}/>}/>
 		</Route>
+
 		<Route path="/weixin">
 			<Route path="guanzhu" component={WeixinContainer}/>
 			<Route path="share(/:id)" component={SharePage}/>
+			<Route path="share2(/:id)" component={SharePage2}/>
+		</Route>
+
+		<Route path="/official">
+			<Route path="index" component={OfficialContainer}/>
 		</Route>
 		<Route path="app" component={App}/>
 		<Route path="draft" component={DraftComponent} />

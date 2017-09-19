@@ -2,7 +2,7 @@ import React from 'react'
 import config from '../config'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {addDiscover,editDiscover} from 'actions/discover'
+import {addDiscover,editDiscover,deleteDiscover} from 'actions/discover'
 import {fromJS} from 'immutable'
 
 export default (CreateEditPanel) => {
@@ -30,13 +30,16 @@ export default (CreateEditPanel) => {
 		handleEdit = (formData) => {
 			return this.props.editDiscover(formData,this.props.params.id)
 		}
+		handleDelete = () => {
+			return this.props.deleteDiscover(this.props.params.id)
+		}
 		render(){
 			const {discoverInfo} = this.state
 			const props = {
 				discoverInfo
 			}
 			return (
-				<CreateEditPanel onSubmit={this.props.type=='edit'?this.handleEdit:this.handleCreate} title={this.props.type=='edit'?'更新发现':'新建发现'} {...props}/>
+				<CreateEditPanel onSubmit={this.props.type=='edit'?this.handleEdit:this.handleCreate} title={this.props.type=='edit'?'更新发现':'新建发现'} onDelete={this.handleDelete} {...props}/>
 			)
 		}
 	}
@@ -45,7 +48,8 @@ export default (CreateEditPanel) => {
 	}, dispatch => {
 		return {
 			addDiscover:bindActionCreators(addDiscover,dispatch),
-			editDiscover:bindActionCreators(editDiscover,dispatch)
+			editDiscover:bindActionCreators(editDiscover,dispatch),
+			deleteDiscover:bindActionCreators(deleteDiscover,dispatch)
 		}
 	})(DiscoverCreateEditPanel)
 }

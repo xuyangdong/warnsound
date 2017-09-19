@@ -11,19 +11,23 @@ export default class SharePage extends React.Component {
 		this.state = {
 			currentTime:0,
 			duration:0,
+			workInfo:{}
 		}
 	}
 	played = false
 	componentDidMount(){
 		const audio = document.getElementById('audio1')
 		this.player = plyr.setup(this.refs.audio)[0];
-		fetch(config.api.works.query(this.props.params.id||1)).then(res => res.json()).then(res => {
-			console.log(res)
+		fetch(config.api.works.query(this.props.params.id||120)).then(res => res.json()).then(res => {
+			console.log(res.obj.url)
+			this.setState({
+				workInfo:res.obj
+			})
 			this.player.source({
 				type:'audio',
 				title:'Example title',
 				sources:[{
-					src:musicSrc
+					src:res.obj.url||musicSrc
 				}]
 			})
 		})
@@ -36,8 +40,8 @@ export default class SharePage extends React.Component {
 				</div>
 				<div className={styles.body}>
 					<div className={styles.info}>
-						<div className={styles.title}>故事会</div>
-						<div className={styles.author}>佚名</div>
+						<div className={styles.title}>{this.state.workInfo.storyTitle}</div>
+						<div className={styles.author}>{this.state.workInfo.username}</div>
 					</div>
 					<PlayerComponent onClick={()=>{
 						if(!this.played){

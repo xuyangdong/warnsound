@@ -1,7 +1,12 @@
-import {LOGIN_SUCCESS, LOGOUT_SUCCESS} from '../actions/user'
+import {LOGIN_SUCCESS, LOGOUT_SUCCESS,GET_USER} from '../actions/user'
 import {fromJS} from 'immutable'
 
-const initialState = fromJS({auth: sessionStorage.getItem('auth')||'',permission:fromJS((sessionStorage.getItem('permission')||'').split(',')||[])})
+const initialState = fromJS({
+    auth: sessionStorage.getItem('auth')||'',
+    permission:fromJS((sessionStorage.getItem('permission')||'').split(',')||[]),
+    data:fromJS([]),
+    loading:true
+})
 
 export default(state = initialState, action) => {
     switch (action.type) {
@@ -13,6 +18,10 @@ export default(state = initialState, action) => {
             sessionStorage.setItem('auth', '');
             sessionStorage.clear();
             return state.set('auth', '')
+        case GET_USER[0]:
+            return state.set('loading',true)
+        case GET_USER[1]:
+            return state.set('loading', false).set('data', fromJS(action.response)).set('otherData', fromJS(action.otherData))
         default:
             return state
     }

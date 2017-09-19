@@ -1,0 +1,29 @@
+@import '~variant.scss';
+
+:local(.container){
+	width: 100%;
+	border:1px dashed #efefef;
+	box-sizing: border-box;
+	padding:10px;
+	:local(.createRolePart){
+		width:100%;
+		display:flex;
+	}
+}
+
+:local(.createRole){
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	:local(.createRoleItem){
+		display:flex;
+		justify-content: flex-start;
+		align-items: flex-end;
+		flex-grow: 1;
+		width: 50%;
+		margin-bottom: 10px;
+		>span:nth-child(1){
+			word-break: keep-all;
+		}
+	}
+}

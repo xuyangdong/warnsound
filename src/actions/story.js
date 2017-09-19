@@ -159,3 +159,13 @@ export function deRecommendStory(id){
         }
     }).then(res => res)
 }
+
+export function addStoryRole(jsonData){
+    return fetch(config.api.story.storyRole.add,{
+        method:'post',
+        headers:{
+            'authorization':sessionStorage.getItem('auth')
+        },
+        body:jsonData
+    }).then(res => res.json())
+}

@@ -3,7 +3,7 @@ import qs from 'qs'
 const isProduction = process.env.NODE_ENV === "production"
 
 const baseURL = isProduction
-    ? 'http://120.27.219.173'
+    ? 'http://47.93.242.215'
     : ''
 // const baseURL = ""
 
@@ -14,9 +14,22 @@ const config = _.extend({
     api: {
         user: {
             login: (id, ps) => `${baseURL}/manage/auth?username=${id}&password=${ps}`,
-            logout: `${baseURL}/manage/auth`
+            logout: `${baseURL}/manage/auth`,
+            get:(page,pageSize) => `${baseURL}/manage/user/getUserListByPage?page=${page}&pageSize=${pageSize}`,
+            query:id => `${baseURL}/manage/user/getUserById?id=${id}`,
+            edit:`${baseURL}/manage/user/updateUser`,
+            add:`${baseURL}/manage/user/saveUser`,
+            delete:id => `${baseURL}/manage/user/deleteUserById/${id}`,
+            work:{
+                get:(id,page,pageSize) => `${baseURL}/manage/getWorksListByUserId?id=${id}&page=${page}&pageSize=${pageSize}`,
+                add:`${baseURL}/manage/saveWorksByUserId`,
+                query:id => `${baseURL}/manage/getWorkById?id=${id}`,
+                edit:`${baseURL}/manage/updateWorksById`,
+                delete:id => `${baseURL}/manage/deleteWorksById/${id}`
+            }
         },
         story: {
+            all: (offset,limit) => `${baseURL}/manage/stories?offset=${offset}&limit=${limit}`,
             get: (offset, limit, query = {
                 title: '',
                 author: '',
@@ -48,7 +61,9 @@ const config = _.extend({
                 delete:`${baseURL}/manage/deleteCover`
             },
             role: {
-                query:(id) => `${baseURL}/manage/getStoryRoleListByStoryId?storyId=${id}`
+                query:(id) => `${baseURL}/manage/getStoryRoleListByStoryId?storyId=${id}`,
+                add:`${baseURL}/manage/storyRoles`,
+                get:storyId => `/manage/getStoryRoleListByStoryId?storyId=${storyId}`
             },
             storySet:{
                 query:storyId => `${baseURL}/manage/getStorySetByStoryId?storyId=${storyId}`
@@ -114,7 +129,8 @@ const config = _.extend({
             get: (offset, limit) => `${baseURL}/manage/Discoveries?offset=${offset}&limit=${limit}`,
             query: (id) => `${baseURL}/manage/Discovery?id=${id}`,
             add: `${baseURL}/manage/saveDiscovery`,
-            edit: `${baseURL}/manage/updateDiscovery`
+            edit: `${baseURL}/manage/updateDiscovery`,
+            delete: `${baseURL}/manage/deleteDiscovery`
         },
         recommend: {
             get:(offset, limit) => `${baseURL}/manage/getRecommendStoryListByPage?offset=${offset}&limit=${limit}`,
@@ -139,6 +155,9 @@ const config = _.extend({
         },
         icon: {
             post:`${baseURL}/manage/uploadIcon`
+        },
+        audio: {
+            post:`${baseURL}/manage/uploadAudio`
         },
         file: {
             post:`${baseURL}/manage/uploadMulti`

@@ -35,7 +35,6 @@ export function addDiscover(formData){
 			// }
 			return res
 		}).then(res => {
-			console.log("------>",res)
 			if(res.status == 2){
 				notification.error({message:res.errorMes})
 			}
@@ -62,6 +61,41 @@ export function editDiscover(formData,id){
 	formData.append('id',id)
 	return dispatch => {
 		return fetch(config.api.discover.edit,{
+			headers: {
+				'authorization': sessionStorage.getItem('auth')
+			},
+			method:'POST',
+			body:formData
+		}).then(res => res.json()).then(res => {
+			// if(res.status!=1){
+			// 	notification.error({message:'服务器出错'})
+			// }
+			return res
+		}).then(res => {
+			return dispatch({
+				types:GET_DISCOVERLIST,
+				callAPI:() => {
+					return fetch(config.api.discover.get(0,10),{
+						headers: {
+							'authorization': sessionStorage.getItem('auth')
+						},
+					}).then(res => res.json()).then(res => {
+						// if(res.status!=1){
+						// 	notification.error({message:'服务器出错'})
+						// }
+						return res
+					})
+				}
+			})
+		})
+	}
+}
+
+export function deleteDiscover(id){
+	let formData = new FormData()
+	formData.append('id',id)
+	return dispatch => {
+		return fetch(config.api.discover.delete,{
 			headers: {
 				'authorization': sessionStorage.getItem('auth')
 			},

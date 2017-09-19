@@ -15,6 +15,8 @@ import IndividualityGetDataHOC from './IndividualityGetDataHOC'
 import LogoGetDataHOC from './LogoGetDataHOC'
 import AlbumGetDataHOC from './AlbumGetDataHOC'
 import StorySetGetDataHOC from './StorySetGetDataHOC'
+import UserGetDataHOC from './UserGetDataHOC'
+import UserWorkGetDataHOC from './UserWorkGetDataHOC'
 
 function buildTree(listData,parentId=0){
 	let result = fromJS([])
@@ -41,7 +43,8 @@ export default (type) => {
 						storyRoleInfo:fromJS({}),
 						albumList:fromJS([]),
 						storySetList:fromJS([]),
-						storySetInfo:fromJS([])
+						storySetInfo:fromJS([]),
+						roleList:fromJS([])
 					}
 					this.handleCreate = this.handleCreate.bind(this)
 					this.handleEdit = this.handleEdit.bind(this)
@@ -199,7 +202,7 @@ export default (type) => {
 							})
 						})
 					}):null
-					//-------------storyRoleInfo
+
 					fetch(config.api.album.get(0,10000),{
 						headers:{
 							'authorization':sessionStorage.getItem('auth')
@@ -236,6 +239,7 @@ export default (type) => {
 						}
 
 					}):null
+					
 				}
 				handleDelete = () => {
 					return this.props.deleteStory(this.props.params.id)
@@ -247,7 +251,7 @@ export default (type) => {
 					return this.props.editStory(formData,this.props.params.id)
 				}
 				render(){
-					const {storyInfo,storyTags,storyTagsByParent,storyTagInfo,soundEffects,backgroundMusics,backgroundMusicInfo,soundEffectByTag,backgroundMusicByTag,storyRoleInfo,albumList,storySetList,storySetInfo} = this.state
+					const {storyInfo,storyTags,storyTagsByParent,storyTagInfo,soundEffects,backgroundMusics,backgroundMusicInfo,soundEffectByTag,backgroundMusicByTag,storyRoleInfo,albumList,storySetList,storySetInfo,roleList} = this.state
 					const props = {
 						storyInfo,
 						storyTags,
@@ -260,7 +264,8 @@ export default (type) => {
 						backgroundMusicByTag,
 						storyRoleInfo,
 						albumList,
-						storySetList,storySetInfo
+						storySetList,storySetInfo,
+						roleList
 					}
 					return (
 						<CreateEditPanel type={this.props.type} onDelete={this.handleDelete} onSubmit={this.props.type=='create'?this.handleCreate:this.handleEdit} title={this.props.type=='create'?'新建Story':`Story ${storyInfo.get('title')}`} {...props}/>
@@ -363,5 +368,9 @@ export default (type) => {
 		return AlbumGetDataHOC
 	}else if(type == 'storyset'){
 		return StorySetGetDataHOC
+	}else if(type == 'user'){
+		return UserGetDataHOC
+	}else if(type == 'userWork'){
+		return UserWorkGetDataHOC
 	}
 }

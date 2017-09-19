@@ -123,11 +123,7 @@ export default class DraftComponent extends React.Component {
         this.setState({
             soundEffectId:blockData||'-1'
         })
-        // this.setState({ editorState:EditorState.push(editorState,contentState,'change-block-data') });
 
-        // this.setState({
-        //     editorState:EditorState.forceSelection(editorState,selectState)
-        // });
         this.setState({
             editorState
         })
@@ -318,18 +314,6 @@ export default class DraftComponent extends React.Component {
         })
     }
     handlePastedText = (text,html) => {
-        // console.log(html)
-        // const _html = html?html.replace(/<br>/g,'<br /><br />').replace(/<div>/g,'\n').replace(/<\/div>/g,'\n'):html
-        // console.log('_html',_html)
-        // const blocksFromHTML = convertFromHTML(_html);
-        // // blocksFromHTML.contentBlocks
-        // const state = ContentState.createFromBlockArray(
-        //   blocksFromHTML.contentBlocks,
-        //   blocksFromHTML.entityMap
-        // );
-        // this.setState({
-        //     editorState:EditorState.createWithContent(state)
-        // })
         return false
     }
     handleClearSoundEffectByBlock = (block) => {
@@ -364,7 +348,6 @@ export default class DraftComponent extends React.Component {
     renderDisplayPanel = () => {
         const {editorState} = this.state
         const contentState = editorState.getCurrentContent()
-        // const blockMap = contentState.getBlockMap()
 
         let blockArray = contentState.getBlocksAsArray()
         let rawContentArray = blockArray.map((v,k) => ({
@@ -396,13 +379,6 @@ export default class DraftComponent extends React.Component {
                 onDelete={this.handleClearSoundEffectByBlock} key={k} block={v}/>
             }
         }))
-        // return (blockMap.map((v,k) => {
-        //     if(v.get('data').isEmpty()||v.get('data').get('soundEffectUrl')===''){
-        //         return (null)
-        //     }else{
-        //         return <MediaTextComponent onDelete={this.handleClearSoundEffectByBlock} key={k} block={v}/>
-        //     }
-        // }).toArray())
     }
     renderEffectTree = () => {
         const { soundEffectByTag } = this.props
@@ -431,17 +407,6 @@ export default class DraftComponent extends React.Component {
             <Cascader options={treeData} style={{ width: 300 }} expandTrigger="hover"
             value={this._treeData.findPath(this.state.soundEffectId||'-1').map(v => v.value)}
             onChange={this.handleSelectSoundEffect.bind(this)} />
-            // <TreeSelect
-            //     style={{ width: 300 }}
-            //     defaultValue='-1'
-            //     value={this.state.soundEffectId||'-1'}
-            //     dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-            //     treeData={treeData}
-            //     placeholder="Please select"
-            //     onSelect={this
-            //         .handleSelectSoundEffect
-            //         .bind( this )}
-            //   />
         )
     }
     renderWordCountPanel = () => {
@@ -501,11 +466,11 @@ export default class DraftComponent extends React.Component {
                         handlePastedText={this.handlePastedText}
                         blockStyleFn={(contentBlock)=>{
                            const type = contentBlock.getType();
-                        //    console.log('->',type)
                               if (type === 'unstyled') {
                                   return styles.unstyled;
                             }
                         }}
+                        onBlur={()=>{this.props.onBlur(this.getData())}}
 						/>
                     </div>
                     <div className={styles.displayPart}>

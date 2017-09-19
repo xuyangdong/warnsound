@@ -65,12 +65,11 @@ class CreateEditPanel extends React.Component {
 	}
 	render(){
 		const {discoverInfo} = this.props
-		console.log("asdf",discoverInfo.toJS())
 		const {getFieldDecorator} = this.props.form
 		return (
 			<div className={styles.container}>
 				<div>
-					<CreateEditHeader title={this.props.title}/>
+					<CreateEditHeader title={this.props.title} onDelete={this.props.onDelete}/>
 				</div>
 				<div className={styles.formPanel}>
 					<FormItem

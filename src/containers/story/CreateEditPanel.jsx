@@ -10,6 +10,9 @@ import AddStoryRoleModal from '../../components/story/AddStoryRoleModal'
 import plyr from 'plyr'
 import _ from 'lodash'
 import DraftComponent from '../../components/DraftComponent'
+import ReadGuideInput from '../../components/story/ReadGuideInput'
+import classnames from 'classnames'
+import MultiRolePanel from '../../components/story/MultiRolePanel'
 const FormItem = Form.Item
 const Option = Select.Option
 const ButtonGroup = Button.Group;
@@ -31,6 +34,7 @@ class CreateEditPanel extends React.Component {
 			guideSoundFileList:[],
 			storyTags:[],
 			spin:false,
+			storyContentData:[]
 		}
 		this.handleSubmit = this.handleSubmit.bind(this)
 		this.handlePicDisplay = this.handlePicDisplay.bind(this)
@@ -85,8 +89,9 @@ class CreateEditPanel extends React.Component {
 		formData.append('draft',isDraft)
 		formData.append('tagList',this.state.storyTags.join(','))
 		formData.append('press',getFieldValue('publish'))
-		formData.append('guide',getFieldValue('tips'))
+		formData.append('guide',JSON.stringify(this.refs.readGuide.getData()))
 		formData.append('readGuide',getFieldValue('readGuide')||'')
+		// formData.append('readGuide',JSON.stringify(this.refs.readGuide.getData()))
 		formData.append('coverFile',this.state.coverFileList[0]||new File([],''))
 		formData.append('preCoverFile',this.state.previewFileList[0]||new File([],''))
 		formData.append('backgroundFile',this.state.backgroundFileList[0]||new File([],''))
@@ -95,16 +100,17 @@ class CreateEditPanel extends React.Component {
 		formData.append('price',getFieldValue('price')||0)
 		formData.append('defaultBackGroundMusicId',getFieldValue('backgroundMusic'))
 		formData.append('albumId',getFieldValue('album').join(',')||'')
-		formData.append('setId',getFieldValue('storySet'))
-		formData.append('readTime',getFieldValue('readTime'))
+		formData.append('setId',getFieldValue('storySet')||0)
+		formData.append('readTime',getFieldValue('readTime')||'')
 		if(this.props.type=='create'){
 			const roleData = this.roleData||{}
 			formData.append('roleName',roleData.roleName||'')
 			formData.append('roleIconFile',roleData.roleIconFile||'')
 			formData.append('roleAudioFile',roleData.roleAudioFile||'')
 			formData.append('roleExtra',JSON.stringify(roleData.roleExtra)||'')
-			formData.append('roleReadGuide',roleData.roleReadGuide)
+			formData.append('roleReadGuide',roleData.roleReadGuide||'')
 		}
+
 		this.props.onSubmit(formData).then(res => {
 			this.setState({
 				spin:false
@@ -188,7 +194,6 @@ class CreateEditPanel extends React.Component {
 			body:iconForm
 		}).then(res => res.json()):null]
 		Promise.all(uploadPromise).then(res => {
-			console.log(res)
 			fetch(config.api.role.edit(this.props.storyRoleInfo.get('id')||''),{
 				method:'POST',
 				headers:{
@@ -287,7 +292,6 @@ class CreateEditPanel extends React.Component {
 				},
 			 };
 		return (
-
 			<div className={styles.container}>
 				<div>
 					<CreateEditHeader onDelete={this.props.onDelete} title={this.props.title}/>
@@ -402,17 +406,28 @@ class CreateEditPanel extends React.Component {
 						})}
 					</Select>
 					</FormItem>
-					<FormItem
+					{
+					(<FormItem
 					  labelCol={{span:2}}
-					  wrapperCol={{span:8}}
+					  wrapperCol={{span:4}}
 					  label={<span>阅读指导</span>}
 					>
-					{getFieldDecorator('tips',{
-						initialValue:storyInfo.get('guide')
-					})(
-						this.props.type=='edit'?<Input type='textarea' autosize={{minRows:4}}/>:<EnhanceInput type='textarea' autosize={{minRows:4}}/>
-					)}
-					</FormItem>
+					<ReadGuideInput ref='readGuide' value={storyInfo.get('guide')}/>
+					</FormItem>)
+					}
+					{
+					// <FormItem
+					//   labelCol={{span:2}}
+					//   wrapperCol={{span:8}}
+					//   label={<span>阅读指导</span>}
+					// >
+					// {getFieldDecorator('tips',{
+					// 	initialValue:storyInfo.get('guide')
+					// })(
+					// 	this.props.type=='edit'?<Input type='textarea' autosize={{minRows:4}}/>:<EnhanceInput type='textarea' autosize={{minRows:4}}/>
+					// )}
+					// </FormItem>
+					}
 					<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:8}}
@@ -560,7 +575,11 @@ class CreateEditPanel extends React.Component {
 						wrapperCol={{span:20}}
 						label={<span>内容</span>}
 					>
-						<DraftComponent ref='draft' soundEffectByTag={soundEffectByTag} soundEffects={soundEffects} value={storyInfo.get('content')}/>
+						<DraftComponent onBlur={(data) => {
+							this.setState({
+								storyContentData:data
+							})
+						}} ref='draft' soundEffectByTag={soundEffectByTag} soundEffects={soundEffects} value={storyInfo.get('content')}/>
 					</FormItem>
 					<FormItem
 					  labelCol={{span:2}}
@@ -568,6 +587,16 @@ class CreateEditPanel extends React.Component {
 					  label={<span>故事角色</span>}
 					>
 					{this.renderStoryRole()}
+					</FormItem>
+					<FormItem
+					  labelCol={{span:2}}
+					  wrapperCol={{span:21}}
+					  label={<span>故事角色</span>}
+					>
+					<MultiRolePanel storyContent={
+						this.state.storyContentData.length==0?
+						(this.refs.draft||{getData:()=>[]}).getData():
+						this.state.storyContentData} storyId={(''+storyInfo.get('id'))||''}/>
 					</FormItem>
 					<FormItem
 						labelCol={{span:2}}
