@@ -13,6 +13,7 @@ import DraftComponent from '../../components/DraftComponent'
 import ReadGuideInput from '../../components/story/ReadGuideInput'
 import classnames from 'classnames'
 import MultiRolePanel from '../../components/story/MultiRolePanel'
+import {Link} from 'react-router'
 const FormItem = Form.Item
 const Option = Select.Option
 const ButtonGroup = Button.Group;
@@ -588,16 +589,26 @@ class CreateEditPanel extends React.Component {
 					>
 					{this.renderStoryRole()}
 					</FormItem>
-					<FormItem
-					  labelCol={{span:2}}
-					  wrapperCol={{span:21}}
-					  label={<span>故事角色</span>}
-					>
-					<MultiRolePanel storyContent={
-						this.state.storyContentData.length==0?
-						(this.refs.draft||{getData:()=>[]}).getData():
-						this.state.storyContentData} storyId={(''+storyInfo.get('id'))||''}/>
-					</FormItem>
+					{
+					// 	this.props.type=='edit'?(<FormItem
+					//   labelCol={{span:2}}
+					//   wrapperCol={{span:21}}
+					//   label={<span>故事角色（多角色）</span>}
+					// >
+					// <MultiRolePanel
+					//  storyContent={
+					// 	this.state.storyContentData.length==0?
+					// 	(this.refs.draft||{getData:()=>[]}).getData():
+					// 	this.state.storyContentData} storyId={(''+storyInfo.get('id'))||''}/>
+					// </FormItem>):null
+				}
+				{this.props.type=='edit'?(<FormItem
+				labelCol={{span:2}}
+				wrapperCol={{span:21}}
+				label={<span>故事角色（多角色）</span>}
+				>
+					<Link to={`/stories/${storyInfo.get('id')}/scenario/create`}>创建故事剧本</Link>
+				</FormItem>):null}
 					<FormItem
 						labelCol={{span:2}}
 						wrapperCol={{span:4,offset:2}}

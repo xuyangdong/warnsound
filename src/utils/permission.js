@@ -14,7 +14,12 @@ const modulePermission = {
 	permission:15,
 	storySet:5,//暂时没有，用5代替
 	album:5,//暂时没有，用5代替
-	user:5//暂时没有，用5代替
+	user:5,//暂时没有，用5代替
+	storySurround:5,
+	readPlan:5,
+	babyRead:5,
+	storyTopic:5,
+	notice:5
 }
 
 export default class Permission {

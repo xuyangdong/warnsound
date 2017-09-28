@@ -10,6 +10,7 @@ import {LoginControlHOC} from './enhancers/AccessControlContainer'
 
 import StoryContainer from './containers/story/StoryContainer'
 import StoryCreateEditPanel from './containers/story/CreateEditPanel'
+import ScenarioCreateEditPanel from './containers/story/scenario/CreateEditPanel.jsx'
 
 import StoryTagContainer from './containers/storytag/StoryTagContainer'
 import StortyTagCreateEditPanel from './containers/storytag/CreateEditPanel'
@@ -53,6 +54,20 @@ import UserCreateEditPanel from './containers/user/CreateEditPanel'
 import UserWorkPage from './containers/user/work/UserWorkPage'
 import UserWorkCreateEditPanel from './containers/user/work/CreateEditPanel'
 
+import StorySurroundContainer from './containers/storySurround/StorySurroundContainer'
+import StorySurroundCreateEditPanel from './containers/storySurround/CreateEditPanel'
+
+import ReadPlanContainer from './containers/readPlan/ReadPlanContainer'
+import ReadPlanCreateEditPanel from './containers/readPlan/CreateEditPanel'
+
+import BabyReadContainer from './containers/babyRead/BabyReadContainer'
+import BabyReadCreateEditPanel from './containers/babyRead/CreateEditPanel'
+
+import StoryTopicContainer from './containers/storyTopic/StoryTopicContainer'
+import StoryTopicCreateEditPanel from './containers/storyTopic/CreateEditPanel'
+
+import NoticeContainer from './containers/notice/NoticeContainer'
+import NoticeCreateEditPanel from './containers/notice/CreateEditPanel'
 /** -------------------- weixin share ------------------- **/
 import SharePage from './containers/weixin/SharePage'
 import SharePage2 from './containers/weixin/share2/SharePage2'
@@ -91,6 +106,18 @@ const StorySetCreateEditPanelWithData = CreateEditGetDataHOCFactory('storyset')(
 const UserCreateEditPanelWidthData = CreateEditGetDataHOCFactory('user')(UserCreateEditPanel)
 
 const UserWorkCreateEditPanelWithData = CreateEditGetDataHOCFactory('userWork')(UserWorkCreateEditPanel)
+
+const StorySurroundCreateEditPanelWithData = CreateEditGetDataHOCFactory('storySurround')(StorySurroundCreateEditPanel)
+
+const ScenarioCreateEditPanelWithData = CreateEditGetDataHOCFactory('scenario')(ScenarioCreateEditPanel)
+
+const ReadPlanCreateEditPanelWithData = CreateEditGetDataHOCFactory('readPlan')(ReadPlanCreateEditPanel)
+
+const BabyReadCreateEditPanelWithData = CreateEditGetDataHOCFactory('babyRead')(BabyReadCreateEditPanel)
+
+const StoryTopicCreateEditPanelWithData = CreateEditGetDataHOCFactory('storyTopic')(StoryTopicCreateEditPanel)
+
+const NoticeCreateEditPanelWithData = CreateEditGetDataHOCFactory('notice')(NoticeCreateEditPanel)
 /** -------------------- HOC ------------------- **/
 
 const routes = (<Router history={hashHistory}>
@@ -101,6 +128,7 @@ const routes = (<Router history={hashHistory}>
 			<Route path="stories" component={StoryContainer} />
 			<Route path="stories/create" component={(props) => <StroyCreateEditPanelWithData type='create' {...props}/>}/>
 			<Route path="stories/edit/(:id)" component={(props) => <StroyCreateEditPanelWithData type='edit' {...props} />}/>
+			<Route path="stories/(:storyId)/scenario/create" component={(props) => <ScenarioCreateEditPanelWithData type='create' {...props}/>} />
 
 			<Route path="storytags" component={StoryTagContainer}/>
 			<Route path="storyTags/create" component={(props) => <StoryTagCreateEditPanelWithData type='create' {...props}/>} />
@@ -151,6 +179,26 @@ const routes = (<Router history={hashHistory}>
 			<Route path='user/work/show/(:id)' component={UserWorkPage} />
 			<Route path='user/(:userId)/work/edit/(:id)' component={(props) => <UserWorkCreateEditPanelWithData type='edit' {...props}/>}/>
 			<Route path='user/(:userId)/work/create' component={(props) => <UserWorkCreateEditPanelWithData type='create' {...props}/>}/>
+
+			<Route path='storySurround' component={StorySurroundContainer} />
+			<Route path='storySurround/create' component={(props) => <StorySurroundCreateEditPanelWithData type='create' {...props}/>}/>
+			<Route path='storySurround/edit/(:id)' component={(props) => <StorySurroundCreateEditPanelWithData type='edit' {...props}/>}/>
+
+			<Route path='readPlan' component={ReadPlanContainer} />
+			<Route path='readPlan/create' component={(props) => <ReadPlanCreateEditPanelWithData type='create' {...props}/>}/>
+			<Route path='readPlan/edit/(:id)' component={(props) => <ReadPlanCreateEditPanelWithData type='edit' {...props}/>}/>
+
+			<Route path='babyRead' component={BabyReadContainer} />
+			<Route path='babyRead/create' component={(props) => <BabyReadCreateEditPanelWithData type='create' {...props}/>}/>
+			<Route path='babyRead/edit/(:id)' component={(props) => <BabyReadCreateEditPanelWithData type='edit' {...props}/>}/>
+
+			<Route path='storyTopic' component={StoryTopicContainer} />
+			<Route path='storyTopic/create' component={(props) => <StoryTopicCreateEditPanelWithData type='create' {...props}/>}/>
+			<Route path='storyTopic/edit/(:id)' component={(props) => <StoryTopicCreateEditPanelWithData type='edit' {...props}/>}/>
+
+			<Route path='notice' component={NoticeContainer} />
+			<Route path='notice/create' component={props => <NoticeCreateEditPanelWithData type='create' {...props}/>}/>
+			<Route path='notice/edit/(:id)' component={props => <NoticeCreateEditPanelWithData type='create' {...props}/>}/>
 		</Route>
 
 		<Route path="/weixin">

@@ -1,0 +1,14 @@
+:local(.container){
+	display: flex;
+	flex-direction: column;
+	:local(.inputWrapper){
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	:local(.errorWrapper){
+		>span{
+			color: red;
+		}
+	}
+}

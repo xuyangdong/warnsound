@@ -16,6 +16,11 @@ import individuality from './individuality'
 import album from './album'
 import storySet from './storySet'
 import userWork from './userWork'
+import storySurround from './storySurround'
+import readPlan from './readPlan'
+import babyRead from './babyRead'
+import storyTopic from './storyTopic'
+import notice from './notice'
 
 const reducer = combineReducers({
 	user,
@@ -32,7 +37,12 @@ const reducer = combineReducers({
 	individuality,
 	album,
 	storySet,
-	userWork
+	userWork,
+	storySurround,
+	readPlan,
+	babyRead,
+	storyTopic,
+	notice
 	// auth,
 	// alliance,
 	// affair,

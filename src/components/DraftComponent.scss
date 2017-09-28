@@ -27,8 +27,16 @@
 		}
 	}
 	:local(.displayPart){
-		width: 40%;
+		width: 30%;
 		flex-shrink: 0;
+		border:1px #efefef solid;
+		overflow: auto;
+		margin-right: 5px;
+		border-radius: $primary-border-radius;
+	}
+	:local(.coverPart){
+		flex-shrink: 0;
+		flex-grow: 1;
 		border:1px #efefef solid;
 		overflow: auto;
 		border-radius: $primary-border-radius;

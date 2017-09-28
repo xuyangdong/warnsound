@@ -1,0 +1,16 @@
+@import '~variant.scss';
+
+:local(.container){
+	width: 306px;
+	height: 500px;
+	border:1px #efefef solid;
+	border-radius: $primary-border-radius;
+	margin-right: 5px;
+	overflow: auto;
+	flex-grow: 0;
+}
+:local(.unstyled){
+	font-size: 16px;
+	text-indent:2em;
+    font-family: fantasy;
+}

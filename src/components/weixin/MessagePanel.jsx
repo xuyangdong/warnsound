@@ -14,7 +14,7 @@ export default class MessagePanel extends React.Component {
 				<div className={styles.title}>{workInfo.storyTitle}</div>
 				<div className={styles.author}>{workInfo.username}</div>
 				<div className={styles.listener}>
-					<img src={listenerLogo} />{workInfo.likeCount}
+					<img src={listenerLogo} />{workInfo.listenCount}
 				</div>
 			</div>
 		)

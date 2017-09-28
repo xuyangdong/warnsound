@@ -10,6 +10,7 @@ import _ from 'lodash'
 import {fromJS} from 'immutable'
 import ForkBlockData from '../model/ForkBlockData'
 import AddReadGuideModal from '../components/story/AddReadGuideModal'
+import StoryPageCardWithCover from './story/StoryPageCardWithCover'
 
 const MAX_SENTENCE = 18
 const separator = /[,|.|;|，|。|；]/
@@ -17,6 +18,7 @@ const Option = Select.Option
 class TreeData {
     constructor(treeData){
         this.treeData = treeData
+
     }
     findPath(value){
 		let path = []
@@ -40,6 +42,7 @@ class TreeData {
 export default class DraftComponent extends React.Component {
     _treeData = []
     _init = false
+    editedContent = []
     constructor( ) {
         super( )
         this.state = {
@@ -54,11 +57,13 @@ export default class DraftComponent extends React.Component {
             let contentSoundEffectId = content.soundEffectId
             let readGuide = content.readGuide
             let tempArray = content.content?content.content.split('*'):''
+            let coverUrl = content.coverUrl
             for(let temp of tempArray){
                 contentArray.push({
                     content:''+temp,
                     soundEffectId:contentSoundEffectId,
-                    readGuide:readGuide
+                    readGuide:readGuide,
+                    coverUrl:coverUrl
                 })
             }
             contentArray.push({
@@ -85,6 +90,7 @@ export default class DraftComponent extends React.Component {
                     if(contentArray[index].soundEffectId){
                         let value = contentArray[index].soundEffectId
                         blockArray[index] = blockArray[index].set('data',fromJS({
+                            coverUrl:contentArray[index].coverUrl,
                             readGuide:contentArray[index].readGuide,
                             soundEffectId:contentArray[index].soundEffectId,
                             soundEffectUrl:nextProps.soundEffectByTag.reduce((p,c) => {
@@ -105,9 +111,12 @@ export default class DraftComponent extends React.Component {
                             },''),
                         }))
                     }
-                    blockArray[index] = blockArray[index].setIn(['data','readGuide'],contentArray[index].readGuide)
+                    blockArray[index] = blockArray[index].
+                    setIn(['data','readGuide'],contentArray[index].readGuide).
+                    setIn(['data','coverUrl'],contentArray[index].coverUrl)
                 }
                 contentState = ContentState.createFromBlockArray(blockArray)
+
                 this.setState({
                     editorState: EditorState.createWithContent( contentState )
                 })
@@ -262,9 +271,13 @@ export default class DraftComponent extends React.Component {
                     contentBlock.soundEffectId = v.soundEffectId
                     contentBlock.soundEffectUrl = v.soundEffectUrl
                     contentBlock.soundEffectName = v.soundEffectName
+                    contentBlock.coverUrl = v.coverUrl
                 }
                 if(v.readGuide){
                     contentBlock.readGuide = v.readGuide
+                }
+                if(v.coverUrl){
+                    contentBlock.coverUrl = v.coverUrl
                 }
                 contentBlock.keyArray.push(v.blockKey)
             }else{
@@ -290,11 +303,12 @@ export default class DraftComponent extends React.Component {
 			content:v.getText().trim(),
 			soundEffectId:v.getData().get('soundEffectId'),
             readGuide:v.getData().get('readGuide'),
+            coverUrl:v.getData().get('coverUrl')
 		}))
-        return this.prePostProcess(rawContentArray).map(v => ({
+        return (this.editedContent.length==0 || !this.editedContent[0].content)?this.prePostProcess(rawContentArray).map(v => ({
             ...v,
             order:v.key
-        })).map(v => _.omit(v,['keyArray','key']))
+        })).map(v => _.omit(v,['keyArray','key'])):this.editedContent
 	}
     handleClearSoundEffect = () => {
         const {editorState} = this.state
@@ -365,7 +379,8 @@ export default class DraftComponent extends React.Component {
                 soundEffectName:v.soundEffectName,
                 soundEffectUrl:v.soundEffectUrl,
                 readGuide:v.readGuide,
-                keyArray:v.keyArray
+                keyArray:v.keyArray,
+                coverUrl:v.coverUrl
             },
             text:v.content,
             key:k,
@@ -437,6 +452,7 @@ export default class DraftComponent extends React.Component {
     }
     render( ) {
         const { editorState, beautyEditorState } = this.state;
+        this.editedContent = this.getData()
         return (
             <div className={styles.container}>
                 <div className={styles.toolBar}>
@@ -470,11 +486,21 @@ export default class DraftComponent extends React.Component {
                                   return styles.unstyled;
                             }
                         }}
-                        onBlur={()=>{this.props.onBlur(this.getData())}}
+                        onBlur={()=>{
+                            this.setState({
+                                editedContent:this.getData()
+                            })
+                            this.props.onBlur(this.getData())
+                        }}
 						/>
                     </div>
                     <div className={styles.displayPart}>
                     {this.renderDisplayPanel()}
+                    </div>
+                    <div className={styles.coverPart}>
+                    {this.editedContent.map((v,k) => {
+                        return (<StoryPageCardWithCover editedContent={this.editedContent} data={v} key={k}/>)
+                    })}
                     </div>
                 </div>
                 {this.state.openReadGuideModal?<AddReadGuideModal editorState={this.state.editorState}

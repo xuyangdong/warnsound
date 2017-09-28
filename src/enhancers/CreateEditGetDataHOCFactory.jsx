@@ -17,6 +17,12 @@ import AlbumGetDataHOC from './AlbumGetDataHOC'
 import StorySetGetDataHOC from './StorySetGetDataHOC'
 import UserGetDataHOC from './UserGetDataHOC'
 import UserWorkGetDataHOC from './UserWorkGetDataHOC'
+import StorySurroundGetDataHOC from './StorySurroundGetDataHOC'
+import ScenarioGetDataHOC from './ScenarioGetDataHOC'
+import ReadPlanGetDataHOC from './ReadPlanGetDataHOC'
+import BabyReadGetDataHOC from './BabyReadGetDataHOC'
+import StoryTopicGetDataHOC from './StoryTopicGetDataHOC'
+import NoticeGetDataHOC from './NoticeGetDataHOC'
 
 function buildTree(listData,parentId=0){
 	let result = fromJS([])
@@ -239,7 +245,7 @@ export default (type) => {
 						}
 
 					}):null
-					
+
 				}
 				handleDelete = () => {
 					return this.props.deleteStory(this.props.params.id)
@@ -372,5 +378,17 @@ export default (type) => {
 		return UserGetDataHOC
 	}else if(type == 'userWork'){
 		return UserWorkGetDataHOC
+	}else if(type == 'storySurround'){
+		return StorySurroundGetDataHOC
+	}else if(type == 'scenario'){
+		return ScenarioGetDataHOC
+	}else if(type == 'readPlan'){
+		return ReadPlanGetDataHOC
+	}else if(type == 'babyRead'){
+		return BabyReadGetDataHOC
+	}else if(type == 'storyTopic'){
+		return StoryTopicGetDataHOC
+	}else if(type == 'notice'){
+		return NoticeGetDataHOC
 	}
 }

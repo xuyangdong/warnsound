@@ -62,7 +62,8 @@ class CreateEditPanel extends React.Component {
 				headImgUrl:urls[1],
 				coverUrl:urls[2],
 				reviewCount:getFieldValue('reviewCount'),
-				listenCount:getFieldValue('listenCount')
+				listenCount:getFieldValue('listenCount'),
+				duration:getFieldValue('duration')
 			}
 			let formData = jsonToFormData(jsonData)
 			this.props.onSubmit(formData).then(res => {
@@ -125,7 +126,7 @@ class CreateEditPanel extends React.Component {
 						  wrapperCol={{span:4}}
 						  label={<span>音频文件</span>}
 						>
-							<UploadAudio value={this.state.audioFileList}
+							<UploadAudio preLoad='preLoad' value={this.state.audioFileList}
 							onChange={(file,fileList) => {
 								this.setState({
 									audioFileList:fileList
@@ -137,6 +138,18 @@ class CreateEditPanel extends React.Component {
 								})
 							}}
 							/>
+						</FormItem>
+
+						<FormItem
+						  labelCol={{span:2}}
+						  wrapperCol={{span:4}}
+						  label={<span>音频时长</span>}
+						>
+						{getFieldDecorator('duration',{
+							initialValue:workInfo.get('duration')
+						})(
+							<Input />
+						)}
 						</FormItem>
 
 						<FormItem

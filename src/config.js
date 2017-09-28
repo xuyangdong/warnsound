@@ -63,10 +63,18 @@ const config = _.extend({
             role: {
                 query:(id) => `${baseURL}/manage/getStoryRoleListByStoryId?storyId=${id}`,
                 add:`${baseURL}/manage/storyRoles`,
-                get:storyId => `/manage/getStoryRoleListByStoryId?storyId=${storyId}`
+                get:(storyId) => `${baseURL}/manage/getStoryRoleListByStoryId?storyId=${storyId}`,
+                attach:`${baseURL}/manage/saveStoryRoleAudio`,
+                info:(storyId) => `${baseURL}/manage/getAdminStoryRoleAudioByStory?storyId=${storyId}`,
+                delete:id => `${baseURL}/manage/storyRoles/${id}`
             },
             storySet:{
                 query:storyId => `${baseURL}/manage/getStorySetByStoryId?storyId=${storyId}`
+            },
+            scenario:{
+                add:`${baseURL}/manage/saveStoryScript`,
+                query:storyId => `${baseURL}/manage/getStoryScriptByStoryId?storyId=${storyId}`,
+                edit:`${baseURL}/manage/updataStoryScriptByStoryId`
             }
         },
         storyTag: {
@@ -188,6 +196,49 @@ const config = _.extend({
                 add:id => `${baseURL}/manage/storySets/${id}/recommendations`,
                 delete:id => `${baseURL}/manage/storySets/${id}/recommendations`
             }
+        },
+        storySurround:{
+            get:(page,pageSize) => `${baseURL}/manage/selectAllStoryAmbitus?page=${page}&pageSize=${pageSize}`,
+            add:`${baseURL}/manage/saveStoryAmbitus`,
+            edit:`${baseURL}/manage/updataStoryAmbitusById`,
+            delete:id => `${baseURL}/manage/deleteStoryAmbitusById/${id}`,
+            query:id => `${baseURL}/manage/getStoryAmbitusById?id=${id}`
+        },
+        readPlan:{
+            get:(page,pageSize) => `${baseURL}/manage/selectAllReadPlan?page=${page}&pageSize=${pageSize}`,
+            add:`${baseURL}/manage/saveReadPlan`,
+            edit:`${baseURL}/manage/updateReadPlanById`,
+            delete:id => `${baseURL}/manage/deleteReadPlan/${id}`,
+            query:id => `${baseURL}/manage/getReadPlanById?id=${id}`,
+            story:{
+                get:(planId,page,pageSize) => `${baseURL}/manage/getStoryGroupByPlanId?ReadingPlanId=${planId}&page=${page}&pageSize=${pageSize}`,
+                add:`${baseURL}/manage/updateStoryForReadPlan`
+            }
+        },
+        babyRead:{
+            get:(page,pageSize) => `${baseURL}/manage/selectAllBabyRead?page=${page}&pageSize=${pageSize}`,
+            add:`${baseURL}/manage/saveBabyReadInfo`,
+            edit:`${baseURL}/manage/updataBabyReadById`,
+            delete:id => `${baseURL}/manage/deleteBabyReadById/${id}`,
+            query:id => `${baseURL}/manage/getBabyReadtById?id=${id}`
+        },
+        storyTopic:{
+            get:(page,pageSize) => `${baseURL}/manage/selectAllStoryTopic?page=${page}&pageSize=${pageSize}`,
+            add:`${baseURL}/manage/saveStoryTopic`,
+            edit:`${baseURL}/manage/updateStoryTopicById`,
+            delete:id => `${baseURL}/manage/deleteStoryTopic/${id}`,
+            query:id => `${baseURL}/manage/getStoryTopicById?id=${id}`,
+            story:{
+                get:(id) => `${baseURL}/manage/getStorysByStoryTopic?id=${id}`,
+                add:`${baseURL}/manage/addStoryForStoryTopic`
+            }
+        },
+        notice:{
+            get:(page,pageSize) => `${baseURL}/manage/getSystemNoticeListByPage?page=${page}&pageSize=${pageSize}`,
+            add:`${baseURL}/manage/systemNotices`,
+            edit:id => `${baseURL}/manage/systemNotices/${id}`,
+            delete:id => `${baseURL}/manage/systemNotices${id}`,
+            query:id => `${baseURL}/manage/systemNotices/${id}`
         }
     }
 })
