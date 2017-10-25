@@ -25,9 +25,9 @@ class CreateEditPanel extends React.Component {
 			storyContentData:[]
 		}
 	}
-	componentWillReceiveProps(nextProps){
-
-	}
+	// componentWillReceiveProps(nextProps){
+	//
+	// }
 	uploadIcon = () => {
 		if(this.state.coverFileList[0] && this.state.coverFileList[0].size>0){
 			return uploadIcon(this.state.coverFileList[0]).then(res => {
@@ -61,6 +61,8 @@ class CreateEditPanel extends React.Component {
 		const {getFieldDecorator} = this.props.form
 		const {storyId} = this.props.params
 		const {storyList,roleList,scenarioInfo} = this.props
+		console.log("roleList:",roleList.toJS())
+		console.log("scenarioInfo:",scenarioInfo.toJS())
 		return (
 			<div className={styles.container}>
 				<div>

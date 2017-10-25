@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux'
 import {fromJS} from 'immutable'
 import CreateEditPanel from '../containers/logo/CreateEditPanel'
 import config from '../config'
-import {createLogo,deleteLogo} from 'actions/logo'
+import {createLogo,deleteLogo,editLogo} from 'actions/logo'
 
 export default (CreateEditPanel) => {
 	class LogoCreateEditPanel extends React.Component {
@@ -33,7 +33,7 @@ export default (CreateEditPanel) => {
 			return this.props.createLogo(formdata)
 		}
 		handleEdit = (formdata) => {
-			// return this.props.updateApp(formdata,this.props.params.id)
+			return this.props.editLogo(formdata,this.props.params.id)
 		}
 		handleDelete = () => {
 			return this.props.deleteLogo(this.props.params.id)
@@ -51,7 +51,8 @@ export default (CreateEditPanel) => {
 	}, dispatch => {
 		return {
 			createLogo:bindActionCreators(createLogo,dispatch),
-			deleteLogo:bindActionCreators(deleteLogo,dispatch)
+			deleteLogo:bindActionCreators(deleteLogo,dispatch),
+			editLogo:bindActionCreators(editLogo,dispatch)
 			// addApp:bindActionCreators(addApp,dispatch),
 			// updateApp:bindActionCreators(updateApp,dispatch)
 		}

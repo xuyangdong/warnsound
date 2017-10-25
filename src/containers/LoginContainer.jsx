@@ -12,7 +12,8 @@ class LoginContainer extends React.Component {
 	}
 	handleSubmit(e){
 		e.preventDefault();
-		this.props.login('admin','admin').then(res =>{
+		const {getFieldValue} = this.props.form
+		this.props.login(getFieldValue('userName'),getFieldValue('password')).then(res =>{
 			this.context.router.push('/stories')
 		})
 	}

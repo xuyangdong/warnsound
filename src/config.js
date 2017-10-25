@@ -75,6 +75,12 @@ const config = _.extend({
                 add:`${baseURL}/manage/saveStoryScript`,
                 query:storyId => `${baseURL}/manage/getStoryScriptByStoryId?storyId=${storyId}`,
                 edit:`${baseURL}/manage/updataStoryScriptByStoryId`
+            },
+            work:{
+                get:(id,page,pageSize) => `${baseURL}/manage/getWorksListByStoryId?id=${id}&page=${page}&pageSize=${pageSize}`,
+            },
+            introduction:{
+                add:`${baseURL}/manage/addIntroductionForStory`
             }
         },
         storyTag: {
@@ -128,10 +134,10 @@ const config = _.extend({
         },
         app: {
             get: (offset, limit) => `${baseURL}/manage/getApps?offset=${offset}&limit=${limit}`,
-            query:`dd`,
+            query:id => `${baseURL}/manage/getAppDetails?id=${id}`,
             add: `${baseURL}/manage/publishApp`,
             edit: `${baseURL}/manage/updateApp`,
-            // delete: (id) => `${baseURL}/manage/stories/${id}`
+            delete: `${baseURL}/manage/deleteApp`
         },
         discover: {
             get: (offset, limit) => `${baseURL}/manage/Discoveries?offset=${offset}&limit=${limit}`,
@@ -198,7 +204,7 @@ const config = _.extend({
             }
         },
         storySurround:{
-            get:(page,pageSize) => `${baseURL}/manage/selectAllStoryAmbitus?page=${page}&pageSize=${pageSize}`,
+            get:(page,pageSize,storyId='') => `${baseURL}/manage/getStoryAmbitusByStoryId?storyId=${storyId}&page=${page}&pageSize=${pageSize}`,
             add:`${baseURL}/manage/saveStoryAmbitus`,
             edit:`${baseURL}/manage/updataStoryAmbitusById`,
             delete:id => `${baseURL}/manage/deleteStoryAmbitusById/${id}`,
@@ -228,6 +234,7 @@ const config = _.extend({
             edit:`${baseURL}/manage/updateStoryTopicById`,
             delete:id => `${baseURL}/manage/deleteStoryTopic/${id}`,
             query:id => `${baseURL}/manage/getStoryTopicById?id=${id}`,
+            top:id => `${baseURL}/manage/stickieStoryTopic?id=${id}`,
             story:{
                 get:(id) => `${baseURL}/manage/getStorysByStoryTopic?id=${id}`,
                 add:`${baseURL}/manage/addStoryForStoryTopic`
@@ -239,6 +246,32 @@ const config = _.extend({
             edit:id => `${baseURL}/manage/systemNotices/${id}`,
             delete:id => `${baseURL}/manage/systemNotices${id}`,
             query:id => `${baseURL}/manage/systemNotices/${id}`
+        },
+        admin:{
+            get:(page,pageSize) => `${baseURL}/manage/getAdminListByPage?page=${page}&pageSize=${pageSize}`,
+            add:`${baseURL}/manage/admins`,
+            edit:id => `${baseURL}/manage/admins/${id}`,
+            delete:id => `${baseURL}/manage/admins/${id}`,
+            permission:{
+                add:`${baseURL}/manage/adminPowers`,
+                delete:(adminId,code) => `${baseURL}/manage/deleteAdminPower`,
+                query:(adminId,page,pageSize) => `${baseURL}/manage/getAdminPowerListByPage?id=${adminId}&page=${page}&pageSize=${pageSize}`
+            }
+        },
+        permission:{
+            get:(page,pageSize) => `${baseURL}/manage/getPowerCodeListByPage?page=${page}&pageSize=${pageSize}`,
+            add:`${baseURL}/manage/powerCodes`,
+            delete:id => `${baseURL}/manage/powerCodes/${id}`,
+            edit:id => `${baseURL}/manage/powerCodes/${id}`,
+            query:id => `${baseURL}/manage/powerCodes/${id}`
+        },
+        initImage:{
+            get:(page,pageSize) => `${baseURL}/manage/initImage/getAllInitImageByPage?page=${page}&pageSize=${pageSize}`,
+            add:`${baseURL}/manage/initImage/addInitImage`,
+            delete:id => `${baseURL}/manage/initImage/deleteInitImageById?id=${id}`,
+            edit:`${baseURL}/manage/initImage/updateInitImage`,
+            query:id => `${baseURL}/manage/initImage/getInitImageById?id=${id}`,
+            isShow:(id,isShow) => `${baseURL}/manage/initImage/updateIsShow?id=${id}&isShow=${isShow}`
         }
     }
 })

@@ -11,7 +11,7 @@ class DashBoardContainer extends React.Component {
 		return (
 			<div className={styles.container}>
 				<div className={styles.title}>
-					欢迎来到暖音后台管理系统
+					欢迎来到读个小故事后台管理系统
 				</div>
 				<div className={styles.content}>
 					<div className={styles.item}>

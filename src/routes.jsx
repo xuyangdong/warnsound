@@ -68,14 +68,24 @@ import StoryTopicCreateEditPanel from './containers/storyTopic/CreateEditPanel'
 
 import NoticeContainer from './containers/notice/NoticeContainer'
 import NoticeCreateEditPanel from './containers/notice/CreateEditPanel'
-/** -------------------- weixin share ------------------- **/
-import SharePage from './containers/weixin/SharePage'
-import SharePage2 from './containers/weixin/share2/SharePage2'
-/** -------------------- weixin share ------------------- **/
 
-/** -------------------- official ------------------- **/
-import OfficialContainer from './containers/official/OfficialContainer'
-/** -------------------- official ------------------- **/
+import AdminContainer from './containers/admin/AdminContainer'
+import AdminCreateEditPanel from './containers/admin/CreateEditPanel'
+
+import PermissionContainer from './containers/permission/PermissionContainer'
+import PermissionCreateEditPanel from './containers/permission/CreateEditPanel'
+
+import WorkEnhancerFactory from './enhancers/workEnhancer/WorkEnhancerFactory'
+import WorkContainer from './containers/work/WorkContainer'
+import WorkCreateEditPanel from './containers/work/CreateEditPanel'
+
+import InitImageContainer from './containers/initImage/InitImageContainer'
+import InitImageCreateEditPanel from './containers/initImage/CreateEditPanel'
+
+/** -------------------- Test Component ------------------- **/
+import TestContainer from './containers/test/TestContainer'
+import UeditorComponent from './components/UeditorComponent'
+/** -------------------- Test ------------------- **/
 
 /** -------------------- HOC ------------------- **/
 import CreateEditGetDataHOCFactory from './enhancers/CreateEditGetDataHOCFactory'
@@ -118,6 +128,20 @@ const BabyReadCreateEditPanelWithData = CreateEditGetDataHOCFactory('babyRead')(
 const StoryTopicCreateEditPanelWithData = CreateEditGetDataHOCFactory('storyTopic')(StoryTopicCreateEditPanel)
 
 const NoticeCreateEditPanelWithData = CreateEditGetDataHOCFactory('notice')(NoticeCreateEditPanel)
+
+const AdminCreateEditPanelWithData = CreateEditGetDataHOCFactory('admin')(AdminCreateEditPanel)
+
+const PermissionCreateEditPanelWithData = CreateEditGetDataHOCFactory('permission')(PermissionCreateEditPanel)
+
+const InitImageCreateEditPanelWithData = CreateEditGetDataHOCFactory('initImage')(InitImageCreateEditPanel)
+/** -------------------- HOC ------------------- **/
+
+/** -------------------- HOC ------------------- **/
+const UserWorkContainerHOC = WorkEnhancerFactory('user')(WorkContainer)
+
+const StoryWorkContainerHOC = WorkEnhancerFactory('story')(WorkContainer)
+
+const WorkCreateEditPanelWithData = CreateEditGetDataHOCFactory('userWork')(WorkCreateEditPanel)
 /** -------------------- HOC ------------------- **/
 
 const routes = (<Router history={hashHistory}>
@@ -127,8 +151,11 @@ const routes = (<Router history={hashHistory}>
 
 			<Route path="stories" component={StoryContainer} />
 			<Route path="stories/create" component={(props) => <StroyCreateEditPanelWithData type='create' {...props}/>}/>
+			<Route path='stories/work/show/(:id)' component={StoryWorkContainerHOC} />
 			<Route path="stories/edit/(:id)" component={(props) => <StroyCreateEditPanelWithData type='edit' {...props} />}/>
 			<Route path="stories/(:storyId)/scenario/create" component={(props) => <ScenarioCreateEditPanelWithData type='create' {...props}/>} />
+			<Route path='stories/(:userId)/work/edit/(:id)' component={(props) => <WorkCreateEditPanelWithData indexType='story' type='edit' {...props}/>}/>
+			<Route path='stories/(:userId)/work/create' component={(props) => <WorkCreateEditPanelWithData indexType='story' type='create' {...props}/>}/>
 
 			<Route path="storytags" component={StoryTagContainer}/>
 			<Route path="storyTags/create" component={(props) => <StoryTagCreateEditPanelWithData type='create' {...props}/>} />
@@ -148,7 +175,7 @@ const routes = (<Router history={hashHistory}>
 
 			<Route path="publishapp" component={PublishAppContainer} />
 			<Route path="publishapp/create" component={(props) => <AppCreateEditPanelWithData type='create' {...props} />}/>
-			<Route path="publishapp/edit/(:id)" component={(props) => <AppCreateEditPanelWithData type='create' {...props} />}/>
+			<Route path="publishapp/edit/(:id)" component={(props) => <AppCreateEditPanelWithData type='edit' {...props} />}/>
 
 			<Route path="discover" component={DiscoverContainer} />
 			<Route path="discover/create" component={(props) => <DiscoverCreateEditPanelWithData type='create' {...props}/>}/>
@@ -176,9 +203,9 @@ const routes = (<Router history={hashHistory}>
 			<Route path='user' component={UserContainer} />
 			<Route path='user/create' component={(props) => <UserCreateEditPanelWidthData type='create' {...props}/>}/>
 			<Route path='user/edit/(:id)' component={(props) => <UserCreateEditPanelWidthData type='edit' {...props}/>}/>
-			<Route path='user/work/show/(:id)' component={UserWorkPage} />
-			<Route path='user/(:userId)/work/edit/(:id)' component={(props) => <UserWorkCreateEditPanelWithData type='edit' {...props}/>}/>
-			<Route path='user/(:userId)/work/create' component={(props) => <UserWorkCreateEditPanelWithData type='create' {...props}/>}/>
+			<Route path='user/work/show/(:id)' component={UserWorkContainerHOC} />
+			<Route path='user/(:userId)/work/edit/(:id)' component={(props) => <WorkCreateEditPanelWithData indexType='user' type='edit' {...props}/>}/>
+			<Route path='user/(:userId)/work/create' component={(props) => <WorkCreateEditPanelWithData indexType='user' type='create' {...props}/>}/>
 
 			<Route path='storySurround' component={StorySurroundContainer} />
 			<Route path='storySurround/create' component={(props) => <StorySurroundCreateEditPanelWithData type='create' {...props}/>}/>
@@ -199,20 +226,28 @@ const routes = (<Router history={hashHistory}>
 			<Route path='notice' component={NoticeContainer} />
 			<Route path='notice/create' component={props => <NoticeCreateEditPanelWithData type='create' {...props}/>}/>
 			<Route path='notice/edit/(:id)' component={props => <NoticeCreateEditPanelWithData type='create' {...props}/>}/>
+
+			<Route path='admin' component={AdminContainer} />
+			<Route path='admin/create' component={props => <AdminCreateEditPanelWithData type='create' {...props}/>}/>
+			<Route path='admin/edit/(:id)' component={props => <AdminCreateEditPanelWithData type='edit' {...props}/>}/>
+
+			<Route path='permission' component={PermissionContainer} />
+			<Route path='permission/create' component={props => <PermissionCreateEditPanelWithData type='create' {...props}/>}/>
+			<Route path='permission/edit/(:id)' component={props => <PermissionCreateEditPanelWithData type='edit' {...props}/>}/>
+
+			<Route path='initImage' component={InitImageContainer} />
+			<Route path='initImage/create' component={props => <InitImageCreateEditPanelWithData type='create' {...props}/>}/>
+			<Route path='initImage/edit/(:id)' component={props => <InitImageCreateEditPanelWithData type='edit' {...props}/>}/>
 		</Route>
 
-		<Route path="/weixin">
-			<Route path="guanzhu" component={WeixinContainer}/>
-			<Route path="share(/:id)" component={SharePage}/>
-			<Route path="share2(/:id)" component={SharePage2}/>
-		</Route>
-
-		<Route path="/official">
-			<Route path="index" component={OfficialContainer}/>
-		</Route>
 		<Route path="app" component={App}/>
 		<Route path="draft" component={DraftComponent} />
 		<Route path="media" component={MediaTextComponent}/>
+
+		<Route path="test" component={TestContainer}>
+			<Route path="ueditor" component={UeditorComponent} />
+		</Route>
+
 	</Router>)
 
 export default routes

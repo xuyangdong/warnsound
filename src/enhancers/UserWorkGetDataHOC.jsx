@@ -12,7 +12,8 @@ export default (CreateEditPanel) => {
 			super()
 			this.state = {
 				workInfo:fromJS({}),
-				storyList:fromJS([])
+				storyList:fromJS([]),
+				userList:fromJS([])
 			}
 		}
 		componentDidMount(){
@@ -24,6 +25,15 @@ export default (CreateEditPanel) => {
 			}).then(res => res.json()).then(res => {
 				this.setState({
 					storyList:fromJS(res.obj)
+				})
+			})
+			fetch(config.api.user.get(0,1000),{
+				headers:{
+					'authorization':sessionStorage.getItem('auth')
+				}
+			}).then(res => res.json()).then(res => {
+				this.setState({
+					userList:fromJS(res.obj)
 				})
 			})
 			if(this.props.userWork.get('user').isEmpty()){
@@ -53,15 +63,16 @@ export default (CreateEditPanel) => {
 			return this.props.deleteUserWork(this.props.params.id,this.props.params.userId)
 		}
 		render(){
-			const {workInfo,storyList} = this.state
+			const {workInfo,storyList,userList} = this.state
 			const {userWork} = this.props
 			const props = {
 				workInfo,
 				storyList,
+				userList,
 				userInfo:userWork.getIn(['user','info'])
 			}
 			return (
-				<CreateEditPanel type={this.props.type} title={this.props.type=='edit'?'编辑作品':'创建作品'} onSubmit={this.props.type=='create'?this.handleCreate:this.handleEdit} onDelete={this.handleDelete} {...props}/>
+				<CreateEditPanel type={this.props.type} indexType={this.props.indexType} title={this.props.type=='edit'?'编辑作品':'创建作品'} onSubmit={this.props.type=='create'?this.handleCreate:this.handleEdit} onDelete={this.handleDelete} {...props}/>
 			)
 		}
 	}

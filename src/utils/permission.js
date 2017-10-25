@@ -1,5 +1,8 @@
 import _ from 'lodash'
 import {isImmutable,List} from 'immutable'
+import config from '../config'
+import {notification} from 'antd'
+
 const modulePermission = {
 	story:5,
 	storyTag:6,
@@ -19,7 +22,9 @@ const modulePermission = {
 	readPlan:5,
 	babyRead:5,
 	storyTopic:5,
-	notice:5
+	notice:5,
+	admin:5,
+	initImage:5,
 }
 
 export default class Permission {
@@ -32,6 +37,18 @@ export default class Permission {
 			return false
 		}
 	}
+	static getPermissionDict = _.memoize(() => {
+		return fetch(config.api.permission.get(0,10000),{
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			}
+		}).then(res => res.json()).then(res => {
+			if(res.state==2){
+				notification.error({message:res.errorMes})
+			}
+			return res.obj
+		})
+	})
 }
 
 export const operatePermission = {

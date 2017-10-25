@@ -6,6 +6,8 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import PropTypes from 'prop-types'
 import {getAppList} from 'actions/app'
+import {Popover} from 'antd'
+import {Link} from 'react-router'
 
 class PublishAppContainer extends React.Component {
 	static contextTypes = {
@@ -28,7 +30,17 @@ class PublishAppContainer extends React.Component {
 		},{
 			title:'更新提示',
 			dataIndex:'updateHint',
-			key:'updateHint'
+			key:'updateHint',
+			render:(t,r) => {
+				const content = (
+					<p>{t}</p>
+				)
+				return (
+					<Popover content={content}>
+					  <p>{t.length>22?`${t.substring(0,10)}...${t.substring(t.length-10)}`:t}</p>
+					</Popover>
+				)
+			}
 		},{
 			title:'文件大小',
 			dataIndex:'fileSize',
@@ -45,6 +57,12 @@ class PublishAppContainer extends React.Component {
 			title:'更新时间',
 			dataIndex:'updateTime',
 			key:'updateTime'
+		},{
+			title:'操作',
+			key:'operat',
+			render:(t,r) => {
+				return (<Link to={`/publishapp/edit/${r.id}`}>编辑</Link>)
+			}
 		}]
 		const dataSource = this.props.app.get('data').map((v,k) => ({
 			...v.toJS(),

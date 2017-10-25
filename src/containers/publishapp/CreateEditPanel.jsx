@@ -3,6 +3,7 @@ import styles from './CreateEditPanel.scss'
 import CreateEditHeader from '../../components/common/CreateEditHeader'
 import {Form,Upload,Input,Button,Icon,Spin,notification} from 'antd'
 import PropTypes from 'prop-types'
+import _ from 'lodash'
 const FormItem = Form.Item
 
 class CreateEditPanel extends React.Component {
@@ -14,6 +15,16 @@ class CreateEditPanel extends React.Component {
 		this.state = {
 			appFileList:[],
 			spin:false
+		}
+	}
+	componentWillReceiveProps(nextProps){
+		if(!nextProps.appInfo.isEmpty()){
+			this.setState({
+				appFileList:nextProps.appInfo.get('url')?[_.extend(new File([],nextProps.appInfo.get('url')),{
+					uid:-1,
+					url:nextProps.appInfo.get('url')
+				})]:[]
+			})
 		}
 	}
 	handleSubmit = (e) => {
@@ -38,10 +49,11 @@ class CreateEditPanel extends React.Component {
 	}
 	render(){
 		const {getFieldDecorator} = this.props.form
+		const {appInfo} = this.props
 		return (
 			<div className={styles.container}>
 				<div>
-					<CreateEditHeader title={this.props.title}/>
+					<CreateEditHeader onDelete={this.props.onDelete} title={this.props.title}/>
 				</div>
 				<div className={styles.formPanel}>
 					<Form>
@@ -50,7 +62,7 @@ class CreateEditPanel extends React.Component {
 						  labelCol={{span:2}}
 						  wrapperCol={{span:4}}
 						>{getFieldDecorator('version',{
-							// initialValue:soundEffectInfo.get('description')
+							initialValue:appInfo.get('version')
 						})(
 							<Input />
 						)}
@@ -60,7 +72,7 @@ class CreateEditPanel extends React.Component {
 						  labelCol={{span:2}}
 						  wrapperCol={{span:4}}
 						>{getFieldDecorator('updateHint',{
-							// initialValue:soundEffectInfo.get('description')
+							initialValue:appInfo.get('updateHint')
 						})(
 							<Input />
 						)}

@@ -26,7 +26,7 @@ class CreateRolePart extends React.Component {
 				return res.obj.url
 			})
 		}else{
-			return Promise.resolve(this.props.storySetInfo.get('coverUrl'))
+			return Promise.resolve('')
 		}
 	}
 	handleCreateRole = () => {
@@ -139,7 +139,6 @@ class MultiRolePanel extends React.Component {
 				'authorization':sessionStorage.getItem('auth')
 			}
 		}).then(res => res.json()).then(res => {
-			console.log("asdfasdfasdf:",res)
 			const roleMsg = res.obj.roleMsg
 			let roleMap = this.state.roleMap
 			let urlMap = this.state.urlMap
@@ -197,7 +196,7 @@ class MultiRolePanel extends React.Component {
 			title:'角色',
 			key:'role',
 			render:(t,r) => {
-				return (<Select optionLabelProp='title' style={{width:100}} value={''+roleMap.get(r.order)} onChange={value => {
+				return (<Select optionLabelProp='title' style={{width:100}} value={''+roleMap.get(r.order,'-1')} onChange={value => {
 					this.setState({
 						roleMap:roleMap.set(r.order,value)
 					})
@@ -228,8 +227,7 @@ class MultiRolePanel extends React.Component {
 						fileMap:fileMap.set(r.order,fileList)
 					})
 				}}
-				preUpload={this.handlePreUploadAudio.bind(this,r.order)}
-				/>)
+				preUpload={this.handlePreUploadAudio.bind(this,r.order)}/>)
 			}
 		},{
 			title:'试听',
@@ -332,6 +330,8 @@ class MultiRolePanel extends React.Component {
 		}).then(res => res.json()).then(res => {
 			if(res.status==2){
 				notification.error({message:res.errorMes})
+			}else{
+				notification.success({message:'角色音频信息已保存'})
 			}
 		})
 	}
@@ -347,7 +347,7 @@ class MultiRolePanel extends React.Component {
 				<div className={styles.distributeRolePart}>
 					<Table columns={columns} dataSource={dataSource}/>
 				</div>
-				<Button  onClick={this.handleConfirmRoleMsg}>修改角色</Button>
+				<Button  onClick={this.handleConfirmRoleMsg}>保存角色修改</Button>
 			</div>
 		)
 	}

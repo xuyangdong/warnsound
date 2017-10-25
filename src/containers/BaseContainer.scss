@@ -27,13 +27,26 @@
 		width: 100%;
 		height: 100%;
 		overflow: auto;
+		position: relative;
 		:local(.leftPanel){
 
+			position:relative;
 			height:calc( 100vh - 64px);
 			flex-grow:0;
 			width: 240px;
 			flex-shrink: 0;
 			overflow: auto;
+		}
+		:local(.collaps){
+			position:absolute;
+			display: block;
+			height: 30px;
+			width: 30px;
+			line-height: 30px;
+			top:0px;
+			left: 240px;
+			cursor: pointer;
+			font-size: 18px;
 		}
 		:local(.mainPanel){
 			flex-grow: 1;

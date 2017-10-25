@@ -18,7 +18,9 @@ export default class AddStoryModal extends React.Component {
 			storyList:fromJS([]),
 			choosenStoryList:fromJS([]),
 			current:1,
-			pageSize:10
+			pageSize:10,
+
+			replacingStory:-1,
 		}
 	}
 	componentDidMount(){
@@ -49,6 +51,11 @@ export default class AddStoryModal extends React.Component {
 			})
 		})
 	}
+	handleReplace = (record,value) => {
+		this.setState({
+			choosenStoryList:this.state.choosenStoryList.set(record.key,value)
+		})
+	}
 	getTableData = () => {
 		const columns = [{
 			title:'标题',
@@ -59,29 +66,60 @@ export default class AddStoryModal extends React.Component {
 			render:(t,r) => {
 				return (<a onClick={this.handleDeleteStory.bind(this,r.id)}>删除</a>)
 			}
+		},{
+			title:'替换',
+			key:'replace',
+			render:(t,r) => {
+				return this.state.replacingStory == r.id ? (
+					<Select
+					showSearch
+					optionFilterProp="children"
+					filterOption={(input, option) => option.props.children.indexOf(input) >= 0}
+					style={{width:100}} defaultValue={''+r.id} onSelect={this.handleReplace.bind(this,r)}>
+						{this.state.storyList.map((v,k) => {
+							return (<Option value={''+v.get('id')} key={k}>{v.get('title')}</Option>)
+						})}
+					</Select>
+				) : (<a onClick={() => {
+					this.setState({
+						replacingStory:r.id
+					})
+				}}>替换</a>)
+			}
 		}]
-		const storyList = this.state.storyList.filter((v,k) => {
-			return this.state.choosenStoryList.some(v1 => v1==v.get('id'))
-		}).sort((a,b) => {
-			return (this.state.choosenStoryList.indexOf(''+a.get('id'))
-			- this.state.choosenStoryList.indexOf(''+b.get('id')))
+		// const storyList = this.state.storyList.filter((v,k) => {
+		// 	return this.state.choosenStoryList.some(v1 => v1==v.get('id'))
+		// }).sort((a,b) => {
+		// 	return (this.state.choosenStoryList.indexOf(''+a.get('id'))
+		// 	- this.state.choosenStoryList.indexOf(''+b.get('id')))
+		// })
+		let storyList = fromJS([])
+		storyList = this.state.choosenStoryList.map(v => {
+			return this.state.storyList.find(v1 => v1.get('id')==v)
 		})
-		const dataSource = storyList.map((v,k) => ({
-			...v.toJS(),
-			key:k
-		})).toJS()
+		let dataSource = []
+		try{
+			dataSource = storyList.map((v,k) => ({
+				...v.toJS(),
+				key:k
+			})).toJS()
+		}catch(e){}
+
 		return {
 			columns,
 			dataSource
 		}
 	}
 	handleOk = () => {
-		let storyList = this.state.storyList.filter((v,k) => {
-			return this.state.choosenStoryList.some(v1 => v1==v.get('id'))
-		})
-		storyList = storyList.sort((a,b) => {
-			return (this.state.choosenStoryList.indexOf(a.get('id'))
-			- this.state.choosenStoryList.indexOf(b.get('id')))
+		// let storyList = this.state.storyList.filter((v,k) => {
+		// 	return this.state.choosenStoryList.some(v1 => v1==v.get('id'))
+		// })
+		// storyList = storyList.sort((a,b) => {
+		// 	return (this.state.choosenStoryList.indexOf(a.get('id'))
+		// 	- this.state.choosenStoryList.indexOf(b.get('id')))
+		// })
+		const storyList = this.state.choosenStoryList.map(v => {
+			return this.state.storyList.find(v1 => v1.get('id')==v)
 		})
 		if(storyList.size!=21){
 			Modal.warning({

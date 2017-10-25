@@ -49,9 +49,45 @@ export function createLogo(jsonData){
 							'authorization': sessionStorage.getItem('auth')
 						}
 					}).then(res => res.json()).then(res => {
-						// if(res.status!=1){
-						// 	notification.error({message:'服务器出错'})
-						// }
+						if(res.status==2){
+							notification.error({message:res.errorMes})
+						}
+						return res
+					})
+				}
+			})
+		})
+	}
+}
+
+export function editLogo(jsonData,id){
+	return dispatch => {
+		return fetch(config.api.logo.edit(id),{
+			method: 'put',
+            body: JSON.stringify(jsonData),
+			headers: {
+				'authorization': sessionStorage.getItem('auth'),
+				'content-type':'application/json'
+			}
+		}).then(res => res.json()).then(res => {
+			if(res.status==2){
+				notification.error({message:res.errorMes})
+			}else{
+				notification.success({message:'徽章更新成功'})
+			}
+			return res
+		}).then(res => {
+			return dispatch({
+				type:GET_LOGOS,
+				callAPI:() => {
+					return fetch(config.api.logo.get(0,10),{
+						headers: {
+							'authorization': sessionStorage.getItem('auth')
+						}
+					}).then(res => res.json()).then(res => {
+						if(res.status==2){
+							notification.error({message:res.errorMes})
+						}
 						return res
 					})
 				}

@@ -31,7 +31,6 @@ class CreateEditPanel extends React.Component {
 			this.setState({
 				spin:false
 			})
-			notification.success({message:'LOGO新建成功'})
 			this.context.router.goBack()
 		})
 

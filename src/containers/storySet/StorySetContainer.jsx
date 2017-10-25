@@ -13,6 +13,13 @@ class StorySetContainer extends React.Component {
 	static contextTypes = {
 		router:React.PropTypes.object
 	}
+	constructor(){
+		super()
+		this.state = {
+			current:0,
+			pageSize:10
+		}
+	}
 	componentDidMount(){
 		if(this.props.storySet.get('data').isEmpty()){
 			this.props.getStorySet(0,10)

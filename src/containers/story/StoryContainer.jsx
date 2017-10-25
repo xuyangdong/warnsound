@@ -7,6 +7,8 @@ import {getStories,searchStories,recommendStory,deRecommendStory} from '../../ac
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import qs from 'qs'
+import {fromJS} from 'immutable'
+import config from '../../config'
 const Search = Input.Search
 
 class StoryContainer extends React.Component{
@@ -31,12 +33,23 @@ class StoryContainer extends React.Component{
 			tag:'',
 			current:0,
 			pageSize:10,
+
+			storySetList:fromJS([])
 		}
 	}
 	componentDidMount(){
 		if(this.props.stories.get('data').isEmpty()){
 			this.props.getStories(0,10)
 		}
+		fetch(config.api.storySet.get(0,10000),{
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			}
+		}).then(res => res.json()).then(res => {
+			this.setState({
+				storySetList:fromJS(res.obj)
+			})
+		})
 	}
 	getTableData(){
 		const columns = [{
@@ -78,6 +91,13 @@ class StoryContainer extends React.Component{
 				return t==1?<span style={{color:'red'}}>是</span>:'否'
 			}
 		},{
+			title:'所属故事集',
+			key:'storySet',
+			dataIndex:'setId',
+			render:(t,r) => {
+				return (<span>{this.state.storySetList.find(v => v.get('id')==t,{},fromJS({})).get('title')||'暂无故事集'}</span>)
+			}
+		},{
 			title:'编辑状态',
 			key:'editingState',
 			width:100,
@@ -98,7 +118,10 @@ class StoryContainer extends React.Component{
 			render:(r,t) => (
 				<span>
 					<a onClick={this.handleEdit.bind(this,r.id)}>编辑</a>&nbsp;
-					<a onClick={!r.recommend?this.handleRecommend.bind(this,r.id):this.handleDeRecommend.bind(this,r.id)}>{r.recommend?'取消推荐':'推荐'}</a>
+					<a onClick={!r.recommend?this.handleRecommend.bind(this,r.id):this.handleDeRecommend.bind(this,r.id)}>{r.recommend?'取消推荐':'推荐'}</a>&nbsp;
+					<a onClick={() => {
+						this.context.router.push(`/stories/work/show/${r.id}`)
+					}}>作品</a>
 				</span>
 			)
 		}]

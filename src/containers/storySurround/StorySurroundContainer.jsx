@@ -1,5 +1,5 @@
 import React from 'react'
-import {Table,Input,Button,notification,Popover} from 'antd'
+import {Table,Input,Button,notification,Popover,Select} from 'antd'
 import TableHeader from '../../components/common/TableHeader'
 import styles from './StorySurroundContainer.scss'
 import EnhanceTable from '../../components/common/EnhanceTable'
@@ -9,15 +9,38 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import config from '../../config'
 import {getStorySurround} from 'actions/storySurround'
+import {fromJS} from 'immutable'
+
+const Option = Select.Option
 
 class StorySurroundContainer extends React.Component {
 	static contextTypes = {
 		router:React.PropTypes.object
 	}
+	constructor(){
+		super()
+		this.state = {
+			storyList:fromJS([])
+		}
+	}
 	componentDidMount(){
 		if(this.props.storySurround.get('data').isEmpty()){
 			this.props.getStorySurround(1,10)
 		}
+		fetch(config.api.story.all(0,10000),{
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			}
+		}).then(res => res.json()).then(res => {
+			this.setState({
+				storyList:fromJS(res.obj)
+			})
+		})
+	}
+	componentWillReceiveProps(nextProps) {
+		this.setState({
+			storyId:nextProps.storySurround.getIn(['otherData','storyId'])
+		})
 	}
 	getTableData = () => {
 		const columns = [{
@@ -49,7 +72,17 @@ class StorySurroundContainer extends React.Component {
 		},{
 			title:'storyid',
 			dataIndex:'storyid',
-			key:'storyid'
+			key:'storyid',
+			render:(t,r) => {
+				return this.state.storyList.find(v => v.get('id')==t,{},fromJS({})).get('title')
+			},
+			filterDropdown:(
+				<Select style={{width:100}}>
+				{this.state.storyList.map((v,k) => {
+					return (<Option value={v.get('id')} key={k}>{v.get('title')}</Option>)
+				})}
+				</Select>
+			)
 		},{
 			title:'videourl',
 			dataIndex:'videourl',
@@ -94,7 +127,7 @@ class StorySurroundContainer extends React.Component {
 								current:page,
 								pageSize:pageSize
 							})
-							this.props.getStorySurround(page,pageSize)
+							this.props.getStorySurround(page,pageSize,this.state.storyId)
 						}
 					}}/>
 				</div>

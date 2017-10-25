@@ -82,7 +82,9 @@ export function editStory(formData, id) {
         }).then(res => res.json()).then(res => {
 			if(res.status==2){
 				notification.error({message:res.errorMes})
-			}
+			}else{
+                notification.success({message:'故事修改成功'})
+            }
 			return res
 		}).then(res => {
             dispatch({
@@ -119,8 +121,9 @@ export function deleteStory(id){
         }).then(res => {
             if(res.status==2){
                 notification.error({message:res.errorMes})
+            }else{
+                notification.success({message:'故事删除成功'})
             }
-            notification.success({message:'删除成功'})
             return res
         }).then(res => {
             dispatch({

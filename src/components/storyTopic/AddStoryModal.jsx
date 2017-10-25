@@ -44,6 +44,7 @@ export default class AddStoryModal extends React.Component {
 				'authorization':sessionStorage.getItem('auth')
 			}
 		}).then(res => res.json()).then(res => {
+			console.log(res.obj)
 			this.setState({
 				choosenStoryList:fromJS(res.obj.map(v => v.id))
 			})
@@ -60,21 +61,41 @@ export default class AddStoryModal extends React.Component {
 				return (<a onClick={this.handleDeleteStory.bind(this,r.id)}>删除</a>)
 			}
 		}]
-		const storyList = this.state.storyList.filter((v,k) => {
-			return this.state.choosenStoryList.some(v1 => v1==v.get('id'))
+		// const storyList = this.state.storyList.filter((v,k) => {
+		// 	return this.state.choosenStoryList.some(v1 => v1==v.get('id'))
+		// })
+
+		// const storyList = this.state.choosenStoryList.map((v,k) => {
+		// 	return this.state.storyList.find(v1 => v1.get('id')==v)
+		// })
+		let storyList = fromJS([])
+		storyList = this.state.choosenStoryList.map(v => {
+			return this.state.storyList.find(v1 => v1.get('id')==v)
 		})
-		const dataSource = storyList.map((v,k) => ({
-			...v.toJS(),
-			key:k
-		})).toJS()
+		let dataSource = []
+		try{
+			dataSource = storyList.map((v,k) => ({
+				...v.toJS(),
+				key:k
+			})).toJS()
+		}catch(e){}
+
+
+		// const dataSource = storyList.map((v,k) => ({
+		// 	...v.toJS(),
+		// 	key:k
+		// })).toJS()
 		return {
 			columns,
 			dataSource
 		}
 	}
 	handleOk = () => {
-		const storyList = this.state.storyList.filter((v,k) => {
-			return this.state.choosenStoryList.some(v1 => v1==v.get('id'))
+		// const storyList = this.state.storyList.filter((v,k) => {
+		// 	return this.state.choosenStoryList.some(v1 => v1==v.get('id'))
+		// })
+		const storyList = this.state.choosenStoryList.map(v => {
+			return this.state.storyList.find(v1 => v1.get('id')==v)
 		})
 		let formData = new FormData()
 		formData.append('storyTopicId',this.props.storyTopicId)

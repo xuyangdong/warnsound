@@ -61,8 +61,8 @@ class CreateEditPanel extends React.Component {
 				url:urls[0],
 				headImgUrl:urls[1],
 				coverUrl:urls[2],
-				reviewCount:getFieldValue('reviewCount'),
-				listenCount:getFieldValue('listenCount'),
+				reviewCount:getFieldValue('reviewCount')||0,
+				listenCount:getFieldValue('listenCount')||0,
 				duration:getFieldValue('duration')
 			}
 			let formData = jsonToFormData(jsonData)
@@ -74,7 +74,8 @@ class CreateEditPanel extends React.Component {
 	}
 	render(){
 		const {getFieldDecorator} = this.props.form
-		const {userInfo,storyList,workInfo} = this.props
+		const {userInfo,storyList,workInfo,userList} = this.props
+		console.log("asdf:",workInfo.toJS())
 		return (
 			<div className={styles.container}>
 				<div>
@@ -93,6 +94,21 @@ class CreateEditPanel extends React.Component {
 							<Select>
 							{storyList.map((v,k) => {
 								return <Option value={''+v.get('id')} title={v.get('title')} key={k}>{v.get('title')}</Option>
+							}).toJS()}
+							</Select>
+						)}
+						</FormItem>
+						<FormItem
+						  labelCol={{span:2}}
+						  wrapperCol={{span:4}}
+						  label={<span>用户</span>}
+						>
+						{getFieldDecorator('userId',{
+							initialValue:''+workInfo.get('userId',' ')
+						})(
+							<Select>
+							{userList.map((v,k) => {
+								return <Option value={''+v.get('id')} title={v.get('nickname')} key={k}>{v.get('nickname')}</Option>
 							}).toJS()}
 							</Select>
 						)}

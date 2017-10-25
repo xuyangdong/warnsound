@@ -7,7 +7,7 @@ import callAPIHOCFactory from 'callAPIHOCFactory'
 const callAPIHOC = callAPIHOCFactory('storySurround')
 
 export const GET_STORYSURROUND = actionNames('GET_STORYSURROUND')
-export function getStorySurround(page,pageSize){
+export function getStorySurround(page,pageSize,storyId=''){
 	return {
 		types:GET_STORYSURROUND,
 		callAPI:callAPIHOC(page,pageSize)

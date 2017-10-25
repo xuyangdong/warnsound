@@ -82,10 +82,14 @@ class CreateEditPanel extends React.Component {
 		})
 		e.preventDefault()
 		const formData = new FormData()
+		let storySetId = getFieldValue('storySet') || []
+		if(storySetId.length==0){
+			storySetId = 0
+		}
 		formData.append('title',getFieldValue('title'))
 		formData.append('author',getFieldValue('author'))
 		// formData.append('soundEffects_id',getFieldValue('soundEffect'))
-		formData.append('content',JSON.stringify(this.refs.draft.getData()))
+		formData.append('content',JSON.stringify(this.refs.draft.getDataWithCover()))
 		// TODO: 啥意思
 		formData.append('draft',isDraft)
 		formData.append('tagList',this.state.storyTags.join(','))
@@ -101,7 +105,7 @@ class CreateEditPanel extends React.Component {
 		formData.append('price',getFieldValue('price')||0)
 		formData.append('defaultBackGroundMusicId',getFieldValue('backgroundMusic'))
 		formData.append('albumId',getFieldValue('album').join(',')||'')
-		formData.append('setId',getFieldValue('storySet')||0)
+		formData.append('setId',storySetId)
 		formData.append('readTime',getFieldValue('readTime')||'')
 		if(this.props.type=='create'){
 			const roleData = this.roleData||{}
@@ -119,6 +123,25 @@ class CreateEditPanel extends React.Component {
 
 		})
 		this.context.router.goBack(0)
+	}
+	handleAddStoryIntroduction = (introduction) => {
+		const {getFieldValue} = this.props.form
+		let formData = new FormData()
+		formData.append('storyId',this.props.storyInfo.get('id'))
+		formData.append('introduction',getFieldValue('storyIntroduction'))
+		fetch(config.api.story.introduction.add,{
+			method:'post',
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			},
+			body:formData
+		}).then(res => res.json()).then(res => {
+			if(res.status==2){
+				notification.error({message:res.errorMes})
+			}else{
+				notification.success({message:'添加故事简介成功'})
+			}
+		})
 	}
 	// TODO: 目前支持能做到单文件，不知道怎么做到fileList显示一整个列表
 	handlePicDisplay(fileList,stateName){
@@ -407,6 +430,19 @@ class CreateEditPanel extends React.Component {
 						})}
 					</Select>
 					</FormItem>
+					{this.props.type=='edit'?(<FormItem
+					  labelCol={{span:2}}
+					  wrapperCol={{span:6}}
+					  label={<span >故事简介</span>}
+					>
+					{getFieldDecorator('storyIntroduction',{
+						initialValue:storyInfo.get('introduction','')
+					})(
+						<Input autosize={{minRows:4,maxRows:4}} onBlur={(e)=>{
+							this.handleAddStoryIntroduction(e.target.value)
+						}} type='textarea'/>
+					)}
+					</FormItem>):null}
 					{
 					(<FormItem
 					  labelCol={{span:2}}

@@ -23,6 +23,9 @@ import ReadPlanGetDataHOC from './ReadPlanGetDataHOC'
 import BabyReadGetDataHOC from './BabyReadGetDataHOC'
 import StoryTopicGetDataHOC from './StoryTopicGetDataHOC'
 import NoticeGetDataHOC from './NoticeGetDataHOC'
+import AdminGetDataHOC from './AdminGetDataHOC'
+import PermissionGetDataHOC from './PermissionGetDataHOC'
+import InitImageGetDataHOC from './InitImageGetDataHOC'
 
 function buildTree(listData,parentId=0){
 	let result = fromJS([])
@@ -390,5 +393,11 @@ export default (type) => {
 		return StoryTopicGetDataHOC
 	}else if(type == 'notice'){
 		return NoticeGetDataHOC
+	}else if(type == 'admin'){
+		return AdminGetDataHOC
+	}else if(type == 'permission'){
+		return  PermissionGetDataHOC
+	}else if(type == 'initImage'){
+		return InitImageGetDataHOC
 	}
 }

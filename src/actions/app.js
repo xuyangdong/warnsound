@@ -54,6 +54,39 @@ export function addApp(formdata){
 	}
 }
 
+export function deleteApp(id) {
+	return dispatch => {
+		let formData = new FormData()
+		formData.append('appId',id)
+		return fetch(config.api.app.delete,{
+			method:'post',
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			},
+			body:formData
+		}).then(res => res.json()).then(res => {
+			if(res.status == 2){
+				notification.error({message:res.errorMes})
+			}
+			return dispatch({
+				type:GET_APPLIST,
+				callAPI:() => {
+					return fetch(config.api.app.get(0,10),{
+						headers: {
+							'authorization': sessionStorage.getItem('auth')
+						}
+					}).then(res => res.json()).then(res => {
+						// if(res.status!=1){
+						// 	notification.error({message:'服务器出错'})
+						// }
+						return res
+					})
+				}
+			})
+		})
+	}
+}
+
 export function updateApp(formdata,id){
 	formdata.append('appId',id)
 	return dispatch => {

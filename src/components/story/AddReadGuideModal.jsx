@@ -1,5 +1,6 @@
 import React from 'react'
 import {Modal,Input} from 'antd'
+import InputWithCount from '../common/InputWithCount'
 export default class AddReadGuideModal extends React.Component {
 	constructor(){
 		super()
@@ -28,7 +29,7 @@ export default class AddReadGuideModal extends React.Component {
 			}}
 			onCancel={this.props.onCancel}
 			>
-			<Input type='textarea' autosize={{minRows:5,maxRows:5}}
+			<InputWithCount count={70} type='textarea' autosize={{minRows:5,maxRows:5}}
 			value={this.state.value} onChange={(e) => {
 				this.setState({
 					value:e.target.value

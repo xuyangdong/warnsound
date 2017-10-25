@@ -21,6 +21,10 @@ import readPlan from './readPlan'
 import babyRead from './babyRead'
 import storyTopic from './storyTopic'
 import notice from './notice'
+import admin from './admin'
+import permission from './permission'
+import storyWork from './storyWork'
+import initImage from './initImage'
 
 const reducer = combineReducers({
 	user,
@@ -42,7 +46,11 @@ const reducer = combineReducers({
 	readPlan,
 	babyRead,
 	storyTopic,
-	notice
+	notice,
+	admin,
+	permission,
+	storyWork,
+	initImage
 	// auth,
 	// alliance,
 	// affair,

@@ -19,7 +19,8 @@ export function addNotice(jsonData){
 		return fetch(config.api.notice.add,{
 			method:'post',
 			headers: {
-				'authorization': sessionStorage.getItem('auth')
+				'authorization': sessionStorage.getItem('auth'),
+				'content-type':'application/json'
 			},
 			body:JSON.stringify(jsonData)
 		}).then(res => res.json()).then(res => {
@@ -39,7 +40,8 @@ export function editNotice(jsonData,id){
 		return fetch(config.api.notice.edit(id),{
 			method:'put',
 			headers: {
-				'authorization': sessionStorage.getItem('auth')
+				'authorization': sessionStorage.getItem('auth'),
+				'content-type':'application/json'
 			},
 			body:JSON.stringify(jsonData)
 		}).then(res => res.json()).then(res => {

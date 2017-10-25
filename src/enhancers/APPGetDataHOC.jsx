@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux'
 import {fromJS} from 'immutable'
 import CreateEditPanel from '../containers/publishapp/CreateEditPanel'
 import config from '../config'
-import {getAppList,addApp,updateApp} from 'actions/app'
+import {getAppList,addApp,updateApp,deleteApp} from 'actions/app'
 
 export default (CreateEditPanel) => {
 	class AppCreateEditPanel extends React.Component {
@@ -16,24 +16,17 @@ export default (CreateEditPanel) => {
 		}
 		componentDidMount(){
 			if(this.props.type=='edit'){
-				if(this.props.app.get('data').isEmpty()){
-					// TODO: 缺少一个获取app的接口，先用getList代替
-					this.props.getAppList(0,100)
-				}else{
+				fetch(config.api.app.query(this.props.params.id),{
+					headers:{
+						'authorization':sessionStorage.getItem('auth')
+					}
+				}).then(res => res.json()).then(res => {
 					this.setState({
-						appInfo:this.props.app.get('data').find(v => v.get('appId')==this.props.params.id)
+						appInfo:fromJS(res.obj)
 					})
-				}
+				})
 			}
-		}
-		componentWillReceiveProps(nextProps){
-			if(nextProps.type=='edit'){
-				if(!nextProps.app.get('data').isEmpty()){
-					this.setState({
-						appInfo:nextProps.app.get('data').find(v => v.get('appId')==this.props.params.id)
-					})
-				}
-			}
+
 		}
 		handleCreate = (formdata) => {
 
@@ -42,12 +35,15 @@ export default (CreateEditPanel) => {
 		handleEdit = (formdata) => {
 			return this.props.updateApp(formdata,this.props.params.id)
 		}
+		handleDelete = () => {
+			return this.props.deleteApp(this.props.params.id)
+		}
 		render() {
 			const {appInfo} = this.state
 			const props = {
 				appInfo
 			}
-			return <CreateEditPanel onSubmit={this.props.type=='edit'?this.handleEdit:this.handleCreate} title={this.props.type=='edit'?'更新APP':'发布APP'} {...props}/>
+			return <CreateEditPanel onDelete={this.handleDelete} onSubmit={this.props.type=='edit'?this.handleEdit:this.handleCreate} title={this.props.type=='edit'?'更新APP':'发布APP'} {...props}/>
 		}
 	}
 	return connect(state => {
@@ -58,7 +54,8 @@ export default (CreateEditPanel) => {
 		return {
 			getAppList:bindActionCreators(getAppList,dispatch),
 			addApp:bindActionCreators(addApp,dispatch),
-			updateApp:bindActionCreators(updateApp,dispatch)
+			updateApp:bindActionCreators(updateApp,dispatch),
+			deleteApp:bindActionCreators(deleteApp,dispatch)
 		}
 	})(AppCreateEditPanel)
 }

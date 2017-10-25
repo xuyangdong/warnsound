@@ -105,13 +105,18 @@ export default class UploadAvatar extends React.Component {
 					  })
 				  }}
 				  onCancel={()=>{
-					  this.getImageBlob().then(blob => {
-							this.props.onChange(blob,[blob])
-							this.handlePicDisplay([blob])
-							this.setState({
-							   showEditAvatar:false,
-							})
-					  })
+					//   this.getImageBlob().then(blob => {
+					// 		this.props.onChange(blob,[blob])
+					// 		this.handlePicDisplay([blob])
+					// 		this.setState({
+					// 		   showEditAvatar:false,
+					// 		})
+					//   })
+					this.props.onChange(this.state.editingFile,[this.state.editingFile])
+					this.handlePicDisplay([this.state.editingFile])
+					this.setState({
+						showEditAvatar:false
+					})
 				  }}
 				>
 					<div className={styles.avatarContainer}>

@@ -3,12 +3,13 @@ const express = require('express')
 const app = express()
 const path = require('path')
 const isProduction = process.env.NODE_ENV === 'production'
-const port = isProduction ? process.env.PORT : 8929
+const port = isProduction ? process.env.PORT : 3000
 const publicPath = path.resolve(__dirname, 'build')
 
 // We point to our static assets
 app.use(express.static(publicPath))
 app.get('*', function(req, res) {
+	console.log("asdfasdf")
 	res.sendFile(path.join(__dirname, './build/index.html'))
 })
 

@@ -8,7 +8,7 @@ import {getStorySet} from 'actions/storySet'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import config from '../../config'
-import {getStoryTopic} from 'actions/storyTopic'
+import {getStoryTopic,topStoryTopic} from 'actions/storyTopic'
 import AddStoryModal from '../../components/storyTopic/AddStoryModal'
 
 class StoryTopicContainer extends React.Component {
@@ -55,6 +55,14 @@ class StoryTopicContainer extends React.Component {
 			key:'isshow',
 			render:(t,r) => {
 				return t==1?'显示':'不显示'
+			}
+		},{
+			title:'置顶',
+			key:'top',
+			render:(t,r) => {
+				return (<a onClick={() => {
+					this.props.topStoryTopic(r.id)
+				}}>置顶</a>)
 			}
 		},{
 			title:'添加故事',
@@ -127,5 +135,6 @@ class StoryTopicContainer extends React.Component {
 export default connect(state => ({
 	storyTopic:state.get('storyTopic')
 }), dispatch => ({
-	getStoryTopic:bindActionCreators(getStoryTopic,dispatch)
+	getStoryTopic:bindActionCreators(getStoryTopic,dispatch),
+	topStoryTopic:bindActionCreators(topStoryTopic,dispatch)
 }))(StoryTopicContainer)

@@ -305,11 +305,15 @@ export default class DraftComponent extends React.Component {
             readGuide:v.getData().get('readGuide'),
             coverUrl:v.getData().get('coverUrl')
 		}))
-        return (this.editedContent.length==0 || !this.editedContent[0].content)?this.prePostProcess(rawContentArray).map(v => ({
+        return this.prePostProcess(rawContentArray).map(v => ({
             ...v,
             order:v.key
-        })).map(v => _.omit(v,['keyArray','key'])):this.editedContent
+        })).map(v => _.omit(v,['keyArray','key']))
 	}
+    getDataWithCover = () => {
+        // (this.editedContent.length==0 || !this.editedContent[0].content)?[]:this.editedContent
+        return this.editedContent
+    }
     handleClearSoundEffect = () => {
         const {editorState} = this.state
         const contentState = editorState.getCurrentContent()

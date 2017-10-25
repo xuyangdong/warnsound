@@ -39,6 +39,14 @@ class RecommendContainer extends React.Component {
 			dataIndex:'press',
 			key:'press'
 		},{
+			title:'是否为故事集',
+			dataIndex:'isSet',
+			key:'isSet',
+			render:(t,r) => {
+				console.log('=>',t)
+				return (t?'是':'否')
+			}
+		},{
 			title:'阅读指导',
 			dataIndex:'guide',
 			key:'guide',

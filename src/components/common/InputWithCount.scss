@@ -1,0 +1,11 @@
+:local(.container){
+	position: relative;
+	:local(.count){
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		height: 18px;
+		line-height: 18px;
+		font-size: 14px;
+	}
+}

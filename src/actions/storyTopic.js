@@ -69,3 +69,19 @@ export function deleteStoryTopic(id) {
 		})
 	}
 }
+
+export function topStoryTopic(id) {
+	return dispatch => {
+		return fetch(config.api.storyTopic.top(id),{
+			method:'get',
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			}
+		}).then(res => {
+			return dispatch({
+				types:GET_STORYTOPIC,
+				callAPI:callAPIHOC()
+			})
+		})
+	}
+}

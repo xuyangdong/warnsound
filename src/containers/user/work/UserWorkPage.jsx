@@ -19,6 +19,10 @@ class UserWorkPage extends React.Component {
 		if(this.props.userWork.get('user').isEmpty()){
 			this.props.getUserInfo(this.props.params.id)
 		}
+		if(this.props.userWork.getIn(['user','info','id']) != this.props.params.id){
+			this.props.getUserWork(this.props.params.id,0,10)
+			this.props.getUserInfo(this.props.params.id)
+		}
 	}
 	getTableData = () => {
 		const columns = [{
@@ -91,7 +95,7 @@ class UserWorkPage extends React.Component {
 								current:page-1,
 								pageSize:pageSize
 							})
-							this.props.getUser(page-1,pageSize)
+							this.props.getUserWork(page-1,pageSize)
 						}
 					}}/>
 				</div>

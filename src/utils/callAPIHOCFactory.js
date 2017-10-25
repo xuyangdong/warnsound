@@ -2,7 +2,7 @@ import config from '../config'
 import {notification} from 'antd'
 
 export default function callAPIHOCFactory(actionName){
-	return (page,pageSize) => {
+	return (page,pageSize,otherData) => {
 	    return (getState) => {
 	        if(typeof page ==='undefined'){
 	            page = getState().getIn([actionName,'otherData','offset'],1)
@@ -10,7 +10,7 @@ export default function callAPIHOCFactory(actionName){
 	        if(!pageSize){
 	            pageSize = getState().getIn([actionName,'otherData','limit'],10)
 	        }
-	        return fetch(config.api[actionName].get(page, pageSize), {
+	        return fetch(config.api[actionName].get(page, pageSize, otherData), {
 	            headers: {
 	                'authorization': sessionStorage.getItem('auth')
 	            },
@@ -23,6 +23,11 @@ export default function callAPIHOCFactory(actionName){
 	            }
 	            res.offset = page
 	            res.limit = pageSize
+				if(typeof otherData != 'undefined' && otherData instanceof Object){
+					Object.keys(otherData).forEach(v => {
+						res[v] = otherData[v]
+					})
+				}
 	            return res
 	        })
 	    }
