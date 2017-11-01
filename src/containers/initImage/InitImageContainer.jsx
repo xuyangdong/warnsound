@@ -41,8 +41,8 @@ class InitImageContainer extends React.Component {
 			}
 		},{
 			title:'是否显示',
-			dataIndex:'isshow',
-			key:'isshow',
+			dataIndex:'isShow',
+			key:'isShow',
 			render:(t,r) => {
 				return t==1?'显示':'不显示'
 			}

@@ -10,7 +10,7 @@ export const GET_STORYSURROUND = actionNames('GET_STORYSURROUND')
 export function getStorySurround(page,pageSize,storyId=''){
 	return {
 		types:GET_STORYSURROUND,
-		callAPI:callAPIHOC(page,pageSize)
+		callAPI:callAPIHOC({storyId:storyId})(page,pageSize)
 	}
 }
 

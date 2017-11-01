@@ -20,12 +20,14 @@ class StorySurroundContainer extends React.Component {
 	constructor(){
 		super()
 		this.state = {
-			storyList:fromJS([])
+			storyList:fromJS([]),
+			current:0,
+			pageSize:10
 		}
 	}
 	componentDidMount(){
 		if(this.props.storySurround.get('data').isEmpty()){
-			this.props.getStorySurround(1,10)
+			this.props.getStorySurround(0,10)
 		}
 		fetch(config.api.story.all(0,10000),{
 			headers:{
@@ -42,8 +44,34 @@ class StorySurroundContainer extends React.Component {
 			storyId:nextProps.storySurround.getIn(['otherData','storyId'])
 		})
 	}
+	handleFilter = (value) => {
+		this.props.getStorySurround(this.state.current,this.state.pageSize,value)
+		this.setState({
+			storyId:value
+		})
+	}
 	getTableData = () => {
 		const columns = [{
+			title:'storyid',
+			dataIndex:'storyid',
+			key:'storyid',
+			render:(t,r) => {
+				return this.state.storyList.find(v => v.get('id')==t,{},fromJS({})).get('title')
+			},
+			filterDropdown:(
+				<Select
+				style={{width:100}}
+				onSelect={this.handleFilter}
+				showSearch
+				optionFilterProp="children"
+				filterOption={(input, option) => option.props.children.indexOf(input) >= 0}
+				>
+				{this.state.storyList.map((v,k) => {
+					return (<Option value={''+v.get('id')} key={k}>{v.get('title')}</Option>)
+				})}
+				</Select>
+			)
+		},{
 			title:'标题',
 			dataIndex:'title',
 			key:'title'
@@ -69,20 +97,6 @@ class StorySurroundContainer extends React.Component {
 			title:'obligate',
 			dataIndex:'obligate',
 			key:'obligate'
-		},{
-			title:'storyid',
-			dataIndex:'storyid',
-			key:'storyid',
-			render:(t,r) => {
-				return this.state.storyList.find(v => v.get('id')==t,{},fromJS({})).get('title')
-			},
-			filterDropdown:(
-				<Select style={{width:100}}>
-				{this.state.storyList.map((v,k) => {
-					return (<Option value={v.get('id')} key={k}>{v.get('title')}</Option>)
-				})}
-				</Select>
-			)
 		},{
 			title:'videourl',
 			dataIndex:'videourl',
@@ -124,10 +138,10 @@ class StorySurroundContainer extends React.Component {
 						total:this.props.storySurround.getIn(['otherData','totalSize']),
 						onChange:(page,pageSize) => {
 							this.setState({
-								current:page,
+								current:page-1,
 								pageSize:pageSize
 							})
-							this.props.getStorySurround(page,pageSize,this.state.storyId)
+							this.props.getStorySurround(page-1,pageSize,this.state.storyId)
 						}
 					}}/>
 				</div>

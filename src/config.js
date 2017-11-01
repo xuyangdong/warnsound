@@ -51,7 +51,7 @@ const config = _.extend({
             tag:{
                 add:(storyId,tagId) => `${baseURL}/manage/stories/${storyId}/storyTags/${tagId}`,
                 delete:(storyId,tagId) => `${baseURL}/manage/stories/${storyId}/storyTags/${tagId}`,
-                query:(id) => `${baseURL}/manage/stories/${id}/storyTags`
+                query:(id) => `${baseURL}/manage/stories/${id}/storyTags`,
             },
             recommend:{
                 add:(id) => `${baseURL}/manage/stories/${id}/recommendations`,
@@ -81,6 +81,9 @@ const config = _.extend({
             },
             introduction:{
                 add:`${baseURL}/manage/addIntroductionForStory`
+            },
+            tellCount:{
+                add:`${baseURL}/manage/updateTellCountByStoryId`
             }
         },
         storyTag: {
@@ -88,7 +91,11 @@ const config = _.extend({
             query: (id) => `${baseURL}/manage/storyTags/${id}`,
             add: `${baseURL}/manage/storyTags`,
             edit: (id) => `${baseURL}/manage/storyTags/${id}`,
-            delete: (id) => `${baseURL}/manage/storyTags/${id}`
+            delete: (id) => `${baseURL}/manage/storyTags/${id}`,
+            hotTag:{
+                add:`${baseURL}/manage/addTagToHotsearch`,
+                get:(page,pageSize) => `${baseURL}/manage/getHotStoryList?page=${page}&pageSize=${pageSize}`
+            }
         },
         soundEffect: {
             get: (offset, limit) => `${baseURL}/manage/soundEffects?offset=${offset}&limit=${limit}`,
@@ -244,7 +251,7 @@ const config = _.extend({
             get:(page,pageSize) => `${baseURL}/manage/getSystemNoticeListByPage?page=${page}&pageSize=${pageSize}`,
             add:`${baseURL}/manage/systemNotices`,
             edit:id => `${baseURL}/manage/systemNotices/${id}`,
-            delete:id => `${baseURL}/manage/systemNotices${id}`,
+            delete:id => `${baseURL}/manage/systemNotices/${id}`,
             query:id => `${baseURL}/manage/systemNotices/${id}`
         },
         admin:{

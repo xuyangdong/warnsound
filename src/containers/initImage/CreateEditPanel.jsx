@@ -90,7 +90,7 @@ class CreateEditPanel extends React.Component {
 					  wrapperCol={{span:4}}
 					  label={<span>图标</span>}
 					>
-					<UploadAvatar widthEdit={true} imageRatio={1.6} value={this.state.coverFileList}
+					<UploadAvatar widthEdit={false} imageRatio={1.6} value={this.state.coverFileList}
 					onChange={(file,fileList)=>{
 						this.setState({
 							coverFileList:fileList
@@ -103,7 +103,7 @@ class CreateEditPanel extends React.Component {
 					}}
 					/>
 					</FormItem>
-					<FormItem
+					{this.props.type=='edit'?(<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:4}}
 					  label={<span>是否显示</span>}
@@ -114,7 +114,7 @@ class CreateEditPanel extends React.Component {
 					})(
 						<Switch onChange={this.handleSwitch} />
 					)}
-					</FormItem>
+					</FormItem>):null}
 					<FormItem
 						labelCol={{span:2}}
 						wrapperCol={{span:4,offset:2}}

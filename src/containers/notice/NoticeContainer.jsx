@@ -22,7 +22,7 @@ class NoticeContainer extends React.Component {
 	}
 	componentDidMount(){
 		if(this.props.notice.get('data').isEmpty()){
-			this.props.getNotice(1,10)
+			this.props.getNotice(0,10)
 		}
 	}
 	getTableData = () => {
@@ -81,10 +81,10 @@ class NoticeContainer extends React.Component {
 						total:this.props.notice.getIn(['otherData','totalSize']),
 						onChange:(page,pageSize) => {
 							this.setState({
-								current:page,
+								current:page-1,
 								pageSize:pageSize
 							})
-							this.props.getNotice(page,pageSize)
+							this.props.getNotice(page-1,pageSize)
 						}
 					}}/>
 				</div>

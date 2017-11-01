@@ -7,13 +7,15 @@ import {bindActionCreators} from 'redux'
 import {getStoryTags} from 'actions/storyTag'
 import {Popover} from 'antd'
 import {fromJS} from 'immutable'
+import {Button} from 'antd'
 import config from '../../config'
+import DisplayHotSearchModal from '../../components/storyTag/DisplayHotSearchModal'
 
 class PopContent extends React.Component {
 	constructor(){
 		super()
 		this.state ={
-			storyTagInfo:fromJS({})
+			storyTagInfo:fromJS({}),
 		}
 	}
 	componentDidMount(){
@@ -45,10 +47,23 @@ class StoryTagContainer extends React.Component {
 	static contextTypes = {
 		router:React.PropTypes.object
 	}
+	state = {
+		displayHotSearchModal:false,
+		hotTagList:fromJS([])
+	}
 	componentDidMount(){
 		if(this.props.storyTags.get('data').isEmpty()){
 			this.props.getStoryTags(0,10)
 		}
+		// fetch(config.api.storyTag.hotTag.get(0,100000),{
+		// 	headers:{
+		// 		'authorization':sessionStorage.getItem('auth')
+		// 	}
+		// }).then(res => res.json()).then(res => {
+		// 	this.setState({
+		// 		hotTagList:fromJS(res.obj.map(v => v.id))
+		// 	})
+		// })
 	}
 	getTableData(){
 		const columns = [{
@@ -91,7 +106,7 @@ class StoryTagContainer extends React.Component {
 		}]
 		const dataSource = this.props.storyTags.get('data').map((v,k) => ({
 			...v.toJS(),
-			key:k
+			key:v.get('id')
 		})).toJS()
 		return {
 			columns,
@@ -112,12 +127,37 @@ class StoryTagContainer extends React.Component {
 					<TableHeader title="故事标签" functionBar={['create']} onCreate={this.handleCreate.bind(this)}/>
 				</div>
 				<div className={styles.mainPanel}>
-					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{
+					<Button onClick={() => {
+						this.setState({
+							displayHotSearchModal:true
+						})
+					}} type='primary'>创建热搜标签</Button>
+					<EnhanceTable
+					rowSelection={{
+						selectedRowKeys:this.state.hotTagList.toJS(),
+						onChange:(selectedRowKeys, selectedRows) => {
+							this.setState({
+								hotTagList:fromJS(selectedRowKeys)
+							})
+						}
+					}}
+					columns={columns} dataSource={dataSource} pagination={{
 						total:this.props.storyTags.getIn(['otherData','totalSize']),
 						onChange:(page,pageSize) => {
 							this.props.getStoryTags(page,pageSize)
 						}
 					}}/>
+					{this.state.displayHotSearchModal?<DisplayHotSearchModal hotTagList={this.state.hotTagList} onCancel={()=>{
+						this.setState({
+							displayHotSearchModal:false
+						})
+					}}
+					onChange={(hotTagList)=>{
+						this.setState({
+							hotTagList:hotTagList
+						})
+					}}
+					/>:null}
 				</div>
 			</div>
 		)

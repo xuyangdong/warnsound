@@ -45,13 +45,13 @@ class CreateEditPanel extends React.Component {
 		const {getFieldValue} = this.props.form
 		this.uploadIcon().then(iconUrl => {
 			const jsonData = {
-				nickname:getFieldValue('nickname'),
-				password:getFieldValue('password'),
-				email:getFieldValue('email'),
-				mobile:getFieldValue('mobile'),
-				sex:getFieldValue('sex'),
-				city:getFieldValue('city'),
-				company:getFieldValue('company'),
+				nickname:getFieldValue('nickname')||'',
+				password:getFieldValue('password')||'',
+				email:getFieldValue('email')||'',
+				mobile:getFieldValue('mobile')||'',
+				sex:getFieldValue('sex')||'',
+				city:getFieldValue('city')||'',
+				company:getFieldValue('company')||'',
 				headImgUrl:iconUrl
 			}
 			let formData = jsonToFormData(jsonData)
@@ -129,8 +129,8 @@ class CreateEditPanel extends React.Component {
 
 						})(
 							<RadioGroup>
-								<Radio value={1}>男</Radio>
-								<Radio value={2}>女</Radio>
+								<Radio value='男'>男</Radio>
+								<Radio value='女'>女</Radio>
 							</RadioGroup>
 						)}
 						</FormItem>

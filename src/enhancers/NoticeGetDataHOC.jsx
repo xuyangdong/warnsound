@@ -11,7 +11,7 @@ export default (CreateEditPanel) => {
 		constructor(){
 			super()
 			this.state = {
-				noticeInfo:fromJS([])
+				noticeInfo:fromJS({})
 			}
 		}
 		componentDidMount(){
@@ -22,7 +22,7 @@ export default (CreateEditPanel) => {
 					}
 				}).then(res => res.json()).then(res => {
 					this.setState({
-						noticeInfo:fromJS(res.obj)
+						noticeInfo:fromJS(res)
 					})
 				})
 			}

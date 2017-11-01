@@ -74,6 +74,9 @@ class StoryContainer extends React.Component{
 			key:'guide',
 			// width:300,
 			render:(t,r) => {
+				if(!t){
+					t = ''
+				}
 				const content = (
 					<p>{t}</p>
 				)
@@ -162,6 +165,7 @@ class StoryContainer extends React.Component{
 	render(){
 		const {columns,dataSource} = this.getTableData()
 		const {titleS,author,press,content,tag} = this.state
+		console.log("asdf:",this.props.stories.toJS())
 		return (
 			<div className={styles.container}>
 				<div className={styles.header}>

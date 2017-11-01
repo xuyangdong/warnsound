@@ -225,7 +225,7 @@ const routes = (<Router history={hashHistory}>
 
 			<Route path='notice' component={NoticeContainer} />
 			<Route path='notice/create' component={props => <NoticeCreateEditPanelWithData type='create' {...props}/>}/>
-			<Route path='notice/edit/(:id)' component={props => <NoticeCreateEditPanelWithData type='create' {...props}/>}/>
+			<Route path='notice/edit/(:id)' component={props => <NoticeCreateEditPanelWithData type='edit' {...props}/>}/>
 
 			<Route path='admin' component={AdminContainer} />
 			<Route path='admin/create' component={props => <AdminCreateEditPanelWithData type='create' {...props}/>}/>

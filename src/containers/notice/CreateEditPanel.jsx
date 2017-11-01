@@ -3,13 +3,9 @@ import CreateEditHeader from '../../components/common/CreateEditHeader'
 import styles from './CreateEditPanel.scss'
 import {fromJS} from 'immutable'
 import {Form,Input,Select,Upload,Button,Icon,notification,Switch} from 'antd'
-import EnhanceInput from '../../components/common/EnhanceInput'
-import EnhanceSelect from '../../components/common/EnhanceSelect'
 import config from '../../config'
 import ReadGuideInput from '../../components/story/ReadGuideInput'
-import UploadAvatar from '../../components/common/UploadAvatar'
 import {uploadIcon} from 'actions/common'
-import UploadVideo from '../../components/common/UploadVideo'
 import _ from 'lodash'
 import {jsonToFormData} from 'project-utils'
 const Option = Select.Option
@@ -29,7 +25,8 @@ class CreateEditPanel extends React.Component {
 		e.preventDefault()
 		const {getFieldValue} = this.props.form
 		const jsonData = {
-			content:JSON.stringify(this.refs.readGuide.getData())
+			// content:JSON.stringify(this.refs.readGuide.getData())
+			content:getFieldValue('content')
 		}
 		this.props.onSubmit(jsonData).then(res => {
 			this.context.router.goBack(0)
@@ -47,10 +44,19 @@ class CreateEditPanel extends React.Component {
 				<Form onSubmit={this.handleSubmit}>
 					<FormItem
 					  labelCol={{span:2}}
-					  wrapperCol={{span:4}}
+					  wrapperCol={{span:8}}
 					  label={<span>内容</span>}
 					>
-					<ReadGuideInput ref='readGuide' value={noticeInfo.get('content')}/>
+					{/*
+						<ReadGuideInput ref='readGuide' value={noticeInfo.get('content')}/>
+					*/}
+					{
+						getFieldDecorator('content',{
+							initialValue:noticeInfo.get('content')
+						})(
+							<Input type='textarea' autosize={{minRows:6,maxRows:6}}/>
+						)
+					}
 					</FormItem>
 					<FormItem
 						labelCol={{span:2}}

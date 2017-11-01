@@ -40,9 +40,6 @@ class UserContainer extends React.Component {
 			title:'性别',
 			dataIndex:'sex',
 			key:'sex',
-			render:(t,r) => {
-				return t?'男':'女'
-			}
 		},{
 			title:'城市',
 			dataIndex:'city',
@@ -58,6 +55,10 @@ class UserContainer extends React.Component {
 			render:(t,r) => {
 				return <img src={t} style={{maxWidth:100}}/>
 			}
+		},{
+			title:'作品数量',
+			key:'workNum',
+			dataIndex:'workCount'
 		},{
 			title:'作品',
 			key:'work',

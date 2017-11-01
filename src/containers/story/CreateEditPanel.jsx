@@ -2,7 +2,7 @@ import React from 'react'
 import CreateEditHeader from '../../components/common/CreateEditHeader'
 import styles from './CreateEditPanel.scss'
 import {fromJS} from 'immutable'
-import {Form,Input,Select,Checkbox,Upload,Button,Icon,Row,Col,Spin,Tag,notification,TreeSelect} from 'antd'
+import {Form,Input,InputNumber,Select,Checkbox,Upload,Button,Icon,Row,Col,Spin,Tag,notification,TreeSelect} from 'antd'
 import EnhanceInput from '../../components/common/EnhanceInput'
 import EnhanceSelect from '../../components/common/EnhanceSelect'
 import config from '../../config'
@@ -250,6 +250,23 @@ class CreateEditPanel extends React.Component {
 
 		})
 	}
+	handleChangeHotLevel = () => {
+		const {getFieldValue} = this.props.form
+		let formData = new FormData()
+		formData.append('id',this.props.storyInfo.get('id'))
+		formData.append('tellCount',getFieldValue('tellCount'))
+		fetch(config.api.story.tellCount.add,{
+			method:'post',
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			},
+			body:formData
+		}).then(res => {
+			notification.success({message:'更新热度等级成功'})
+		}).catch(error => {
+			notification.error({message:'更新热度等级失败'})
+		})
+	}
 	getBackgroundMusicInfo = () => {
 		const {getFieldValue} = this.props.form
 		const backgroundMusicId = getFieldValue('backgroundMusic')
@@ -443,28 +460,24 @@ class CreateEditPanel extends React.Component {
 						}} type='textarea'/>
 					)}
 					</FormItem>):null}
-					{
-					(<FormItem
+					{this.props.type=='edit'?<FormItem
 					  labelCol={{span:2}}
-					  wrapperCol={{span:4}}
-					  label={<span>阅读指导</span>}
+					  wrapperCol={{span:8}}
+					  label={<span>朗读次数（热搜）</span>}
 					>
-					<ReadGuideInput ref='readGuide' value={storyInfo.get('guide')}/>
-					</FormItem>)
-					}
-					{
-					// <FormItem
-					//   labelCol={{span:2}}
-					//   wrapperCol={{span:8}}
-					//   label={<span>阅读指导</span>}
-					// >
-					// {getFieldDecorator('tips',{
-					// 	initialValue:storyInfo.get('guide')
-					// })(
-					// 	this.props.type=='edit'?<Input type='textarea' autosize={{minRows:4}}/>:<EnhanceInput type='textarea' autosize={{minRows:4}}/>
-					// )}
-					// </FormItem>
-					}
+					{getFieldDecorator('tellCount',{
+						initialValue:storyInfo.get('tellCount')
+					})(
+						<InputNumber onBlur={this.handleChangeHotLevel} />
+					)}
+					</FormItem>:null}
+					<FormItem
+					  labelCol={{span:2}}
+					  wrapperCol={{span:8}}
+					  label={<span>阅读读指导</span>}
+					>
+					<ReadGuideInput value={storyInfo.get('guide')} ref='readGuide'/>
+					</FormItem>
 					<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:8}}
