@@ -31,6 +31,8 @@ export default class AddStoryModal extends React.Component {
 				storyList:fromJS(res.obj)
 			})
 		})
+		const { current, pageSize } = this.state
+		this.getStoryInStoryTopic(this.props.storyTopicId,current,pageSize)
 	}
 	componentWillReceiveProps(nextProps){
 		if(nextProps.storyTopicId != this.props.storyTopicId){
@@ -60,14 +62,13 @@ export default class AddStoryModal extends React.Component {
 			render:(t,r) => {
 				return (<a onClick={this.handleDeleteStory.bind(this,r.id)}>删除</a>)
 			}
+		},{
+			title:'置顶',
+			render:(t,r) => {
+				return (<a onClick={this.handleTop.bind(this,r.id)}>置顶</a>)
+			}
 		}]
-		// const storyList = this.state.storyList.filter((v,k) => {
-		// 	return this.state.choosenStoryList.some(v1 => v1==v.get('id'))
-		// })
-
-		// const storyList = this.state.choosenStoryList.map((v,k) => {
-		// 	return this.state.storyList.find(v1 => v1.get('id')==v)
-		// })
+		
 		let storyList = fromJS([])
 		storyList = this.state.choosenStoryList.map(v => {
 			return this.state.storyList.find(v1 => v1.get('id')==v)
@@ -89,6 +90,12 @@ export default class AddStoryModal extends React.Component {
 			columns,
 			dataSource
 		}
+	}
+	handleTop = (storyId) => {
+		this.setState({
+			choosenStoryList:this.state.choosenStoryList.filter(v => v!=storyId)
+			.unshift(storyId)
+		})
 	}
 	handleOk = () => {
 		// const storyList = this.state.storyList.filter((v,k) => {

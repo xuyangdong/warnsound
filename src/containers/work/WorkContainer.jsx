@@ -82,7 +82,7 @@ export default class UserWorkPage extends React.Component {
 								current:page-1,
 								pageSize:pageSize
 							})
-							this.props.getWork(this.props.params.id,page-1,pageSize)
+							this.props.getWork(page-1,pageSize)
 						}
 					}}/>
 				</div>

@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './StoryPageCardWithCover.scss'
-import {Button} from 'antd'
+import {Button,Checkbox} from 'antd'
 import {Motion, spring} from 'react-motion'
 import {uploadIcon} from 'actions/common'
 
@@ -10,7 +10,8 @@ export default class StoryPageCardWithCover extends React.Component {
 		super()
 		this.state = {
 			showMask:false,
-			coverUlr:''
+			coverUlr:'',
+			isSelected:false
 		}
 	}
 	handleFileChange = (e) => {
@@ -47,6 +48,9 @@ export default class StoryPageCardWithCover extends React.Component {
 						const data = this.props.data
 						this.editedContent[data.order].coverUrl = ''
 					}}>删除图片</Button>
+					<Button onClick={()=>{
+						this.editedContent[this.props.data.order].isSelected = !this.editedContent[this.props.data.order].isSelected
+					}}>{this.editedContent[this.props.data.order].isSelected?'点击取消显示':'点击显示'}</Button>
 				</div>)}
 				</Motion>
 				<input type='file' style={{display:'none'}} ref='file' onChange={this.handleFileChange} />

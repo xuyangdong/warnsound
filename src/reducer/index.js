@@ -25,6 +25,7 @@ import admin from './admin'
 import permission from './permission'
 import storyWork from './storyWork'
 import initImage from './initImage'
+import icon from './icon'
 
 const reducer = combineReducers({
 	user,
@@ -50,7 +51,8 @@ const reducer = combineReducers({
 	admin,
 	permission,
 	storyWork,
-	initImage
+	initImage,
+	icon
 	// auth,
 	// alliance,
 	// affair,

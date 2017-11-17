@@ -82,6 +82,8 @@ import WorkCreateEditPanel from './containers/work/CreateEditPanel'
 import InitImageContainer from './containers/initImage/InitImageContainer'
 import InitImageCreateEditPanel from './containers/initImage/CreateEditPanel'
 
+import IconContainer from './containers/icon/IconContainer'
+import IconCreateEditPanel from './containers/icon/CreateEditPanel'
 /** -------------------- Test Component ------------------- **/
 import TestContainer from './containers/test/TestContainer'
 import UeditorComponent from './components/UeditorComponent'
@@ -134,6 +136,8 @@ const AdminCreateEditPanelWithData = CreateEditGetDataHOCFactory('admin')(AdminC
 const PermissionCreateEditPanelWithData = CreateEditGetDataHOCFactory('permission')(PermissionCreateEditPanel)
 
 const InitImageCreateEditPanelWithData = CreateEditGetDataHOCFactory('initImage')(InitImageCreateEditPanel)
+
+const IconCreateEditPanelWithData = CreateEditGetDataHOCFactory('icon')(IconCreateEditPanel)
 /** -------------------- HOC ------------------- **/
 
 /** -------------------- HOC ------------------- **/
@@ -238,6 +242,9 @@ const routes = (<Router history={hashHistory}>
 			<Route path='initImage' component={InitImageContainer} />
 			<Route path='initImage/create' component={props => <InitImageCreateEditPanelWithData type='create' {...props}/>}/>
 			<Route path='initImage/edit/(:id)' component={props => <InitImageCreateEditPanelWithData type='edit' {...props}/>}/>
+
+			<Route path='icon' component={IconContainer} />
+			<Route path='icon/create' component={props => <IconCreateEditPanelWithData type='create' {...props}/>} />
 		</Route>
 
 		<Route path="app" component={App}/>

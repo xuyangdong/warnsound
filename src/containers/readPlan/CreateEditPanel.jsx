@@ -48,6 +48,7 @@ const ageGroup = [
 	title:'5-6岁'
 },]
 class CreateEditPanel extends React.Component {
+	_init = false
 	static contextTypes = {
 		router:React.PropTypes.object
 	}
@@ -66,6 +67,17 @@ class CreateEditPanel extends React.Component {
 		// 		})]:[]
 		// 	})
 		// }
+		if(!this._init){
+			if(!nextProps.readPlanInfo.isEmpty()){
+				this._init = true
+				this.setState({
+					coverFileList:nextProps.readPlanInfo.get('coverurl')?[_.extend(new File([],''),{
+						uid:-1,
+						url:nextProps.readPlanInfo.get('coverurl')
+					})]:[],
+				})
+			}
+		}
 	}
 	uploadIcon = () => {
 		if(this.state.coverFileList[0] && this.state.coverFileList[0].size>0){
@@ -73,7 +85,7 @@ class CreateEditPanel extends React.Component {
 				return res.obj.url
 			})
 		}else{
-			return Promise.resolve(this.props.readPlanInfo.get('coverUrl'))
+			return Promise.resolve(this.props.readPlanInfo.get('coverurl'))
 		}
 	}
 	handleSubmit = e => {

@@ -58,12 +58,14 @@ export default class DraftComponent extends React.Component {
             let readGuide = content.readGuide
             let tempArray = content.content?content.content.split('*'):''
             let coverUrl = content.coverUrl
+            let isSelected = content.isSelected
             for(let temp of tempArray){
                 contentArray.push({
                     content:''+temp,
                     soundEffectId:contentSoundEffectId,
                     readGuide:readGuide,
-                    coverUrl:coverUrl
+                    coverUrl:coverUrl,
+                    isSelected:isSelected
                 })
             }
             contentArray.push({
@@ -109,11 +111,12 @@ export default class DraftComponent extends React.Component {
                                 }
                                 return p
                             },''),
+                            isSelected:contentArray[index].isSelected
                         }))
                     }
                     blockArray[index] = blockArray[index].
                     setIn(['data','readGuide'],contentArray[index].readGuide).
-                    setIn(['data','coverUrl'],contentArray[index].coverUrl)
+                    setIn(['data','coverUrl'],contentArray[index].coverUrl).setIn(['data','isSelected'],contentArray[index].isSelected)
                 }
                 contentState = ContentState.createFromBlockArray(blockArray)
 
@@ -272,12 +275,16 @@ export default class DraftComponent extends React.Component {
                     contentBlock.soundEffectUrl = v.soundEffectUrl
                     contentBlock.soundEffectName = v.soundEffectName
                     contentBlock.coverUrl = v.coverUrl
+                    contentBlock.isSelected = v.isSelected
                 }
                 if(v.readGuide){
                     contentBlock.readGuide = v.readGuide
                 }
                 if(v.coverUrl){
                     contentBlock.coverUrl = v.coverUrl
+                }
+                if(v.isSelected){
+                    contentBlock.isSelected = v.isSelected
                 }
                 contentBlock.keyArray.push(v.blockKey)
             }else{
@@ -303,7 +310,8 @@ export default class DraftComponent extends React.Component {
 			content:v.getText().trim(),
 			soundEffectId:v.getData().get('soundEffectId'),
             readGuide:v.getData().get('readGuide'),
-            coverUrl:v.getData().get('coverUrl')
+            coverUrl:v.getData().get('coverUrl'),
+            isSelected:v.getData().get('isSelected')
 		}))
         return this.prePostProcess(rawContentArray).map(v => ({
             ...v,
@@ -390,9 +398,11 @@ export default class DraftComponent extends React.Component {
             key:k,
         }))
         return (forkData.map((v,k) => {
-            if(v.getData().isEmpty()||(!v.getData().get('soundEffectUrl')&&!v.getData().get('readGuide'))||(v.getData().get('soundEffectUrl')===''&&v.getData().get('readGuide')==='')){
+            // k==1?console.log("test::",v,v.getData().isEmpty()||(!v.getData().get('soundEffectUrl')&&!v.getData().get('readGuide'))||(v.getData().get('soundEffectUrl')===''&&v.getData().get('readGuide')==='')):null
+            if(v.getData().isEmpty()||(!v.getData().get('soundEffectUrl')&&!v.getData().get('readGuide')&&!v.getData().get('soundEffectId'))||(v.getData().get('soundEffectUrl')===''&&v.getData().get('readGuide')==='')){
                 return (null)
             }else{
+                console.log("test::",v,v.getData().isEmpty()||(!v.getData().get('soundEffectUrl')&&!v.getData().get('readGuide'))||(v.getData().get('soundEffectUrl')===''&&v.getData().get('readGuide')===''))
                 return <MediaTextComponent
                 onDeleteReadGuide={this.handleClearReadGuideByBlock}
                 onDelete={this.handleClearSoundEffectByBlock} key={k} block={v}/>

@@ -1,15 +1,13 @@
 import React from 'react'
 import {Table,Input,Button,notification,Popover} from 'antd'
 import TableHeader from '../../components/common/TableHeader'
-import styles from './StoryTopicContainer.scss'
+import styles from './IconContainer.scss'
 import EnhanceTable from '../../components/common/EnhanceTable'
 import {bindActionCreators} from 'redux'
-import {getStorySet} from 'actions/storySet'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import config from '../../config'
-import {getStoryTopic,topStoryTopic} from 'actions/storyTopic'
-import AddStoryModal from '../../components/storyTopic/AddStoryModal'
+import {getIcon,deleteIcon} from 'actions/icon'
 
 class StoryTopicContainer extends React.Component {
 	static contextTypes = {
@@ -22,19 +20,23 @@ class StoryTopicContainer extends React.Component {
 		}
 	}
 	componentDidMount(){
-		if(this.props.storyTopic.get('data').isEmpty()){
-			this.props.getStoryTopic(1,10)
+		if(this.props.icon.get('data').isEmpty()){
+			this.props.getIcon(0,10)
 		}
 	}
 	getTableData = () => {
 		const columns = [{
-			title:'标题',
-			dataIndex:'title',
-			key:'title'
+			title:'id',
+			dataIndex:'id',
+			key:'id'
 		},{
-			title:'内容',
-			dataIndex:'content',
-			key:'content',
+			title:'名称',
+			dataIndex:'name',
+			key:'name'
+		},{
+			title:'描述',
+			dataIndex:'description',
+			key:'description',
 			render:(t,r) => {
 				const content = (
 					<p>{t}</p>
@@ -46,35 +48,21 @@ class StoryTopicContainer extends React.Component {
 				)
 			}
 		},{
-			title:'图标',
-			dataIndex:'coverurl',
-			key:'coverurl'
-		},{
-			title:'是否显示',
-			dataIndex:'isshow',
-			key:'isshow',
+			title:'资源',
+			dataIndex:'url',
+			key:'url',
 			render:(t,r) => {
-				return t==1?'显示':'不显示'
-			}
-		},{
-			title:'置顶',
-			key:'top',
-			render:(t,r) => {
-				return (<a onClick={() => {
-					this.props.topStoryTopic(r.id)
-				}}>置顶</a>)
-			}
-		},{
-			title:'添加故事',
-			key:'addStory',
-			render:(t,r) => {
-				return (<a onClick={(e) => {
-					e.preventDefault()
-					this.setState({
-						openAddStoryModal:true
-					})
-					this._choosenStoryTopic = r.id
-				}}>添加故事</a>)
+				switch (r.resourceType) {
+					case 'ICON':
+						console.log("asdfasdfsa",t)
+						return <img style={{height:100}} src={t}/>
+					case 'AUDIO':
+						return <audio src={t}></audio>
+					case 'VIDEO':
+						return <video style={{height:100}} src={t}></video>
+					default:
+						return t
+				}
 			}
 		},{
 			title:'操作',
@@ -82,12 +70,14 @@ class StoryTopicContainer extends React.Component {
 			render:(t,r) => {
 				return (
 				<div>
-					<Link to={`/storyTopic/edit/${r.id}`}>编辑</Link>
+					<a onClick={() => {
+						this.props.deleteIcon(r.id)
+					}}>删除</a>
 				</div>
 				)
 			}
 		}]
-		const dataSource = this.props.storyTopic.get('data').map((v,k) => ({
+		const dataSource = this.props.icon.get('data').map((v,k) => ({
 			...v.toJS(),
 			key:k
 		})).toJS()
@@ -97,7 +87,7 @@ class StoryTopicContainer extends React.Component {
 		}
 	}
 	handleCreate = () => {
-		this.context.router.push('/storyTopic/create')
+		this.context.router.push('/icon/create')
 	}
 	render(){
 		const {columns,dataSource} = this.getTableData()
@@ -110,31 +100,24 @@ class StoryTopicContainer extends React.Component {
 				</div>
 				<div className={styles.mainPanel}>
 					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{
-						total:this.props.storyTopic.getIn(['otherData','totalSize']),
+						total:this.props.icon.getIn(['otherData','totalSize']),
 						onChange:(page,pageSize) => {
 							this.setState({
 								current:page,
 								pageSize:pageSize
 							})
-							this.props.getStoryTopic(page,pageSize)
+							this.props.getIcon(page,pageSize)
 						}
 					}}/>
 				</div>
-				{this.state.openAddStoryModal?<AddStoryModal visible={this.state.openAddStoryModal} storyTopicId={this._choosenStoryTopic}
-				onCancel={()=>{
-					this.setState({
-						openAddStoryModal:false
-					})
-				}}
-				/>:null}
 			</div>
 		)
 	}
 }
 
 export default connect(state => ({
-	storyTopic:state.get('storyTopic')
+	icon:state.get('icon')
 }), dispatch => ({
-	getStoryTopic:bindActionCreators(getStoryTopic,dispatch),
-	topStoryTopic:bindActionCreators(topStoryTopic,dispatch)
+	getIcon:bindActionCreators(getIcon,dispatch),
+	deleteIcon:bindActionCreators(deleteIcon,dispatch)
 }))(StoryTopicContainer)

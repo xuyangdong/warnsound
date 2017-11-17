@@ -3,21 +3,42 @@ import config from '../config'
 import _ from 'lodash'
 import {notification} from 'antd'
 
+export function getAllStorySet(page,pageSize,query){
+	let formData = new FormData()
+	formData.append('page',page)
+	formData.append('pageSize',pageSize)
+	formData.append('query',query)
+	return fetch(config.api.storySet.get(page,pageSize,query),{
+		method:'post',
+		headers: {
+			'authorization': sessionStorage.getItem('auth')
+		},
+		body:formData
+	}).then(res => res.json())
+}
+
 export const GET_STORYSET = actionNames('GET_STORYSET')
-export function getStorySet(page,pageSize){
+export function getStorySet(page,pageSize,query=''){
 	return {
 		types:GET_STORYSET,
 		callAPI:() => {
-			return fetch(config.api.storySet.get(page,pageSize),{
+			let formData = new FormData()
+			formData.append('page',page)
+			formData.append('pageSize',pageSize)
+			formData.append('query',query)
+			return fetch(config.api.storySet.get(page,pageSize,query),{
+				method:'post',
 				headers: {
 			    	'authorization': sessionStorage.getItem('auth')
 			    },
+				body:formData
 			}).then(res => res.json()).then(res => {
 				if(res.status!=1){
 					notification.error({message:'服务器出错'})
 				}
 				res.offset = page
                 res.limit = pageSize
+				res.query = query
 				return res
 			})
 		}

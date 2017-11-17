@@ -44,7 +44,7 @@ class CreateEditPanel extends React.Component {
 				return res.obj.url
 			})
 		}else{
-			return Promise.resolve(this.props.babyReadInfo.get('coverurl')||'')
+			return Promise.resolve(this.state.coverFileList[0].url || this.props.babyReadInfo.get('coverurl')||'')
 		}
 	}
 	handleSubmit = e => {

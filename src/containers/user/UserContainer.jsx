@@ -14,6 +14,14 @@ class UserContainer extends React.Component {
 	static contextTypes = {
 		router:PropTypes.object
 	}
+	constructor(){
+		super()
+		this.state = {
+			current:0,
+			pageSize:10,
+			queryCondition:''
+		}
+	}
 	componentDidMount(){
 		if(this.props.user.get('data').isEmpty()){
 			this.props.getUser(0,10)
@@ -91,7 +99,16 @@ class UserContainer extends React.Component {
 				<div className={styles.header}>
 					<TableHeader title='用户列表'
 					 searchBar={[]}
-					 functionBar={['create']} onCreate={this.handleCreate}/>
+					 functionBar={['create']} onCreate={this.handleCreate}>
+					 <Input style={{width:200}} addonBefore='用户名' value={this.state.queryCondition} onChange={(e) => {
+						 this.setState({
+							 queryCondition:e.target.value
+						 })
+					 }}/>
+					 <Button onClick={()=>{
+						 this.props.getUser(this.state.current,this.state.pageSize,this.state.queryCondition)
+					 }}>查询</Button>
+					 </TableHeader>
 				</div>
 				<div className={styles.mainPanel}>
 					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{

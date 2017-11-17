@@ -14,6 +14,7 @@ import ReadGuideInput from '../../components/story/ReadGuideInput'
 import classnames from 'classnames'
 import MultiRolePanel from '../../components/story/MultiRolePanel'
 import {Link} from 'react-router'
+import HotStoryModal from '../../components/story/HotStoryModal'
 const FormItem = Form.Item
 const Option = Select.Option
 const ButtonGroup = Button.Group;
@@ -35,7 +36,8 @@ class CreateEditPanel extends React.Component {
 			guideSoundFileList:[],
 			storyTags:[],
 			spin:false,
-			storyContentData:[]
+			storyContentData:[],
+			displayHotStory:false
 		}
 		this.handleSubmit = this.handleSubmit.bind(this)
 		this.handlePicDisplay = this.handlePicDisplay.bind(this)
@@ -120,14 +122,17 @@ class CreateEditPanel extends React.Component {
 			this.setState({
 				spin:false
 			})
-
+			if(this.props.type=='create'){
+				this.handleAddStoryIntroduction(getFieldValue('storyIntroduction'),res.obj.id)
+			}
+			this.context.router.goBack(0)
 		})
-		this.context.router.goBack(0)
+
 	}
-	handleAddStoryIntroduction = (introduction) => {
+	handleAddStoryIntroduction = (introduction,storyId = this.props.storyInfo.get('id')) => {
 		const {getFieldValue} = this.props.form
 		let formData = new FormData()
-		formData.append('storyId',this.props.storyInfo.get('id'))
+		formData.append('storyId',storyId)
 		formData.append('introduction',getFieldValue('storyIntroduction'))
 		fetch(config.api.story.introduction.add,{
 			method:'post',
@@ -447,7 +452,7 @@ class CreateEditPanel extends React.Component {
 						})}
 					</Select>
 					</FormItem>
-					{this.props.type=='edit'?(<FormItem
+					{this.props.type=='edit'||this.props.type=='create'?(<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:6}}
 					  label={<span >故事简介</span>}
@@ -456,7 +461,10 @@ class CreateEditPanel extends React.Component {
 						initialValue:storyInfo.get('introduction','')
 					})(
 						<Input autosize={{minRows:4,maxRows:4}} onBlur={(e)=>{
-							this.handleAddStoryIntroduction(e.target.value)
+							if(this.props.type=='edit'){
+								this.handleAddStoryIntroduction(e.target.value)
+							}
+
 						}} type='textarea'/>
 					)}
 					</FormItem>):null}
@@ -465,16 +473,23 @@ class CreateEditPanel extends React.Component {
 					  wrapperCol={{span:8}}
 					  label={<span>朗读次数（热搜）</span>}
 					>
-					{getFieldDecorator('tellCount',{
-						initialValue:storyInfo.get('tellCount')
-					})(
-						<InputNumber onBlur={this.handleChangeHotLevel} />
-					)}
+					{this.state.displayHotStory?<HotStoryModal
+						currentStory={storyInfo.get('id')}
+						onCancel={()=>{
+							this.setState({
+								displayHotStory:false
+							})
+						}}
+						/>:<Button onClick={()=>{
+						this.setState({
+							displayHotStory:true
+						})
+					}}>点击查看热搜故事</Button>}
 					</FormItem>:null}
 					<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:8}}
-					  label={<span>阅读读指导</span>}
+					  label={<span>阅读指导</span>}
 					>
 					<ReadGuideInput value={storyInfo.get('guide')} ref='readGuide'/>
 					</FormItem>

@@ -1,21 +1,25 @@
 import React from 'react'
-import {Upload,Icon,Modal,Slider} from 'antd'
+import {Upload,Icon,Modal,Slider,Select} from 'antd'
 import _ from 'lodash'
 import AvatarEditor from 'react-avatar-editor'
 import styles from './UploadAvatar'
+import config from '../../config'
+const Option = Select.Option
 const IMAGE_WIDTH = 250
 export default class UploadAvatar extends React.Component {
 	static defaultProps = {
 		width:250,
 		height:250,
 		border:50,
-		widthEdit:false
+		widthEdit:false,
+		withSelect:false
 	}
 	constructor(){
 		super()
 		this.state = {
 			fileList:[],
 			scale:1,
+			resourceList:[]
 		}
 	}
 	componentDidMount(){
@@ -24,6 +28,16 @@ export default class UploadAvatar extends React.Component {
 				fileList:this.props.value
 			})
 		}
+		fetch(config.api.resource.get(0,10000),{
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			}
+		}).then(res => res.json()).then(res => {
+
+			this.setState({
+				resourceList:res.obj
+			})
+		})
 	}
 	componentWillReceiveProps(nextProps){
 		if(nextProps.value){
@@ -56,6 +70,16 @@ export default class UploadAvatar extends React.Component {
 			},'image/png',0.95)
 		})
 	}
+	handleSelect = (value,option) => {
+
+		let forkFile = new File([],option.props.children.toString())
+		forkFile.uid = '-1'
+		forkFile.url = value
+		// this.setState({
+		//
+		// })
+		this.props.onChange(forkFile,[forkFile])
+	}
 	render(){
 		const uploadButton = (
 	      <div>
@@ -65,6 +89,11 @@ export default class UploadAvatar extends React.Component {
 	    );
 		return (
 			<div>
+				{this.props.withSelect?<Select dropdownMatchSelectWidth={false} onSelect={this.handleSelect} style={{width:200}}>
+				{this.state.resourceList.map((v,k) => {
+					return <Option value={''+v.url} key={k}>{v.name}</Option>
+				})}
+				</Select>:null}
 				<Upload
 				  key='avatar'
 		          listType="picture-card"

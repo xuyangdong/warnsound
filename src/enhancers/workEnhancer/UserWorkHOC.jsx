@@ -26,6 +26,7 @@ export default (WorkContainer) => {
 			title={`${this.props.userWork.getIn(['user','info','nickname'])}的用户的作品`}
 			getWork={this.getWork}
 			prefix={`user/${this.props.userWork.getIn(['user','info','id'])}`}
+			{...this.props}
 			/>)
 		}
 	}

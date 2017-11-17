@@ -67,6 +67,7 @@ export function addStory(formData) {
         			})
                 }
             })
+            return res
         })
     }
 }

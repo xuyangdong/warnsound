@@ -25,6 +25,7 @@ const modulePermission = {
 	notice:5,
 	admin:5,
 	initImage:5,
+	icon:5
 }
 
 export default class Permission {

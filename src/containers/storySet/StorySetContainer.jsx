@@ -103,7 +103,16 @@ class StorySetContainer extends React.Component {
 						this.setState({
 							[key]:value
 						})
-					}} onSearch={this.hanleFilterData}/>
+					}} onSearch={this.hanleFilterData}>
+						<Input addonBefore='故事集名称' style={{width:200}} value={this.state.queryCondition} onChange={(e) => {
+							this.setState({
+								queryCondition:e.target.value
+							})
+						}} />
+						<Button onClick={()=>{
+							this.props.getStorySet(this.state.current,this.state.pageSize,this.state.queryCondition)
+						}}>查询</Button>
+					</TableHeader>
 				</div>
 				<div className={styles.mainPanel}>
 					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{

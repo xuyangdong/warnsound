@@ -1,29 +1,26 @@
 import React from 'react'
 import {Row, Col, Input, Icon,Button} from 'antd'
 import styles from './TableHeader.scss'
-import SearchBar from './SearchBar'
 
-const Search = Input.Search
-
-class TableHeader extends React.Component {
-	static propTypes={
-		functionBar:React.PropTypes.array,
-		title:React.PropTypes.string.isRequired,
-		searchBar:React.PropTypes.array
-	}
-	handleCleanQuery = () => {
-		this.refs.searchBar.clean()
+export default class TableHeader extends React.Component {
+	renderChildren = () => {
+		const children = this.props.children
+		if(typeof children === 'undefined'){
+			return null
+		}if(typeof children === 'array'){
+			return children.map((v,k) => {
+				return (
+					<Col key={k}>
+					{v}
+					</Col>
+				)
+			})
+		}else{
+			return children
+		}
 	}
 	render(){
 		const {functionBar,title} = this.props
-		const {titleS,author,press,content,tag} = this.props.functionBar.indexOf('search')>-1?this.props.search:{
-			titleS:'',
-			author:'',
-			press:'',
-			content:'',
-			tag:''
-		}
-
 		return (
 			<div className={styles.container}>
 				<Row type='flex' justify='space-between'>
@@ -39,7 +36,7 @@ class TableHeader extends React.Component {
 							</span>
 						</Col>:null}
 						{functionBar.indexOf('refresh')>-1?<Col>
-							<span className={styles.functionLabel} onClick={this.handleCleanQuery}>
+							<span className={styles.functionLabel} onClick={this.props.onRefresh}>
 							<Icon type="reload" />
 							刷新
 							</span>
@@ -47,10 +44,13 @@ class TableHeader extends React.Component {
 						</Row>
 					</Col>
 				</Row>
-				<SearchBar ref='searchBar' searchCondition={this.props.searchBar} onSearch={this.props.onSearch}/>
+				{/*
+					<SearchBar ref='searchBar' searchCondition={this.props.searchBar} onSearch={this.props.onSearch}>
+				</SearchBar>*/}
+				<Row type='flex' justify='space-between'>
+				{this.renderChildren()}
+				</Row>
 			</div>
 		)
 	}
 }
-
-export default TableHeader

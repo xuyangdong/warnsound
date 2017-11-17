@@ -1,5 +1,5 @@
 import React from 'react'
-import {Table,Input,Button,notification,Popover} from 'antd'
+import {Table,Input,Button,notification,Popover,TreeSelect} from 'antd'
 import TableHeader from '../../components/common/TableHeader'
 import styles from './StoryContainer.scss'
 import EnhanceTable from '../../components/common/EnhanceTable'
@@ -9,6 +9,8 @@ import {connect} from 'react-redux'
 import qs from 'qs'
 import {fromJS} from 'immutable'
 import config from '../../config'
+import {getAllStorySet} from 'actions/storySet'
+import _ from 'lodash'
 const Search = Input.Search
 
 class StoryContainer extends React.Component{
@@ -34,20 +36,45 @@ class StoryContainer extends React.Component{
 			current:0,
 			pageSize:10,
 
-			storySetList:fromJS([])
+			storySetList:fromJS([]),
+			storyTagTree:[]
 		}
 	}
 	componentDidMount(){
 		if(this.props.stories.get('data').isEmpty()){
 			this.props.getStories(0,10)
 		}
-		fetch(config.api.storySet.get(0,10000),{
-			headers:{
-				'authorization':sessionStorage.getItem('auth')
-			}
-		}).then(res => res.json()).then(res => {
+		getAllStorySet(0,10000,'').then(res => {
 			this.setState({
 				storySetList:fromJS(res.obj)
+			})
+		})
+		fetch(config.api.storyTag.get(0,100000),{
+			headers:{
+				authorization:sessionStorage.getItem('auth')
+			}
+		}).then(res => res.json()).then(res => {
+			let treeData = res.obj.filter(v => v.parentId == 0).map(v => ({
+				value:''+v.id,
+				key:''+v.id,
+				label:v.content,
+				otherData:v
+			}))
+			treeData = treeData.map(v => ({
+				...v,
+				children:res.obj.filter(t => t.parentId == v.value).map(t => ({
+					value:''+t.id,
+					key:''+t.id,
+					label:t.content,
+					otherData:t
+				}))
+			}))
+			this.setState({
+				storyTagTree:_.concat([{
+					value:'',
+					key:'-1',
+					label:'所有标签'
+				}],treeData)
 			})
 		})
 	}
@@ -162,26 +189,100 @@ class StoryContainer extends React.Component{
 			this.props.getStories(this.state.current,this.state.pageSize)
 		})
 	}
+	handleChangeSearchCondition = (key,value) => {
+		if(!!value.target){
+			this.setState({
+				[key]:value.target.value
+			})
+		}else{
+			this.setState({
+				[key]:value
+			})
+		}
+
+	}
 	render(){
 		const {columns,dataSource} = this.getTableData()
 		const {titleS,author,press,content,tag} = this.state
-		console.log("asdf:",this.props.stories.toJS())
 		return (
 			<div className={styles.container}>
 				<div className={styles.header}>
 					<TableHeader title='故事列表'
-					 searchBar={['title','author','press','content','tag']}
-					 functionBar={['create','refresh','search']} search={{
-						titleS,
-						author,
-						press,
-						content,
-						tag
-					}} onCreate={this.handleCreate} onChangeSearch={(value,key) => {
-						this.setState({
-							[key]:value
-						})
-					}} onSearch={this.hanleFilterData}/>
+					 functionBar={['create','refresh','search']}
+					 onCreate={this.handleCreate}
+					 onRefresh={() => {
+						 this.setState({
+							 titleS:'',
+							 author:'',
+							 press:'',
+							 content:'',
+							 tag:''
+						 })
+					 }}>
+					<Input
+						style={{width:150}}
+						addonBefore='标题'
+						value={titleS}
+						onPressEnter={this.hanleFilterData.bind(this,{
+							title:this.state.titleS,
+							author:this.state.author,
+							press:this.state.press,
+							content:this.state.content,
+							tag:this.state.tag
+						})}
+						onChange={this.handleChangeSearchCondition.bind(this,'titleS')}/>
+					<Input
+						style={{width:150}}
+						addonBefore='作者'
+						value={author}
+						onPressEnter={this.hanleFilterData.bind(this,{
+							title:this.state.titleS,
+							author:this.state.author,
+							press:this.state.press,
+							content:this.state.content,
+							tag:this.state.tag
+						})}
+						onChange={this.handleChangeSearchCondition.bind(this,'author')}/>
+					<Input
+						style={{width:150}}
+						addonBefore='出版社'
+						value={press}
+						onPressEnter={this.hanleFilterData.bind(this,{
+							title:this.state.titleS,
+							author:this.state.author,
+							press:this.state.press,
+							content:this.state.content,
+							tag:this.state.tag
+						})}
+						onChange={this.handleChangeSearchCondition.bind(this,'press')}/>
+					<Input
+						style={{width:150}}
+						addonBefore='内容'
+						value={content}
+						onPressEnter={this.hanleFilterData.bind(this,{
+							title:this.state.titleS,
+							author:this.state.author,
+							press:this.state.press,
+							content:this.state.content,
+							tag:this.state.tag
+						})}
+						onChange={this.handleChangeSearchCondition.bind(this,'content')}/>
+					<TreeSelect
+						style={{width:200}}
+						dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+						value={tag}
+						treeData={this.state.storyTagTree}
+						placeholder="故事标签"
+						onChange={this.handleChangeSearchCondition.bind(this,'tag')}
+					/>
+					<Button onClick={this.hanleFilterData.bind(this,{
+						title:this.state.titleS,
+						author:this.state.author,
+						press:this.state.press,
+						content:this.state.content,
+						tag:this.state.tag
+					})}>查询</Button>
+					</TableHeader>
 				</div>
 				<div className={styles.mainPanel}>
 					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{

@@ -48,7 +48,7 @@ class CreateEditPanel extends React.Component {
 			return Promise.resolve({
 				name:getFieldValue('name'),
 				description:getFieldValue('description'),
-				icon:this.props.albumInfo.get('icon')
+				icon:this.state.fileList[0].url||this.props.albumInfo.get('icon')
 			})
 		}
 	}

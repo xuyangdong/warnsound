@@ -7,6 +7,7 @@ import EnhanceInput from '../../components/common/EnhanceInput'
 import EnhanceSelect from '../../components/common/EnhanceSelect'
 import config from '../../config'
 import ReadGuideInput from '../../components/story/ReadGuideInput'
+import ReadGuideInput2 from '../../components/story/ReadGuideInput2'
 import UploadAvatar from '../../components/common/UploadAvatar'
 import {uploadIcon} from 'actions/common'
 import UploadVideo from '../../components/common/UploadVideo'
@@ -50,7 +51,7 @@ class CreateEditPanel extends React.Component {
 				return res.obj.url
 			})
 		}else{
-			return Promise.resolve(this.props.storySurroundInfo.get('coverUrl')||'')
+			return Promise.resolve(this.state.coverFileList[0].url||this.props.storySurroundInfo.get('coverUrl')||'')
 		}
 	}
 	uploadVideo = () => {
@@ -122,17 +123,17 @@ class CreateEditPanel extends React.Component {
 					</FormItem>
 					<FormItem
 					  labelCol={{span:2}}
-					  wrapperCol={{span:4}}
+					  wrapperCol={{span:14}}
 					  label={<span>内容</span>}
 					>
-					<ReadGuideInput ref='readGuide' value={storySurroundInfo.get('content')}/>
+					<ReadGuideInput2 ref='readGuide' id='readGuide' value={storySurroundInfo.get('content')}/>
 					</FormItem>
 					<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:4}}
 					  label={<span>图标</span>}
 					>
-					<UploadAvatar widthEdit={true} imageRatio={1.6} value={this.state.coverFileList}
+					<UploadAvatar withSelect={true} widthEdit={true} imageRatio={1.6} value={this.state.coverFileList}
 					onChange={(file,fileList)=>{
 						this.setState({
 							coverFileList:fileList

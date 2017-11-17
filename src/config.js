@@ -3,7 +3,7 @@ import qs from 'qs'
 const isProduction = process.env.NODE_ENV === "production"
 
 const baseURL = isProduction
-    ? 'http://47.93.242.215'
+    ? 'http://120.79.0.217'
     : ''
 // const baseURL = ""
 
@@ -15,7 +15,7 @@ const config = _.extend({
         user: {
             login: (id, ps) => `${baseURL}/manage/auth?username=${id}&password=${ps}`,
             logout: `${baseURL}/manage/auth`,
-            get:(page,pageSize) => `${baseURL}/manage/user/getUserListByPage?page=${page}&pageSize=${pageSize}`,
+            get:(page,pageSize,query='') => `${baseURL}/manage/user/getUserByFuzzyQuery?page=${page}&pageSize=${pageSize}&query=${query}`,
             query:id => `${baseURL}/manage/user/getUserById?id=${id}`,
             edit:`${baseURL}/manage/user/updateUser`,
             add:`${baseURL}/manage/user/saveUser`,
@@ -84,6 +84,9 @@ const config = _.extend({
             },
             tellCount:{
                 add:`${baseURL}/manage/updateTellCountByStoryId`
+            },
+            hotSearch:{
+                get:(page,pageSize) => `${baseURL}/manage/getHotStoryList?page=${page}&pageSize=${pageSize}`
             }
         },
         storyTag: {
@@ -200,7 +203,7 @@ const config = _.extend({
             edit:id => `${baseURL}/manage/albums/${id}`
         },
         storySet:{
-            get:(page,pageSize) => `${baseURL}/manage/getAllStorySetByPage?page=${page}&pageSize=${pageSize}`,
+            get:(page,pageSize,query='') => `${baseURL}/manage/getStorySetByFuzzyQuery?page=${page}&pageSize=${pageSize}&query=${query}`,
             add:`${baseURL}/manage/storySets`,
             edit:id => `${baseURL}/manage/storySets/${id}`,
             query:id => `${baseURL}/manage/storySets/${id}`,
@@ -279,6 +282,13 @@ const config = _.extend({
             edit:`${baseURL}/manage/initImage/updateInitImage`,
             query:id => `${baseURL}/manage/initImage/getInitImageById?id=${id}`,
             isShow:(id,isShow) => `${baseURL}/manage/initImage/updateIsShow?id=${id}&isShow=${isShow}`
+        },
+        resource:{
+            get:(page,pageSize) => `${baseURL}/manage/getResourceListByPage?page=${page}&pageSize=${pageSize}`,
+            add:`${baseURL}/manage/resources`,
+            // edit:``,
+            query:id => `${baseURL}/manage/resources/${id}`,
+            delete:id => `${baseURL}/manage/resources/${id}`
         }
     }
 })

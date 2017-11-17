@@ -26,7 +26,7 @@ class CreateRolePart extends React.Component {
 				return res.obj.url
 			})
 		}else{
-			return Promise.resolve('')
+			return Promise.resolve(this.state.coverFileList[0].url||'')
 		}
 	}
 	handleCreateRole = () => {

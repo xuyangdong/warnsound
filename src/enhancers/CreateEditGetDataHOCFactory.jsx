@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {addStory,editStory,deleteStory} from 'actions/story'
 import {addStoryTag,editStoryTag,deleteStoryTag} from 'actions/storyTag'
+import {getAllStorySet} from 'actions/storySet'
 import SoundEffectGetDataHOC from './SoundEffectGetDataHOC'
 import SoundEffectTagGetDataHOC from './SoundEffectTagGetDataHOC'
 import BackgroundMusicGetDataHOC from './BackgroundMusicGetDataHOC'
@@ -26,6 +27,7 @@ import NoticeGetDataHOC from './NoticeGetDataHOC'
 import AdminGetDataHOC from './AdminGetDataHOC'
 import PermissionGetDataHOC from './PermissionGetDataHOC'
 import InitImageGetDataHOC from './InitImageGetDataHOC'
+import IconGetDataHOC from './IconGetDataHOC'
 
 function buildTree(listData,parentId=0){
 	let result = fromJS([])
@@ -53,7 +55,8 @@ export default (type) => {
 						albumList:fromJS([]),
 						storySetList:fromJS([]),
 						storySetInfo:fromJS([]),
-						roleList:fromJS([])
+						roleList:fromJS([]),
+						hotStory:fromJS([])
 					}
 					this.handleCreate = this.handleCreate.bind(this)
 					this.handleEdit = this.handleEdit.bind(this)
@@ -224,11 +227,16 @@ export default (type) => {
 						})
 					})
 					//-------------storySetList
-					fetch(config.api.storySet.get(0,10000),{
-						headers:{
-							'authorization':sessionStorage.getItem('auth')
-						}
-					}).then(res => res.json()).then(res => {
+					// fetch(config.api.storySet.get(0,10000),{
+					// 	headers:{
+					// 		'authorization':sessionStorage.getItem('auth')
+					// 	}
+					// }).then(res => res.json()).then(res => {
+					// 	this.setState({
+					// 		storySetList:fromJS(res.obj)
+					// 	})
+					// })
+					getAllStorySet(0,10000,'').then(res => {
 						this.setState({
 							storySetList:fromJS(res.obj)
 						})
@@ -249,6 +257,17 @@ export default (type) => {
 
 					}):null
 
+					//------------hot story
+					fetch(config.api.story.hotSearch.get(0,1000),{
+						headers:{
+							'authorization':sessionStorage.getItem('auth')
+						}
+					}).then(res => res.json()).then(res => {
+						this.setState({
+							hotStory:fromJS(res.obj)
+						})
+					})
+
 				}
 				handleDelete = () => {
 					return this.props.deleteStory(this.props.params.id)
@@ -260,7 +279,7 @@ export default (type) => {
 					return this.props.editStory(formData,this.props.params.id)
 				}
 				render(){
-					const {storyInfo,storyTags,storyTagsByParent,storyTagInfo,soundEffects,backgroundMusics,backgroundMusicInfo,soundEffectByTag,backgroundMusicByTag,storyRoleInfo,albumList,storySetList,storySetInfo,roleList} = this.state
+					const {storyInfo,storyTags,storyTagsByParent,storyTagInfo,soundEffects,backgroundMusics,backgroundMusicInfo,soundEffectByTag,backgroundMusicByTag,storyRoleInfo,albumList,storySetList,storySetInfo,roleList,hotStory} = this.state
 					const props = {
 						storyInfo,
 						storyTags,
@@ -274,7 +293,8 @@ export default (type) => {
 						storyRoleInfo,
 						albumList,
 						storySetList,storySetInfo,
-						roleList
+						roleList,
+						hotStory
 					}
 					return (
 						<CreateEditPanel type={this.props.type} onDelete={this.handleDelete} onSubmit={this.props.type=='create'?this.handleCreate:this.handleEdit} title={this.props.type=='create'?'新建Story':`Story ${storyInfo.get('title')}`} {...props}/>
@@ -399,5 +419,7 @@ export default (type) => {
 		return  PermissionGetDataHOC
 	}else if(type == 'initImage'){
 		return InitImageGetDataHOC
+	}else if(type == 'icon'){
+		return IconGetDataHOC
 	}
 }

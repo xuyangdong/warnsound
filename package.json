@@ -51,6 +51,7 @@
     "antd": "^2.11.0",
     "babel-polyfill": "^6.23.0",
     "blueimp-md5": "^2.7.0",
+    "iconv-lite": "^0.4.19",
     "immutable": "^3.8.1",
     "lodash": "^4.17.4",
     "plyr": "^2.0.13",

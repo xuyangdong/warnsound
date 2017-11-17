@@ -28,7 +28,7 @@ export function logout() {
     }
 }
 
-const callAPIHOC = (page,pageSize) => {
+const callAPIHOC = (page,pageSize,query='') => {
     return (getState) => {
         if(typeof page ==='undefined'){
             page = getState().getIn(['user','otherData','offset'],0)
@@ -36,7 +36,7 @@ const callAPIHOC = (page,pageSize) => {
         if(!pageSize){
             pageSize = getState().getIn(['user','otherData','limit'],10)
         }
-        return fetch(config.api.user.get(page, pageSize), {
+        return fetch(config.api.user.get(page, pageSize,query), {
             headers: {
                 'authorization': sessionStorage.getItem('auth')
             },
@@ -49,16 +49,17 @@ const callAPIHOC = (page,pageSize) => {
             }
             res.offset = page
             res.limit = pageSize
+            res.query = query
             return res
         })
     }
 }
 
 export const GET_USER = actionNames('GET_USER')
-export function getUser(page,pageSize){
+export function getUser(page,pageSize,query){
     return {
         types:GET_USER,
-        callAPI:callAPIHOC(page,pageSize),
+        callAPI:callAPIHOC(page,pageSize,query),
     }
 }
 

@@ -115,7 +115,7 @@ export default class ReadGuideInput extends React.Component {
 	componentWillReceiveProps(nextProps){
 		const blockArray = this._preProcessData(nextProps)
 		const {editorState} = this.state
-		if(blockArray.length>0 && nextProps.value != this.props.value){
+		if(blockArray.length>=0 && nextProps.value != this.props.value){
 			this.setState({
 				editorState:EditorState.createWithContent(ContentState.createFromBlockArray(blockArray))
 			})
@@ -181,7 +181,16 @@ export default class ReadGuideInput extends React.Component {
 					content:v.getText()
 				}
 			}
-		}).filter(v => !!v.content),[{order:blockArray.length,type:0,content:''}])
+		})
+		.filter((v,k) => {
+			if(k == blockArray.length-1 && !v.content){
+				return false
+			}else{
+				return true
+			}
+		})
+		// .filter(v => !!v.content)
+		,[{order:blockArray.length,type:0,content:''}])
 	}
 
 	render(){
