@@ -7,6 +7,7 @@ import UploadAvatar from '../../components/common/UploadAvatar'
 import UploadAudio from '../../components/common/UploadAudio'
 import {uploadIcon,uploadMutil} from 'actions/common'
 import {jsonToFormData} from 'project-utils'
+import {fromJS} from 'immutable'
 const FormItem = Form.Item
 const Option = Select.Option
 const RadioGroup = Radio.Group
@@ -25,20 +26,20 @@ class CreateEditPanel extends React.Component {
 		}
 	}
 	componentWillReceiveProps(nextProps){
-		if(!nextProps.workInfo.isEmpty() && !this._init){
+		if(!nextProps.nativeWorkInfo.isEmpty() && !this._init){
 			this._init = true
 			this.setState({
-				audioFileList:nextProps.workInfo.get('url')?[_.extend(new File([],''),{
+				audioFileList:nextProps.nativeWorkInfo.get('url')?[_.extend(new File([],''),{
 					uid:-1,
-					url:nextProps.workInfo.get('url')
+					url:nextProps.nativeWorkInfo.get('url')
 				})]:[],
-				headImgList:nextProps.workInfo.get('headImgUrl')?[_.extend(new File([],''),{
+				headImgList:nextProps.nativeWorkInfo.get('headImgUrl')?[_.extend(new File([],''),{
 					uid:-1,
-					url:nextProps.workInfo.get('headImgUrl')
+					url:nextProps.nativeWorkInfo.get('headImgUrl')
 				})]:[],
-				coverList:nextProps.workInfo.get('coverUrl')?[_.extend(new File([],''),{
+				coverList:nextProps.nativeWorkInfo.get('coverUrl')?[_.extend(new File([],''),{
 					uid:-1,
-					url:nextProps.workInfo.get('coverUrl')
+					url:nextProps.nativeWorkInfo.get('coverUrl')
 				})]:[],
 			})
 		}
@@ -57,9 +58,9 @@ class CreateEditPanel extends React.Component {
 				// userId:this.props.userInfo.get('id'),
 				userId:getFieldValue('userId'),
 				storyId:getFieldValue('storyId'),
-				// storyTitle:this.props.storyList.find(v => v.get('id')==getFieldValue('storyId'),{}).get('title'),
-				storyTitle:this.props.workInfo.get('storyTitle'),
-				username:this.props.userInfo.get('nickname'),
+				storyTitle:this.props.storyList.find(v => v.get('id')==getFieldValue('storyId'),fromJS({})).get('title'),
+				// storyTitle:this.props.nativeWorkInfo.get('storyTitle'),
+				username:this.props.userList.find(v => v.get('id')==getFieldValue('userId'),fromJS({})).get('nickname'),
 				url:urls[0],
 				headImgUrl:urls[1],
 				coverUrl:urls[2],
@@ -76,8 +77,7 @@ class CreateEditPanel extends React.Component {
 	}
 	render(){
 		const {getFieldDecorator} = this.props.form
-		const {userInfo,storyList,workInfo,userList} = this.props
-		console.log("asdf:",workInfo.toJS())
+		const {nativeWorkInfo,storyList,userList} = this.props
 		return (
 			<div className={styles.container}>
 				<div>
@@ -91,9 +91,14 @@ class CreateEditPanel extends React.Component {
 						  label={<span>故事</span>}
 						>
 						{getFieldDecorator('storyId',{
-							initialValue:''+workInfo.get('storyId',' ')
+							initialValue:''+nativeWorkInfo.get('storyId',' ')
 						})(
-							<Select disabled={this.props.indexType=='story'}>
+							<Select
+								showSearch
+								style={{ width: 200 }}
+								optionFilterProp="children"
+								filterOption={(input, option) => option.props.children.indexOf(input) >= 0}
+							>
 							{storyList.map((v,k) => {
 								return <Option value={''+v.get('id')} title={v.get('title')} key={k}>{v.get('title')}</Option>
 							}).toJS()}
@@ -106,9 +111,14 @@ class CreateEditPanel extends React.Component {
 						  label={<span>用户</span>}
 						>
 						{getFieldDecorator('userId',{
-							initialValue:''+workInfo.get('userId',' ')
+							initialValue:''+nativeWorkInfo.get('userId',' ')
 						})(
-							<Select disabled={this.props.indexType=='user'}>
+							<Select
+								showSearch
+								style={{ width: 200 }}
+								optionFilterProp="children"
+								filterOption={(input, option) => option.props.children.indexOf(input) >= 0}
+							>
 							{userList.map((v,k) => {
 								return <Option value={''+v.get('id')} title={v.get('nickname')} key={k}>{v.get('nickname')}</Option>
 							}).toJS()}
@@ -121,7 +131,7 @@ class CreateEditPanel extends React.Component {
 						  label={<span>浏览器次数</span>}
 						>
 						{getFieldDecorator('reviewCount',{
-							initialValue:workInfo.get('reviewCount')
+							initialValue:nativeWorkInfo.get('reviewCount')
 						})(
 							<InputNumber />
 						)}
@@ -133,7 +143,7 @@ class CreateEditPanel extends React.Component {
 						  label={<span>收听次数</span>}
 						>
 						{getFieldDecorator('listenCount',{
-							initialValue:workInfo.get('listenCount')
+							initialValue:nativeWorkInfo.get('listenCount')
 						})(
 							<InputNumber />
 						)}
@@ -164,7 +174,7 @@ class CreateEditPanel extends React.Component {
 						  label={<span>音频时长</span>}
 						>
 						{getFieldDecorator('duration',{
-							initialValue:workInfo.get('duration')
+							initialValue:nativeWorkInfo.get('duration')
 						})(
 							<Input />
 						)}

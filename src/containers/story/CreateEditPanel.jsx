@@ -125,7 +125,8 @@ class CreateEditPanel extends React.Component {
 			if(this.props.type=='create'){
 				this.handleAddStoryIntroduction(getFieldValue('storyIntroduction'),res.obj.id)
 			}
-			this.context.router.goBack(0)
+			// this.context.router.goBack(0)
+			window.location.reload()
 		})
 
 	}
@@ -473,6 +474,7 @@ class CreateEditPanel extends React.Component {
 					  wrapperCol={{span:8}}
 					  label={<span>朗读次数（热搜）</span>}
 					>
+					当前朗读次数：{storyInfo.get('tellCount')}
 					{this.state.displayHotStory?<HotStoryModal
 						currentStory={storyInfo.get('id')}
 						onCancel={()=>{

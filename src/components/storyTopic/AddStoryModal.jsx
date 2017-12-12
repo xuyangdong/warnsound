@@ -22,15 +22,15 @@ export default class AddStoryModal extends React.Component {
 		}
 	}
 	componentDidMount(){
-		fetch(config.api.story.all(0,10000),{
-			headers: {
-				'authorization': sessionStorage.getItem('auth')
-			}
-		}).then(res => res.json()).then(res => {
-			this.setState({
-				storyList:fromJS(res.obj)
-			})
-		})
+		// fetch(config.api.story.all(0,10000),{
+		// 	headers: {
+		// 		'authorization': sessionStorage.getItem('auth')
+		// 	}
+		// }).then(res => res.json()).then(res => {
+		// 	this.setState({
+		// 		storyList:fromJS(res.obj)
+		// 	})
+		// })
 		const { current, pageSize } = this.state
 		this.getStoryInStoryTopic(this.props.storyTopicId,current,pageSize)
 	}
@@ -48,7 +48,7 @@ export default class AddStoryModal extends React.Component {
 		}).then(res => res.json()).then(res => {
 			console.log(res.obj)
 			this.setState({
-				choosenStoryList:fromJS(res.obj.map(v => v.id))
+				choosenStoryList:fromJS(res.obj)
 			})
 		})
 	}
@@ -65,14 +65,12 @@ export default class AddStoryModal extends React.Component {
 		},{
 			title:'置顶',
 			render:(t,r) => {
-				return (<a onClick={this.handleTop.bind(this,r.id)}>置顶</a>)
+				return (<a onClick={this.handleTop.bind(this,r)}>置顶</a>)
 			}
 		}]
-		
+
 		let storyList = fromJS([])
-		storyList = this.state.choosenStoryList.map(v => {
-			return this.state.storyList.find(v1 => v1.get('id')==v)
-		})
+		storyList = this.state.choosenStoryList
 		let dataSource = []
 		try{
 			dataSource = storyList.map((v,k) => ({
@@ -81,29 +79,19 @@ export default class AddStoryModal extends React.Component {
 			})).toJS()
 		}catch(e){}
 
-
-		// const dataSource = storyList.map((v,k) => ({
-		// 	...v.toJS(),
-		// 	key:k
-		// })).toJS()
 		return {
 			columns,
 			dataSource
 		}
 	}
-	handleTop = (storyId) => {
+	handleTop = (record) => {
 		this.setState({
-			choosenStoryList:this.state.choosenStoryList.filter(v => v!=storyId)
-			.unshift(storyId)
+			choosenStoryList:this.state.choosenStoryList.filter(v => v.get('id')!=record.id)
+			.unshift(fromJS(record))
 		})
 	}
 	handleOk = () => {
-		// const storyList = this.state.storyList.filter((v,k) => {
-		// 	return this.state.choosenStoryList.some(v1 => v1==v.get('id'))
-		// })
-		const storyList = this.state.choosenStoryList.map(v => {
-			return this.state.storyList.find(v1 => v1.get('id')==v)
-		})
+		const storyList = this.state.choosenStoryList
 		let formData = new FormData()
 		formData.append('storyTopicId',this.props.storyTopicId)
 		storyList.forEach(v => {
@@ -125,12 +113,15 @@ export default class AddStoryModal extends React.Component {
 	handleDeleteStory = (id,e) => {
 		e.preventDefault()
 		this.setState({
-			choosenStoryList:this.state.choosenStoryList.filter(v => v!=id)
+			choosenStoryList:this.state.choosenStoryList.filter(v => v.get('id')!=id)
 		})
 	}
 	handleSelectStory = (value,option) => {
 		this.setState({
-			choosenStoryList:this.state.choosenStoryList.push(value)
+			selectedStoryId:this.state.storyList.find(v => v.get('id')==value).get('title'),
+			choosenStoryList:this.state.choosenStoryList.push(this.state.storyList.find(v => v.get('id')==value))
+		},() => {
+			console.log(this.state)
 		})
 	}
 	render(){
@@ -151,10 +142,34 @@ export default class AddStoryModal extends React.Component {
 			<div className={styles.container}>
 				<div className={styles.selectBar}>
 					<Select style={{width:200}}
-					showSearch
-					optionFilterProp="children"
 					onSelect={this.handleSelectStory}
-					filterOption={(input, option) => option.props.children.indexOf(input) >= 0}
+					value={this.state.selectedStoryId}
+					mode="combobox"
+			        notFoundContent=""
+			        defaultActiveFirstOption={false}
+			        showArrow={false}
+			        filterOption={false}
+			        onChange={(value)=>{
+						this.setState({
+							selectedStoryId:value
+						})
+						if(!value){
+							return
+						}
+						fetch(config.api.story.get(0,10000,{title: value,
+		                author: '',
+		                press: '',
+		                content: '',
+		                tag: ''}),{
+							headers:{
+								'authorization':sessionStorage.getItem('auth')
+							}
+						}).then(res => res.json()).then(res => {
+							this.setState({
+								storyList:fromJS(res.obj)
+							})
+						})
+					}}
 					>
 					{storyList.map((v,k) => {
 						return (<Option value={''+v.get('id')} key={k}>{v.get('title')}</Option>)
@@ -163,9 +178,7 @@ export default class AddStoryModal extends React.Component {
 				</div>
 				<div className={styles.content}>
 					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{
-						total:this.state.storyList.filter((v,k) => {
-							return this.state.choosenStoryList.some(v1 => v1==v.get('id'))
-						}).size,
+						total:this.state.choosenStoryList.size,
 						current:current,
 						pageSize:pageSize,
 						onChange:(current,pageSize) => {

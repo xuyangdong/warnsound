@@ -64,3 +64,12 @@ export function uploadMutil(fileList) {
 		})
 	})
 }
+
+export function getOssSignature(){
+	return fetch(config.api.auth.oss,{
+	}).then(res => res.json())
+}
+
+export function getSTSAuthorization(){
+	return fetch(config.api.auth.sts).then(res => res.json())
+}

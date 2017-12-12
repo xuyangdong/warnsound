@@ -69,7 +69,7 @@ class CreateEditPanel extends React.Component {
 		const jsonData = {
 			storyId:getFieldValue('storyId'),
 			title:getFieldValue('title'),
-			content:JSON.stringify(this.refs.readGuide.getData())
+			content:this.refs.readGuide.getData()
 		}
 		Promise.all([
 			this.uploadIcon(),

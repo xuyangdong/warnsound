@@ -151,7 +151,22 @@ class StoryContainer extends React.Component{
 					<a onClick={!r.recommend?this.handleRecommend.bind(this,r.id):this.handleDeRecommend.bind(this,r.id)}>{r.recommend?'取消推荐':'推荐'}</a>&nbsp;
 					<a onClick={() => {
 						this.context.router.push(`/stories/work/show/${r.id}`)
-					}}>作品</a>
+					}}>作品</a>&nbsp;
+					<a onClick={()=>{
+						fetch(config.api.story.default(r.id),{
+							headers:{
+								'authorization':sessionStorage.getItem('auth')
+							}
+						}).then(res => res.json()).then(res => {
+							if(res.status == 2){
+								notification.error({message:'设为默认故事失败'})
+							}else{
+								notification.success({message:'成功设为默认故事'})
+							}
+
+							// this.props.getStories(this.state.current,this.state.pageSize)
+						})
+					}}>设为默认</a>
 				</span>
 			)
 		}]

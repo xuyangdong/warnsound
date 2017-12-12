@@ -8,10 +8,20 @@ export default class HotStoryModal extends React.Component {
 		super()
 		this.state = {
 			hotStoryList:fromJS([]),
-			selectedStory:''
+			selectedStory:'',
+			storyList:fromJS([])
 		}
 	}
 	componentDidMount(){
+		fetch(config.api.story.list,{
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			}
+		}).then(res => res.json()).then(res => {
+			this.setState({
+				storyList:fromJS(res.obj)
+			})
+		})
 		this.getHotStory()
 	}
 	getHotStory = () => {
@@ -21,7 +31,8 @@ export default class HotStoryModal extends React.Component {
 			}
 		}).then(res => res.json()).then(res => {
 			this.setState({
-				hotStoryList:fromJS(res.obj)
+				hotStoryList:fromJS(res.obj),
+				selectedStory:''
 			})
 		})
 	}
@@ -43,7 +54,7 @@ export default class HotStoryModal extends React.Component {
 						})
 					}}
 				>
-				{this.state.hotStoryList.map((v,k) => (
+				{this.state.storyList.map((v,k) => (
 					<Option value={''+v.get('id')} key={k} >{v.get('title')}</Option>
 				))}
 				</Select>
@@ -102,11 +113,10 @@ export default class HotStoryModal extends React.Component {
 				onCancel={this.props.onCancel}
 				onOk={this.props.onCancel}
 			>
-				<a onClick={() => {
-					this.setState({
-						selectedStory:this.props.currentStory
-					})
-				}}>跳转到当前故事</a>
+				<div>
+					设置当前故事的收听次数：
+					<InputNumber onBlur={this.handleChangeHotLevel.bind(this,this.props.currentStory)} />
+				</div>
 				<Table  {...tableConfig}/>
 			</Modal>
 		)

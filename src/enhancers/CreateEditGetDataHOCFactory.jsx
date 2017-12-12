@@ -28,6 +28,8 @@ import AdminGetDataHOC from './AdminGetDataHOC'
 import PermissionGetDataHOC from './PermissionGetDataHOC'
 import InitImageGetDataHOC from './InitImageGetDataHOC'
 import IconGetDataHOC from './IconGetDataHOC'
+import NativeWorkGetDataHOC from './NativeWorkGetDataHOC'
+import ContinuousLoginPromptGetDataHOC from './ContinuousLoginPromptGetDataHOC'
 
 function buildTree(listData,parentId=0){
 	let result = fromJS([])
@@ -421,5 +423,9 @@ export default (type) => {
 		return InitImageGetDataHOC
 	}else if(type == 'icon'){
 		return IconGetDataHOC
+	}else if(type == 'nativeWork'){
+		return NativeWorkGetDataHOC
+	}else if(type == 'continuousLoginPrompt'){
+		return ContinuousLoginPromptGetDataHOC
 	}
 }

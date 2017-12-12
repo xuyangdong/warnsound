@@ -26,6 +26,9 @@ import permission from './permission'
 import storyWork from './storyWork'
 import initImage from './initImage'
 import icon from './icon'
+import nativeWork from './nativeWork'
+import opinion from './opinion'
+import continuousLoginPrompt from './continuousLoginPrompt'
 
 const reducer = combineReducers({
 	user,
@@ -52,7 +55,10 @@ const reducer = combineReducers({
 	permission,
 	storyWork,
 	initImage,
-	icon
+	icon,
+	nativeWork,
+	opinion,
+	continuousLoginPrompt
 	// auth,
 	// alliance,
 	// affair,

@@ -56,6 +56,11 @@ export default class AddStoryModal extends React.Component {
 			choosenStoryList:this.state.choosenStoryList.set(record.key,value)
 		})
 	}
+	handleTop = (id) => {
+		this.setState({
+			choosenStoryList:this.state.choosenStoryList.filter(v => v!=id).unshift(id)
+		})
+	}
 	getTableData = () => {
 		const columns = [{
 			title:'标题',
@@ -85,6 +90,14 @@ export default class AddStoryModal extends React.Component {
 						replacingStory:r.id
 					})
 				}}>替换</a>)
+			}
+		},{
+			title:'置顶',
+			key:'top',
+			render:(t,r) => {
+				return (<a onClick={()=>{
+					this.handleTop(r.id)
+				}}>置顶</a>)
 			}
 		}]
 		// const storyList = this.state.storyList.filter((v,k) => {

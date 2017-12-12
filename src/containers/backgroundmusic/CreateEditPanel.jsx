@@ -37,10 +37,13 @@ class CreateEditPanel extends React.Component {
 		formData.append('description',getFieldValue('description'))
 		formData.append('uploadFile',this.state.fileList[0]||new File([],''))
 		this.props.onSubmit(formData).then(res => {
+			return res
+		}).then(res => {
 			this.setState({
 				spin:false
 			})
 			notification.success({message:'背景音效上传成功'})
+			this.addBackgroundMusicTag(res.id,this.state.backgroundMusicTag[0])
 		})
 		this.context.router.goBack()
 	}
@@ -61,7 +64,6 @@ class CreateEditPanel extends React.Component {
 				'authorization':sessionStorage.getItem('auth')
 			},
 		}).then(res => res.json()).then(res => {
-			console.log(res)
 			notification.success({message:'删除成功'})
 		})
 	}

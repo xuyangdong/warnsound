@@ -64,6 +64,9 @@ const BaseContainer = React.createClass({
                                     {PermissionControlEnhance(user.get('permission'),'permission')(<Menu.Item key="21"><Link to='/permission'><Icon type="book" />权限管理</Link></Menu.Item>)}
                                     {PermissionControlEnhance(user.get('permission'),'initImage')(<Menu.Item key="22"><Link to='/initImage'><Icon type="book" />开屏图片</Link></Menu.Item>)}
                                     {PermissionControlEnhance(user.get('permission'),'icon')(<Menu.Item key="23"><Link to='/icon'><Icon type="book" />图标库</Link></Menu.Item>)}
+                                    {PermissionControlEnhance(user.get('permission'),'nativeWork')(<Menu.Item key="24"><Link to='/nativeWork'><Icon type="book" />最新作品</Link></Menu.Item>)}
+                                    {PermissionControlEnhance(user.get('permission'),'opinion')(<Menu.Item key="25"><Link to='/opinion'><Icon type="book" />反馈信息</Link></Menu.Item>)}
+                                    {PermissionControlEnhance(user.get('permission'),'continuousLoginPrompt')(<Menu.Item key="26"><Link to='/continuousLoginPrompt'><Icon type="book" />连续登陆提示语</Link></Menu.Item>)}
         						</Menu>
                             </div>
                             <div style={{

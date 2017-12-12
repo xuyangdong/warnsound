@@ -49,6 +49,7 @@ export function addBackgroundMusic(formData){
 					})
                 }
             })
+			return res
         })
     }
 }
@@ -82,6 +83,7 @@ export function editBackgroundMusic(formData,id){
 					})
                 }
             })
+			return res
         })
     }
 }
@@ -115,6 +117,7 @@ export function deleteBackgroundMusic(id){
 					})
                 }
             })
+			return res
         })
     }
 }

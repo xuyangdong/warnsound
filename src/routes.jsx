@@ -84,9 +84,18 @@ import InitImageCreateEditPanel from './containers/initImage/CreateEditPanel'
 
 import IconContainer from './containers/icon/IconContainer'
 import IconCreateEditPanel from './containers/icon/CreateEditPanel'
+
+import NativeWorkContainer from './containers/nativeWork/NativeWorkContainer'
+import NativeWorkCreateEditPanel from './containers/nativeWork/CreateEditPanel'
+
+import OpinionContainer from './containers/opinion/OpinionContainer'
+
+import ContinuousLoginPromptContainer from './containers/continuousLoginPrompt/ContinuousLoginPromptContainer'
+import ContinuousLoginPromptCreateEditPanel from './containers/continuousLoginPrompt/CreateEditPanel'
 /** -------------------- Test Component ------------------- **/
 import TestContainer from './containers/test/TestContainer'
 import UeditorComponent from './components/UeditorComponent'
+import OssUploadComponent from './components/common/OssUploadComponent'
 /** -------------------- Test ------------------- **/
 
 /** -------------------- HOC ------------------- **/
@@ -138,6 +147,10 @@ const PermissionCreateEditPanelWithData = CreateEditGetDataHOCFactory('permissio
 const InitImageCreateEditPanelWithData = CreateEditGetDataHOCFactory('initImage')(InitImageCreateEditPanel)
 
 const IconCreateEditPanelWithData = CreateEditGetDataHOCFactory('icon')(IconCreateEditPanel)
+
+const NativeWorkCreateEditPanelWithData = CreateEditGetDataHOCFactory('nativeWork')(NativeWorkCreateEditPanel)
+
+const ContinuousLoginPromptCreateEditPanelWithData = CreateEditGetDataHOCFactory('continuousLoginPrompt')(ContinuousLoginPromptCreateEditPanel)
 /** -------------------- HOC ------------------- **/
 
 /** -------------------- HOC ------------------- **/
@@ -245,6 +258,16 @@ const routes = (<Router history={hashHistory}>
 
 			<Route path='icon' component={IconContainer} />
 			<Route path='icon/create' component={props => <IconCreateEditPanelWithData type='create' {...props}/>} />
+
+			<Route path='nativeWork' component={NativeWorkContainer} />
+			<Route path='nativeWork/create' component={props => <NativeWorkCreateEditPanelWithData type='create' {...props}/>} />
+			<Route path='nativeWork/edit/(:id)' component={props => <NativeWorkCreateEditPanelWithData type='edit' {...props}/>} />
+
+			<Route path='opinion' component={OpinionContainer} />
+
+			<Route path='continuousLoginPrompt' component={ContinuousLoginPromptContainer} />
+			<Route path='continuousLoginPrompt/create' component={props => <ContinuousLoginPromptCreateEditPanelWithData type='create' {...props} />} />
+			<Route path='continuousLoginPrompt/edit/(:id)' component={props => <ContinuousLoginPromptCreateEditPanelWithData type='edit' {...props} /> } />
 		</Route>
 
 		<Route path="app" component={App}/>
@@ -253,6 +276,7 @@ const routes = (<Router history={hashHistory}>
 
 		<Route path="test" component={TestContainer}>
 			<Route path="ueditor" component={UeditorComponent} />
+			<Route path="oss" component={OssUploadComponent} />
 		</Route>
 
 	</Router>)

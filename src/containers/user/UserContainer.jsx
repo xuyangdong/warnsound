@@ -9,6 +9,7 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import config from '../../config'
 import PropTypes from 'prop-types'
+import ZombieFensModal from '../../components/user/ZombieFensModal'
 
 class UserContainer extends React.Component {
 	static contextTypes = {
@@ -108,6 +109,11 @@ class UserContainer extends React.Component {
 					 <Button onClick={()=>{
 						 this.props.getUser(this.state.current,this.state.pageSize,this.state.queryCondition)
 					 }}>查询</Button>
+					 <Button onClick={()=>{
+						 this.setState({
+							 displayZombieFensModal:true
+						 })
+					 }}>添加僵尸粉</Button>
 					 </TableHeader>
 				</div>
 				<div className={styles.mainPanel}>
@@ -123,6 +129,11 @@ class UserContainer extends React.Component {
 						}
 					}}/>
 				</div>
+				{this.state.displayZombieFensModal?<ZombieFensModal onCancel={() => {
+					this.setState({
+						displayZombieFensModal:false
+					})
+				}}/>:null}
 			</div>
 		)
 	}

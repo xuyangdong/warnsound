@@ -48,9 +48,11 @@
     "whatwg-fetch": "2.0.3"
   },
   "dependencies": {
+    "ali-oss": "^4.11.2",
     "antd": "^2.11.0",
     "babel-polyfill": "^6.23.0",
     "blueimp-md5": "^2.7.0",
+    "co": "^4.6.0",
     "iconv-lite": "^0.4.19",
     "immutable": "^3.8.1",
     "lodash": "^4.17.4",
@@ -76,7 +78,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "qa": "node scripts/build_qa.js"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -113,7 +116,7 @@
   },
   "proxy": {
     "/": {
-      "target": "http://47.93.242.215/",
+      "target": "http://test.warmtale.com/",
       "changeOrigin": true
     }
   }

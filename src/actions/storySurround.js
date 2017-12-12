@@ -23,10 +23,17 @@ export function addStorySurround(formData){
 			},
 			body:formData
 		}).then(res => res.json()).then(res => {
+			if(res.status == 2){
+				notification.error({
+					message:res.errorMes
+				})
+			}
 			dispatch({
 				types:GET_STORYSURROUND,
 				callAPI:callAPIHOC()
 			})
+		}).catch(err => {
+			notification.error({message:err})
 		})
 	}
 }

@@ -1,9 +1,10 @@
 import _ from 'underscore'
 import qs from 'qs'
 const isProduction = process.env.NODE_ENV === "production"
-
-const baseURL = isProduction
+const isQA = process.env.ISQA === "qa"
+const baseURL = (isProduction)
     ? 'http://120.79.0.217'
+    // ?'http://test.warmtale.com'
     : ''
 // const baseURL = ""
 
@@ -12,6 +13,11 @@ const config = _.extend({
     debug: true
 }, {
     api: {
+        auth: {
+            oss:`${baseURL}/auth/getOssSignature?url=test`,
+            sts:`${baseURL}/auth/getAppOssToken`
+
+        },
         user: {
             login: (id, ps) => `${baseURL}/manage/auth?username=${id}&password=${ps}`,
             logout: `${baseURL}/manage/auth`,
@@ -26,10 +32,14 @@ const config = _.extend({
                 query:id => `${baseURL}/manage/getWorkById?id=${id}`,
                 edit:`${baseURL}/manage/updateWorksById`,
                 delete:id => `${baseURL}/manage/deleteWorksById/${id}`
+            },
+            zombieFens:{
+                add:`${baseURL}/manage/user/saveDummy`
             }
         },
         story: {
             all: (offset,limit) => `${baseURL}/manage/stories?offset=${offset}&limit=${limit}`,
+            list: `${baseURL}/manage/getAllStoryTitle`,
             get: (offset, limit, query = {
                 title: '',
                 author: '',
@@ -48,6 +58,7 @@ const config = _.extend({
             add: `${baseURL}/manage/stories`,
             edit: (id) => `${baseURL}/manage/stories/${id}`,
             delete: (id) => `${baseURL}/manage/stories/${id}`,
+            default: (id) => `${baseURL}/manage/addDefaultStory?storyId=${id}`,
             tag:{
                 add:(storyId,tagId) => `${baseURL}/manage/stories/${storyId}/storyTags/${tagId}`,
                 delete:(storyId,tagId) => `${baseURL}/manage/stories/${storyId}/storyTags/${tagId}`,
@@ -289,6 +300,22 @@ const config = _.extend({
             // edit:``,
             query:id => `${baseURL}/manage/resources/${id}`,
             delete:id => `${baseURL}/manage/resources/${id}`
+        },
+        nativeWork:{
+            get:(page,pageSize) => `${baseURL}/manage/getLatestWorksByPage?page=${page}&pageSize=${pageSize}`,
+            add:`${baseURL}/manage/saveWorksByUserId`,
+            query:id => `${baseURL}/manage/getWorkById?id=${id}`,
+            edit:`${baseURL}/manage/updateWorksById`,
+            delete:id => `${baseURL}/manage/deleteWorksById/${id}`
+        },
+        opinion:{
+            get:(page,pageSize) => `${baseURL}/manage/selectAllOpinion?page=${page}&pageSize=${pageSize}`
+        },
+        continuousLoginPrompt:{
+            get:(page,pageSize) => `${baseURL}/manage/continuousLoginPrompt/seleteAllPrompt`,
+            add:`${baseURL}/manage/continuousLoginPrompt/addPrompt`,
+            edit:`${baseURL}/manage/continuousLoginPrompt/updatePrompt`,
+            delete:id => `${baseURL}/manage/continuousLoginPrompt/deletePrompt/${id}`
         }
     }
 })

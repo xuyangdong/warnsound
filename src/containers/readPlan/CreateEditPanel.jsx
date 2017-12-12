@@ -59,14 +59,6 @@ class CreateEditPanel extends React.Component {
 		}
 	}
 	componentWillReceiveProps(nextProps){
-		// if(!nextProps.storySetInfo.isEmpty()){
-		// 	this.setState({
-		// 		coverFileList:nextProps.storySetInfo.get('coverUrl')?[_.extend(new File([],''),{
-		// 			uid:-1,
-		// 			url:nextProps.storySetInfo.get('coverUrl')
-		// 		})]:[]
-		// 	})
-		// }
 		if(!this._init){
 			if(!nextProps.readPlanInfo.isEmpty()){
 				this._init = true
