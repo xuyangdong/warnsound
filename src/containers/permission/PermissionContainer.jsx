@@ -77,7 +77,7 @@ class PermissionContainer extends React.Component {
 								current:page-1,
 								pageSize:pageSize
 							})
-							this.props.getAdmin(page-1,pageSize)
+							this.props.getPermission(page-1,pageSize)
 						}
 					}}/>
 				</div>

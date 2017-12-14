@@ -316,6 +316,17 @@ const config = _.extend({
             add:`${baseURL}/manage/continuousLoginPrompt/addPrompt`,
             edit:`${baseURL}/manage/continuousLoginPrompt/updatePrompt`,
             delete:id => `${baseURL}/manage/continuousLoginPrompt/deletePrompt/${id}`
+        },
+        destination:{
+            get:(page,pageSize) => `${baseURL}/manage/getAllDestination?page=${page}&pageSize=${pageSize}`,
+            add:`${baseURL}/manage/saveDestination`,
+            delete:id => `${baseURL}/manage/deleteDestination/${id}`
+        },
+        pushMessage:{
+            get:(page,pageSize) => `${baseURL}/manage/getAllMessagePush?page=${page}&pageSize=${pageSize}`,
+            add:`${baseURL}/manage/saveMessagePush`,
+            delete:id => `${baseURL}/manage/deleteMessagePush/${id}`,
+            publish:`${baseURL}/manage/messagePush`
         }
     }
 })

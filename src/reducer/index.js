@@ -29,6 +29,8 @@ import icon from './icon'
 import nativeWork from './nativeWork'
 import opinion from './opinion'
 import continuousLoginPrompt from './continuousLoginPrompt'
+import destination from './destination'
+import pushMessage from './pushMessage'
 
 const reducer = combineReducers({
 	user,
@@ -58,7 +60,9 @@ const reducer = combineReducers({
 	icon,
 	nativeWork,
 	opinion,
-	continuousLoginPrompt
+	continuousLoginPrompt,
+	destination,
+	pushMessage
 	// auth,
 	// alliance,
 	// affair,

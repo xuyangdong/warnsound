@@ -22,6 +22,13 @@ export default class ReadGuideInput2 extends React.Component {
 		this.editor.customConfig.uploadImgHeaders = {
 		    'authorization': sessionStorage.getItem('auth')
 		}
+		this.editor.customConfig.pasteFilterStyle = true
+		this.editor.customConfig.pasteTextHandle = function(content){
+			let pattern = /<style>(.*)|(\n*)<\/style>/ig
+			// console.log(content)
+			// console.log(pattern.exec(content))
+			return content
+		}
 		this.editor.customConfig.uploadImgHooks = {
 			error: function (xhr, editor) {
 		        // notification.error({message:'上传图片失败'})
@@ -43,7 +50,8 @@ export default class ReadGuideInput2 extends React.Component {
 		this.editor.create()
 	}
 	getData = () => {
-		return this.editor.txt.html()
+		let pattern1 = /<style>(\n*.*)*<\/style>/ig
+		return this.editor.txt.html().replace(pattern1,'')
 	}
 	componentDidUpdate(){
 		let html = this.props.value

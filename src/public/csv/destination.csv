@@ -1,0 +1,7 @@
+'阅读计划提醒,andoop.android.amstory.LoginDaysActivity,LoginDaysActivity=1
+上线新的故事,andoop.android.amstory.StoryDetailActivity,ID=?(用户ID)
+故事集里更新新的故事,andoop.android.amstory.StorySetActivity,ID=?(用户ID)
+专题更新,andoop.android.amstory.TopicDetailActivity,ID=?(专题编号)
+发现更新,andoop.android.amstory.MainActivity,MainActivity=1,SECONDARY_POSITION=1
+徽章更新,andoop.android.amstory.MainActivity,MainActivity=0
+新版本更新,andoop.android.amstory.MainActivity,MainActivity=0'

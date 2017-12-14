@@ -30,6 +30,8 @@ import InitImageGetDataHOC from './InitImageGetDataHOC'
 import IconGetDataHOC from './IconGetDataHOC'
 import NativeWorkGetDataHOC from './NativeWorkGetDataHOC'
 import ContinuousLoginPromptGetDataHOC from './ContinuousLoginPromptGetDataHOC'
+import DestinationGetDataHOC from './DestinationGetDataHOC.jsx'
+import PushMessageGetDataHOC from './PushMesageGetDataHOC'
 
 function buildTree(listData,parentId=0){
 	let result = fromJS([])
@@ -427,5 +429,9 @@ export default (type) => {
 		return NativeWorkGetDataHOC
 	}else if(type == 'continuousLoginPrompt'){
 		return ContinuousLoginPromptGetDataHOC
+	}else if(type == 'destination'){
+		return DestinationGetDataHOC
+	}else if(type == 'pushMessage'){
+		return PushMessageGetDataHOC
 	}
 }

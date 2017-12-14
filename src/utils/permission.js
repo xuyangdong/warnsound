@@ -28,7 +28,10 @@ const modulePermission = {
 	icon:5,
 	nativeWork:5,
 	opinion:5,
-	continuousLoginPrompt:5
+	continuousLoginPrompt:5,
+	destination:5,
+	pushMessage:5
+
 }
 
 export default class Permission {

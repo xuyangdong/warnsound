@@ -402,7 +402,6 @@ export default class DraftComponent extends React.Component {
             if(v.getData().isEmpty()||(!v.getData().get('soundEffectUrl')&&!v.getData().get('readGuide')&&!v.getData().get('soundEffectId'))||(v.getData().get('soundEffectUrl')===''&&v.getData().get('readGuide')==='')){
                 return (null)
             }else{
-                console.log("test::",v,v.getData().isEmpty()||(!v.getData().get('soundEffectUrl')&&!v.getData().get('readGuide'))||(v.getData().get('soundEffectUrl')===''&&v.getData().get('readGuide')===''))
                 return <MediaTextComponent
                 onDeleteReadGuide={this.handleClearReadGuideByBlock}
                 onDelete={this.handleClearSoundEffectByBlock} key={k} block={v}/>

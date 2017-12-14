@@ -92,6 +92,12 @@ import OpinionContainer from './containers/opinion/OpinionContainer'
 
 import ContinuousLoginPromptContainer from './containers/continuousLoginPrompt/ContinuousLoginPromptContainer'
 import ContinuousLoginPromptCreateEditPanel from './containers/continuousLoginPrompt/CreateEditPanel'
+
+import DestinationContainer from './containers/destination/DestinationContainer'
+import DestinationCreateEditPanel from './containers/destination/CreateEditPanel'
+
+import PushMessageContainer from './containers/pushMessage/PushMessageContainer'
+import PushMessageCreateEditPanel from './containers/pushMessage/CreateEditPanel'
 /** -------------------- Test Component ------------------- **/
 import TestContainer from './containers/test/TestContainer'
 import UeditorComponent from './components/UeditorComponent'
@@ -151,6 +157,10 @@ const IconCreateEditPanelWithData = CreateEditGetDataHOCFactory('icon')(IconCrea
 const NativeWorkCreateEditPanelWithData = CreateEditGetDataHOCFactory('nativeWork')(NativeWorkCreateEditPanel)
 
 const ContinuousLoginPromptCreateEditPanelWithData = CreateEditGetDataHOCFactory('continuousLoginPrompt')(ContinuousLoginPromptCreateEditPanel)
+
+const DestinationCreateEditPanelWithData = CreateEditGetDataHOCFactory('destination')(DestinationCreateEditPanel)
+
+const PushMessageCreateEditPanelWithData = CreateEditGetDataHOCFactory('pushMessage')(PushMessageCreateEditPanel)
 /** -------------------- HOC ------------------- **/
 
 /** -------------------- HOC ------------------- **/
@@ -268,6 +278,14 @@ const routes = (<Router history={hashHistory}>
 			<Route path='continuousLoginPrompt' component={ContinuousLoginPromptContainer} />
 			<Route path='continuousLoginPrompt/create' component={props => <ContinuousLoginPromptCreateEditPanelWithData type='create' {...props} />} />
 			<Route path='continuousLoginPrompt/edit/(:id)' component={props => <ContinuousLoginPromptCreateEditPanelWithData type='edit' {...props} /> } />
+
+			<Route path='destination' component={DestinationContainer} />
+			<Route path='destination/create' component={props => <DestinationCreateEditPanelWithData type='create' {...props} />} />
+			<Route path='destination/edit/(:id)' component={props => <DestinationCreateEditPanelWithData type='edit' {...props} />} />
+
+			<Route path='pushMessage' component={PushMessageContainer} />
+			<Route path='pushMessage/create' component={props => <PushMessageCreateEditPanelWithData type='create' {...props}/> } />
+			<Route path='pushMessage/edit/(:id)' component={props => <PushMessageCreateEditPanelWithData type='edit' {...props}/> } />
 		</Route>
 
 		<Route path="app" component={App}/>
