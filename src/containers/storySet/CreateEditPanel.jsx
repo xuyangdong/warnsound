@@ -7,7 +7,7 @@ import EnhanceInput from '../../components/common/EnhanceInput'
 import EnhanceSelect from '../../components/common/EnhanceSelect'
 import config from '../../config'
 import UploadAvatar from '../../components/common/UploadAvatar'
-import {uploadIcon} from 'actions/common'
+import {uploadIcon,uploadToOSS} from 'actions/common'
 import _ from 'lodash'
 const FormItem = Form.Item
 
@@ -33,8 +33,8 @@ class CreateEditPanel extends React.Component {
 	}
 	uploadIcon = () => {
 		if(this.state.coverFileList[0] && this.state.coverFileList[0].size>0){
-			return uploadIcon(this.state.coverFileList[0]).then(res => {
-				return res.obj.url
+			return uploadToOSS(this.state.coverFileList[0]).then(res => {
+				return res
 			})
 		}else{
 			return Promise.resolve(this.props.storySetInfo.get('coverUrl'))

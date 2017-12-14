@@ -65,6 +65,7 @@ export function addStorySet(jsonData){
 					const offset = state.getIn(['storySet','otherData','offset'])
 					const limit = state.getIn(['storySet','otherData','limit'])
 					return fetch(config.api.storySet.get(offset,limit),{
+						method:'post',
 						headers: {
 					    	'authorization': sessionStorage.getItem('auth')
 					    },
@@ -102,6 +103,7 @@ export function editStorySet(jsonData,id){
 					const offset = state.getIn(['storySet','otherData','offset'])
 					const limit = state.getIn(['storySet','otherData','limit'])
 					return fetch(config.api.storySet.get(offset,limit),{
+						method:'post',
 						headers: {
 					    	'authorization': sessionStorage.getItem('auth')
 					    },
@@ -137,6 +139,7 @@ export function deleteStorySet(id){
 					const offset = state.getIn(['storySet','otherData','offset'])||0
                     const limit = state.getIn(['storySet','otherData','limit'])||10
 					return fetch(config.api.storySet.get(offset,limit),{
+						method:'post',
 						headers: {
 					    	'authorization': sessionStorage.getItem('auth')
 					    },

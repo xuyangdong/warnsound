@@ -1,4 +1,5 @@
 import config from '../config'
+import {notification} from 'antd'
 export function uploadIcon(iconFile) {
 	let formData = new FormData()
 	formData.append('icon',iconFile)
@@ -70,6 +71,31 @@ export function getOssSignature(){
 	}).then(res => res.json())
 }
 
-export function getSTSAuthorization(){
-	return fetch(config.api.auth.sts).then(res => res.json())
+export function uploadToOSS(file){
+	return getOssSignature().then(res => {
+		const formData = new FormData()
+		let originalFileName = file.name
+		let suffix = originalFileName.split('.').slice(-1)[0]
+		let ossFileName = originalFileName.split('.').join('')+Date.now()+'.'+suffix
+		let successUrl = `${res.obj.host}/${res.obj.dir}/${ossFileName}`
+		formData.append('name',ossFileName)
+		formData.append('key', res.obj.dir+'/'+ossFileName)
+		formData.append('policy', res.obj.policy)
+		formData.append('OSSAccessKeyId', res.obj.accessid)
+		formData.append('success_action_status', '200')
+		formData.append('signature', res.obj.signature)
+		formData.append('file', file)
+
+		return fetch(`${res.obj.host}/`,{
+			method:'post',
+			body:formData
+		}).then(res => {
+			if(res.status == 200){
+				notification.success({message:'上传成功'})
+			}else{
+				notification.error({message:res})
+			}
+			return successUrl
+		})
+	})
 }

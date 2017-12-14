@@ -15,6 +15,7 @@ import classnames from 'classnames'
 import MultiRolePanel from '../../components/story/MultiRolePanel'
 import {Link} from 'react-router'
 import HotStoryModal from '../../components/story/HotStoryModal'
+import {uploadToOSS} from 'actions/common'
 const FormItem = Form.Item
 const Option = Select.Option
 const ButtonGroup = Button.Group;
