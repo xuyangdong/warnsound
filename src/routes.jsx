@@ -102,6 +102,7 @@ import PushMessageCreateEditPanel from './containers/pushMessage/CreateEditPanel
 import TestContainer from './containers/test/TestContainer'
 import UeditorComponent from './components/UeditorComponent'
 import OssUploadComponent from './components/common/OssUploadComponent'
+import WangEditorComponent from './components/story/WangEditorTestWrapper'
 /** -------------------- Test ------------------- **/
 
 /** -------------------- HOC ------------------- **/
@@ -295,6 +296,7 @@ const routes = (<Router history={hashHistory}>
 		<Route path="test" component={TestContainer}>
 			<Route path="ueditor" component={UeditorComponent} />
 			<Route path="oss" component={OssUploadComponent} />
+			<Route path="wange" component={WangEditorComponent}/>
 		</Route>
 
 	</Router>)
