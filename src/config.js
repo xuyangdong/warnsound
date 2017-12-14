@@ -3,8 +3,8 @@ import qs from 'qs'
 const isProduction = process.env.NODE_ENV === "production"
 const isQA = process.env.ISQA === "qa"
 const baseURL = (isProduction)
-    ? 'http://120.79.0.217'
-    // ?'http://test.warmtale.com'
+    // ? 'http://120.79.0.217'
+    ?'http://test.warmtale.com'
     : ''
 // const baseURL = ""
 
