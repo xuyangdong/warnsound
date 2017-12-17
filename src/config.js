@@ -53,8 +53,8 @@ const config = _.extend({
                 return `${baseURL}/manage/storiesByFuzzyQuery?${qs.stringify(queryString)}`
             },
             query: (id) => `${baseURL}/manage/stories/${id}`,
-            add: `${baseURL}/manage/stories`,
-            edit: (id) => `${baseURL}/manage/stories/${id}`,
+            add: `${baseURL}/manage/v3/stories`,
+            edit: (id) => `${baseURL}/manage/v3/stories/${id}`,
             delete: (id) => `${baseURL}/manage/stories/${id}`,
             default: (id) => `${baseURL}/manage/addDefaultStory?storyId=${id}`,
             tag:{

@@ -78,6 +78,57 @@ class CreateEditPanel extends React.Component {
 			})
 		}
 	}
+	uploadCoverFileList = () => {
+		if(this.state.coverFileList[0] && this.state.coverFileList[0].size>0){
+			return uploadToOSS(this.state.coverFileList[0]).then(res => {
+				console.log("coverFileList:",res)
+				return res
+			})
+		}else{
+			return Promise.resolve(this.props.storyInfo.get('coverUrl'))
+		}
+	}
+	uploadPreviewFileList = () => {
+		if(this.state.previewFileList[0] && this.state.previewFileList[0].size>0){
+			return uploadToOSS(this.state.previewFileList[0]).then(res => {
+				console.log("previewFileList:",res)
+				return res
+			})
+		}else{
+			return Promise.resolve(this.props.storyInfo.get('preCoverUrl'))
+		}
+	}
+	uploadBackgroundFileList = () => {
+		if(this.state.backgroundFileList[0] && this.state.backgroundFileList[0].size>0){
+			return uploadToOSS(this.state.backgroundFileList[0]).then(res => {
+				console.log("backgroundFileList:",res)
+				return res
+			})
+		}else{
+			return Promise.resolve(this.props.storyInfo.get('backgroundUrl'))
+		}
+	}
+	//已废弃
+	uploadGuideSoundFileList = () => {
+		if(this.state.guideSoundFileList[0] && this.state.guideSoundFileList[0].size>0){
+			return uploadToOSS(this.state.guideSoundFileList[0]).then(res => {
+				console.log("guideSoundFileList:",res)
+				return res
+			})
+		}else{
+			return Promise.resolve(this.props.storyInfo.get('guideSoundFile'))
+		}
+	}
+	uploadOriginSoundFileList = () => {
+		if(this.state.audioFileList[0] && this.state.audioFileList[0].size>0){
+			return uploadToOSS(this.state.audioFileList[0]).then(res => {
+				console.log("audioFileList:",res)
+				return res
+			})
+		}else{
+			return Promise.resolve(this.props.storyInfo.get('originSoundFile'))
+		}
+	}
 	handleSubmit(isDraft,e){
 		const {getFieldValue} = this.props.form
 		this.setState({
@@ -89,47 +140,56 @@ class CreateEditPanel extends React.Component {
 		if(storySetId.length==0){
 			storySetId = 0
 		}
-		formData.append('title',getFieldValue('title'))
-		formData.append('author',getFieldValue('author'))
-		// formData.append('soundEffects_id',getFieldValue('soundEffect'))
-		formData.append('content',JSON.stringify(this.refs.draft.getDataWithCover()))
-		// TODO: 啥意思
-		formData.append('draft',isDraft)
-		formData.append('tagList',this.state.storyTags.join(','))
-		formData.append('press',getFieldValue('publish'))
-		formData.append('guide',JSON.stringify(this.refs.readGuide.getData()))
-		formData.append('readGuide',getFieldValue('readGuide')||'')
-		// formData.append('readGuide',JSON.stringify(this.refs.readGuide.getData()))
-		formData.append('coverFile',this.state.coverFileList[0]||new File([],''))
-		formData.append('preCoverFile',this.state.previewFileList[0]||new File([],''))
-		formData.append('backgroundFile',this.state.backgroundFileList[0]||new File([],''))
-		formData.append('originSoundFile',this.state.audioFileList[0]||new File([],''))
-		formData.append('guideSoundFile',this.state.guideSoundFileList[0]||new File([],''))
-		formData.append('price',getFieldValue('price')||0)
-		formData.append('defaultBackGroundMusicId',getFieldValue('backgroundMusic'))
-		formData.append('albumId',getFieldValue('album').join(',')||'')
-		formData.append('setId',storySetId)
-		formData.append('readTime',getFieldValue('readTime')||'')
-		if(this.props.type=='create'){
-			const roleData = this.roleData||{}
-			formData.append('roleName',roleData.roleName||'')
-			formData.append('roleIconFile',roleData.roleIconFile||'')
-			formData.append('roleAudioFile',roleData.roleAudioFile||'')
-			formData.append('roleExtra',JSON.stringify(roleData.roleExtra)||'')
-			formData.append('roleReadGuide',roleData.roleReadGuide||'')
-		}
+		Promise.all([
+			this.uploadCoverFileList(),
+			this.uploadPreviewFileList(),
+			this.uploadBackgroundFileList(),
+			this.uploadOriginSoundFileList(),
+			this.uploadGuideSoundFileList()
+		]).then(([coverFile,preCoverFile,backgroundFile,originSoundFile,guideSoundFile]) => {
+			console.log("11-->:",coverFile,preCoverFile,backgroundFile,originSoundFile,guideSoundFile)
+			formData.append('title',getFieldValue('title'))
+			formData.append('author',getFieldValue('author'))
+			// formData.append('soundEffects_id',getFieldValue('soundEffect'))
+			formData.append('content',JSON.stringify(this.refs.draft.getDataWithCover()))
+			// TODO: 啥意思
+			formData.append('draft',isDraft)
+			formData.append('tagList',this.state.storyTags.join(','))
+			formData.append('press',getFieldValue('publish'))
+			formData.append('guide',JSON.stringify(this.refs.readGuide.getData()))
+			formData.append('readGuide',getFieldValue('readGuide')||'')
+			formData.append('readGuide',JSON.stringify(this.refs.readGuide.getData()))
+			formData.append('coverFile',coverFile)
+			formData.append('preCoverFile',preCoverFile)
+			formData.append('backgroundFile',backgroundFile)
+			formData.append('originSoundFile',originSoundFile)
+			formData.append('guideSoundFile',guideSoundFile)
 
-		this.props.onSubmit(formData).then(res => {
-			this.setState({
-				spin:false
-			})
+			formData.append('price',getFieldValue('price')||0)
+			formData.append('defaultBackGroundMusicId',getFieldValue('backgroundMusic'))
+			formData.append('albumId',getFieldValue('album').join(',')||'')
+			formData.append('setId',storySetId)
+			formData.append('readTime',getFieldValue('readTime')||'')
 			if(this.props.type=='create'){
-				this.handleAddStoryIntroduction(getFieldValue('storyIntroduction'),res.obj.id)
+				const roleData = this.roleData||{}
+				formData.append('roleName',roleData.roleName||'')
+				formData.append('roleIconFile',roleData.roleIconFile||'')
+				formData.append('roleAudioFile',roleData.roleAudioFile||'')
+				formData.append('roleExtra',JSON.stringify(roleData.roleExtra)||'')
+				formData.append('roleReadGuide',roleData.roleReadGuide||'')
 			}
-			// this.context.router.goBack(0)
-			window.location.reload()
-		})
 
+			this.props.onSubmit(formData).then(res => {
+				this.setState({
+					spin:false
+				})
+				if(this.props.type=='create'){
+					this.handleAddStoryIntroduction(getFieldValue('storyIntroduction'),res.obj.id)
+				}
+				// this.context.router.goBack(0)
+				// window.location.reload()
+			})
+		})
 	}
 	handleAddStoryIntroduction = (introduction,storyId = this.props.storyInfo.get('id')) => {
 		const {getFieldValue} = this.props.form
