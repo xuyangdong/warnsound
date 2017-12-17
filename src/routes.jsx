@@ -98,6 +98,9 @@ import DestinationCreateEditPanel from './containers/destination/CreateEditPanel
 
 import PushMessageContainer from './containers/pushMessage/PushMessageContainer'
 import PushMessageCreateEditPanel from './containers/pushMessage/CreateEditPanel'
+
+import WorksTagContainer from './containers/worksTag/WorksTagContainer'
+import WorksTagCreateEditPanel from './containers/worksTag/CreateEditPanel'
 /** -------------------- Test Component ------------------- **/
 import TestContainer from './containers/test/TestContainer'
 import UeditorComponent from './components/UeditorComponent'
@@ -162,6 +165,8 @@ const ContinuousLoginPromptCreateEditPanelWithData = CreateEditGetDataHOCFactory
 const DestinationCreateEditPanelWithData = CreateEditGetDataHOCFactory('destination')(DestinationCreateEditPanel)
 
 const PushMessageCreateEditPanelWithData = CreateEditGetDataHOCFactory('pushMessage')(PushMessageCreateEditPanel)
+
+const WorksTagCreateEditPanelWithData = CreateEditGetDataHOCFactory('worksTag')(WorksTagCreateEditPanel)
 /** -------------------- HOC ------------------- **/
 
 /** -------------------- HOC ------------------- **/
@@ -287,6 +292,10 @@ const routes = (<Router history={hashHistory}>
 			<Route path='pushMessage' component={PushMessageContainer} />
 			<Route path='pushMessage/create' component={props => <PushMessageCreateEditPanelWithData type='create' {...props}/> } />
 			<Route path='pushMessage/edit/(:id)' component={props => <PushMessageCreateEditPanelWithData type='edit' {...props}/> } />
+
+			<Route path='worksTag' component={WorksTagContainer} />
+			<Route path='worksTag/create' component={props => <WorksTagCreateEditPanelWithData type='create' {...props} /> } />
+			<Route path='worksTag/edit/(:id)' component={props => <WorksTagCreateEditPanelWithData type='edit' {...props} /> } />
 		</Route>
 
 		<Route path="app" component={App}/>

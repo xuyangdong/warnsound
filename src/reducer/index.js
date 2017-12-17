@@ -31,6 +31,7 @@ import opinion from './opinion'
 import continuousLoginPrompt from './continuousLoginPrompt'
 import destination from './destination'
 import pushMessage from './pushMessage'
+import worksTag from './worksTag'
 
 const reducer = combineReducers({
 	user,
@@ -62,7 +63,8 @@ const reducer = combineReducers({
 	opinion,
 	continuousLoginPrompt,
 	destination,
-	pushMessage
+	pushMessage,
+	worksTag
 	// auth,
 	// alliance,
 	// affair,

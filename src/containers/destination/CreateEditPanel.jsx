@@ -29,6 +29,7 @@ class CreateEditPanel extends React.Component {
 	assemblyExtraFieldAndContentField = (formData) => {
 		if(this.state.destinationType!=2){
 			//普通跳转
+			formData.append('content',this.state.content)
 			return
 		}
 		const selectedActivity = this.contentTypeList.find((v,k) => {

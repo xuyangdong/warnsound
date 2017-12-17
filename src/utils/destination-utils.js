@@ -1,9 +1,9 @@
 import _ from 'lodash'
 const destinationType = '阅读计划提醒,andoop.android.amstory.LoginDaysActivity,LoginDaysActivity=1\n\
-上线新的故事,andoop.android.amstory.StoryDetailActivity,ID=?(用户ID)\n\
-故事集里更新新的故事,andoop.android.amstory.StorySetActivity,ID=?(用户ID)\n\
+上线新的故事,andoop.android.amstory.StoryDetailActivity,ID=?(故事编号)\n\
+故事集里更新新的故事,andoop.android.amstory.StorySetActivity,ID=?(故事集编号)\n\
 专题更新,andoop.android.amstory.TopicDetailActivity,ID=?(专题编号)\n\
-发现更新,andoop.android.amstory.MainActivity,MainActivity=1,SECONDARY_POSITION=1\n\
+发现更新,andoop.android.amstory.InformationDetailActivity,Discover=?(发现网址)\n\
 徽章更新,andoop.android.amstory.MainActivity,MainActivity=0\n\
 新版本更新,andoop.android.amstory.MainActivity,MainActivity=0'
 

@@ -27,8 +27,8 @@ class CreateEditPanel extends React.Component {
 		formData.append('title',getFieldValue('title'))
 		formData.append('text',getFieldValue('text'))
 		formData.append('destinationId',getFieldValue('destinationId'))
-		formData.append('startTime',getFieldValue('startTime').format('YYYY-MM-DD HH:mm:ss'))
-		formData.append('expireTime',getFieldValue('expireTime').format('YYYY-MM-DD HH:mm:ss'))
+		formData.append('startTime',getFieldValue('startTime')?getFieldValue('startTime').format('YYYY-MM-DD HH:mm:ss'):'')
+		formData.append('expireTime',getFieldValue('expireTime')?getFieldValue('expireTime').format('YYYY-MM-DD HH:mm:ss'):'')
 		formData.append('pushType',getFieldValue('pushType'))
 		this.props.onSubmit(formData).then(res => {
 			this.context.router.goBack(0)
@@ -36,7 +36,7 @@ class CreateEditPanel extends React.Component {
 		// this.props.onSubmit(jsonData)
 	}
 	render(){
-		const {getFieldDecorator} = this.props.form
+		const {getFieldDecorator,setFieldsValue} = this.props.form
 		const {pushMessageInfo,destinationList} = this.props
 		return (
 			<div className={styles.container}>
@@ -103,9 +103,14 @@ class CreateEditPanel extends React.Component {
 						  label={<span>定时发送时间</span>}
 						>
 						{getFieldDecorator('startTime',{
-							initialValue:moment(pushMessageInfo.get('startTime','2015-01-01 12:33:33'))
+							initialValue:moment(pushMessageInfo.get('starttime','')||Date.now())
 						})(
-							<DatePicker showTime format='YYYY-MM-DD HH:mm:ss' />
+							<DatePicker onChange={(date,dateString) => {
+								let _date = date.clone()
+								setFieldsValue({
+									expireTime:_date.add(3,'days')
+								})
+							}} showTime format='YYYY-MM-DD HH:mm:ss' />
 						)}
 						</FormItem>
 
@@ -115,7 +120,7 @@ class CreateEditPanel extends React.Component {
 						  label={<span>推送的过期时间</span>}
 						>
 						{getFieldDecorator('expireTime',{
-							initialValue:moment(pushMessageInfo.get('expireTime','2015-01-01 12:33:33'))
+							initialValue:moment(pushMessageInfo.get('expiretime','')||(Date.now()+24*3600*1000))
 						})(
 							<DatePicker showTime format='YYYY-MM-DD HH:mm:ss' />
 						)}

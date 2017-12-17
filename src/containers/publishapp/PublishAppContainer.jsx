@@ -5,7 +5,7 @@ import EnhanceTable from '../../components/common/EnhanceTable'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import PropTypes from 'prop-types'
-import {getAppList} from 'actions/app'
+import {getAppList,setLowestVersion,getLowestVersion} from 'actions/app'
 import {Popover} from 'antd'
 import {Link} from 'react-router'
 
@@ -13,10 +13,25 @@ class PublishAppContainer extends React.Component {
 	static contextTypes = {
 		router:PropTypes.object
 	}
+	state = {
+		lowestVersion:''
+	}
 	componentDidMount(){
 		if(this.props.app.get('data').isEmpty()){
 			this.props.getAppList(0,10)
 		}
+		getLowestVersion().then(res => {
+			this.setState({
+				lowestVersion:res.obj.id
+			})
+		})
+	}
+	handleLowestVersion = (id) => {
+		setLowestVersion(id).then(res => {
+			this.setState({
+				lowestVersion:res.obj.id
+			})
+		})
 	}
 	getTableData = () => {
 		const columns = [{
@@ -61,7 +76,15 @@ class PublishAppContainer extends React.Component {
 			title:'操作',
 			key:'operat',
 			render:(t,r) => {
-				return (<Link to={`/publishapp/edit/${r.id}`}>编辑</Link>)
+				return (
+					<div>
+						<Link to={`/publishapp/edit/${r.id}`}>编辑</Link>&nbsp;
+						{this.state.lowestVersion==r.id?'当前最低版本':<a onClick={(e) => {
+							e.preventDefault()
+							this.handleLowestVersion(r.id)
+						}}>设为最低版本</a>}
+					</div>
+				)
 			}
 		}]
 		const dataSource = this.props.app.get('data').map((v,k) => ({

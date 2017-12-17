@@ -120,3 +120,35 @@ export function updateApp(formdata,id){
 		})
 	}
 }
+
+export function getLowestVersion(){
+	return fetch(config.api.app.lowestVersion.get,{
+		headers:{
+			authorization:sessionStorage.getItem('auth')
+		}
+	}).then(res => res.json()).then(res => {
+		if(res.status == 2){
+			notification.error({message:res.errorMes})
+		}
+		return res
+	})
+}
+
+export function setLowestVersion(id){
+	let formData = new FormData()
+	formData.append('id',id)
+	return fetch(config.api.app.lowestVersion.add,{
+		method:'post',
+		headers:{
+			'authorization':sessionStorage.getItem('auth')
+		},
+		body:formData
+	}).then(res => res.json()).then(res => {
+		if(res.status == 2){
+			notification.error({message:res.errorMes})
+		}else{
+			notification.success({message:'设置成功'})
+		}
+		return getLowestVersion()
+	})
+}

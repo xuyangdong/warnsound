@@ -32,6 +32,7 @@ import NativeWorkGetDataHOC from './NativeWorkGetDataHOC'
 import ContinuousLoginPromptGetDataHOC from './ContinuousLoginPromptGetDataHOC'
 import DestinationGetDataHOC from './DestinationGetDataHOC.jsx'
 import PushMessageGetDataHOC from './PushMesageGetDataHOC'
+import WorksTagGetDataHOC from './WorksTagGetDataHOC.jsx'
 
 function buildTree(listData,parentId=0){
 	let result = fromJS([])
@@ -433,5 +434,7 @@ export default (type) => {
 		return DestinationGetDataHOC
 	}else if(type == 'pushMessage'){
 		return PushMessageGetDataHOC
+	}else if(type == 'worksTag'){
+		return WorksTagGetDataHOC
 	}
 }

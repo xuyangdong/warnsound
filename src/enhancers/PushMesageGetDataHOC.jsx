@@ -25,6 +25,17 @@ export default (CreateEditPanel) => {
 					destinationList:fromJS(res.obj)
 				})
 			})
+			if(this.props.type=='edit'){
+				fetch(config.api.pushMessage.query(this.props.params.id),{
+					headers:{
+						authorization:sessionStorage.getItem('auth')
+					}
+				}).then(res => res.json()).then(res => {
+					this.setState({
+						pushMessageInfo:fromJS(res.obj)
+					})
+				})
+			}
 		}
 		componentWillReceiveProps(nextProps){
 			// if(nextProps.type=='edit' && !nextProps.destination.get('data').isEmpty()){
@@ -38,7 +49,7 @@ export default (CreateEditPanel) => {
 		}
 		handleEdit = formData => {
 			// console.log(formData)
-			formData.append('id',this.props.params.id)
+			formData.append('messageId',this.props.params.id)
 			return this.props.editPushMessage(formData,this.props.params.id)
 		}
 		handleDelete = () => {

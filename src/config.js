@@ -1,13 +1,11 @@
 import _ from 'underscore'
 import qs from 'qs'
 const isProduction = process.env.NODE_ENV === "production"
-const isQA = process.env.ISQA === "qa"
+const testBaseURL = process.env.REACT_APP_TEST_BASE_URL
 const baseURL = (isProduction)
-    // ? 'http://120.79.0.217'
-    ?'http://test.warmtale.com'
+    ? testBaseURL||'http://120.79.0.217'
     : ''
 // const baseURL = ""
-
 const config = _.extend({
     // common config
     debug: true
@@ -158,7 +156,11 @@ const config = _.extend({
             query:id => `${baseURL}/manage/getAppDetails?id=${id}`,
             add: `${baseURL}/manage/publishApp`,
             edit: `${baseURL}/manage/updateApp`,
-            delete: `${baseURL}/manage/deleteApp`
+            delete: `${baseURL}/manage/deleteApp`,
+            lowestVersion: {
+                get:`${baseURL}/manage/getMinLimitVersionApp`,
+                add:`${baseURL}/manage/updateMinLimitVersion`
+            }
         },
         discover: {
             get: (offset, limit) => `${baseURL}/manage/Discoveries?offset=${offset}&limit=${limit}`,
@@ -326,7 +328,16 @@ const config = _.extend({
             get:(page,pageSize) => `${baseURL}/manage/getAllMessagePush?page=${page}&pageSize=${pageSize}`,
             add:`${baseURL}/manage/saveMessagePush`,
             delete:id => `${baseURL}/manage/deleteMessagePush/${id}`,
-            publish:`${baseURL}/manage/messagePush`
+            publish:`${baseURL}/manage/messagePush`,
+            query:id => `${baseURL}/manage/getMessagePushById?messageId=${id}`,
+            edit:`${baseURL}/manage/updateMessagePush`
+        },
+        worksTag:{
+            get:(page,pageSize) => `${baseURL}/manage/workTag/selectAllWorkTag`,
+            add:`${baseURL}/manage/workTag/insertWorkTag`,
+            delete:id => `${baseURL}/manage/workTag/deleteWorkTag/${id}`,
+            query:id => `${baseURL}/manage/workTag/selectWorkTagById?id=${id}`,
+            edit:`${baseURL}/manage/workTag/update`
         }
     }
 })

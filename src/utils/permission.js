@@ -30,8 +30,8 @@ const modulePermission = {
 	opinion:5,
 	continuousLoginPrompt:5,
 	destination:5,
-	pushMessage:5
-
+	pushMessage:5,
+	worksTag:5
 }
 
 export default class Permission {
