@@ -117,7 +117,8 @@ class StoryTopicContainer extends React.Component {
 								pageSize:pageSize
 							})
 							this.props.getStoryTopic(page,pageSize)
-						}
+						},
+						showQuickJumper:true
 					}}/>
 				</div>
 				{this.state.openAddStoryModal?<AddStoryModal visible={this.state.openAddStoryModal} storyTopicId={this._choosenStoryTopic}

@@ -142,7 +142,8 @@ class StorySurroundContainer extends React.Component {
 								pageSize:pageSize
 							})
 							this.props.getStorySurround(page-1,pageSize,this.state.storyId)
-						}
+						},
+						showQuickJumper:true
 					}}/>
 				</div>
 			</div>

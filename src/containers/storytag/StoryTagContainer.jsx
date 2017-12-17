@@ -145,7 +145,8 @@ class StoryTagContainer extends React.Component {
 						total:this.props.storyTags.getIn(['otherData','totalSize']),
 						onChange:(page,pageSize) => {
 							this.props.getStoryTags(page,pageSize)
-						}
+						},
+						showQuickJumper:true
 					}}/>
 					{this.state.displayHotSearchModal?<DisplayHotSearchModal hotTagList={this.state.hotTagList} onCancel={()=>{
 						this.setState({

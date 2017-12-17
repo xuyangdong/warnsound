@@ -123,7 +123,8 @@ class StorySetContainer extends React.Component {
 								pageSize:pageSize
 							})
 							this.props.getStorySet(page-1,pageSize)
-						}
+						},
+						showQuickJumper:true
 					}}/>
 				</div>
 			</div>

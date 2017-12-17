@@ -309,7 +309,8 @@ class StoryContainer extends React.Component{
 								pageSize:pageSize
 							})
 							this.props.getStories(page,pageSize,this._condition)
-						}
+						},
+						showQuickJumper:true
 					}}/>
 				</div>
 			</div>
