@@ -3,6 +3,7 @@ import styles from './CreateEditPanel.scss'
 import CreateEditHeader from '../../components/common/CreateEditHeader'
 import {Form,Upload,Input,Button,Icon,Spin,notification} from 'antd'
 import PropTypes from 'prop-types'
+import {uploadToOSS} from 'actions/common'
 import _ from 'lodash'
 const FormItem = Form.Item
 
@@ -27,6 +28,15 @@ class CreateEditPanel extends React.Component {
 			})
 		}
 	}
+	uploadResources = () => {
+		if(this.state.appFileList[0] && this.state.appFileList[0].size>0){
+			return uploadToOSS(this.state.appFileList[0]).then(res => {
+				return res
+			})
+		}else{
+			return Promise.resolve(this.props.appInfo.get('url'))
+		}
+	}
 	handleSubmit = (e) => {
 		e.preventDefault()
 		notification.info({message:'正在上传'})
@@ -35,17 +45,18 @@ class CreateEditPanel extends React.Component {
 			spin:true
 		})
 		let formData = new FormData()
-		formData.append('version',getFieldValue('version'))
-		formData.append('updateHint',getFieldValue('updateHint'))
-		formData.append('appFile',this.state.appFileList[0]||new File([],''))
-		this.props.onSubmit(formData).then(res => {
-			this.setState({
-				spin:false
+		this.uploadResources().then(res => {
+			formData.append('version',getFieldValue('version'))
+			formData.append('updateHint',getFieldValue('updateHint'))
+			formData.append('appFile',res)
+			this.props.onSubmit(formData).then(res => {
+				this.setState({
+					spin:false
+				})
+				notification.success({message:'app发布成功'})
+				this.context.router.goBack()
 			})
-			notification.success({message:'app发布成功'})
-			this.context.router.goBack()
 		})
-
 	}
 	render(){
 		const {getFieldDecorator} = this.props.form
