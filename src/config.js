@@ -154,8 +154,8 @@ const config = _.extend({
         app: {
             get: (offset, limit) => `${baseURL}/manage/getApps?offset=${offset}&limit=${limit}`,
             query:id => `${baseURL}/manage/getAppDetails?id=${id}`,
-            add: `${baseURL}/manage/publishApp`,
-            edit: `${baseURL}/manage/updateApp`,
+            add: `${baseURL}/manage/v3/publishApp`,
+            edit: `${baseURL}/manage/v3/updateApp`,
             delete: `${baseURL}/manage/deleteApp`,
             lowestVersion: {
                 get:`${baseURL}/manage/getMinLimitVersionApp`,
