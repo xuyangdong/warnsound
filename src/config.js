@@ -304,7 +304,7 @@ const config = _.extend({
             delete:id => `${baseURL}/manage/resources/${id}`
         },
         nativeWork:{
-            get:(page,pageSize) => `${baseURL}/manage/getLatestWorksByPage?page=${page}&pageSize=${pageSize}`,
+            get:(page,pageSize,orderRule,fieldName) => `${baseURL}/manage/getLatestWorksByPage?page=${page}&pageSize=${pageSize}&orderRule=${orderRule}&fieldName=${fieldName}`,
             add:`${baseURL}/manage/saveWorksByUserId`,
             query:id => `${baseURL}/manage/getWorkById?id=${id}`,
             edit:`${baseURL}/manage/updateWorksById`,

@@ -7,10 +7,10 @@ import {notification} from 'antd'
 const callAPIHOC = callAPIHOCFactory('nativeWork')
 
 export const GET_NAVITEWORK = actionNames('GET_NAVITEWORK')
-export function getNativeWork(page,pageSize){
+export function getNativeWork(page,pageSize,configData){
 	return {
 		types:GET_NAVITEWORK,
-		callAPI:callAPIHOC(page,pageSize)
+		callAPI:callAPIHOC(configData)(page,pageSize)
 	}
 }
 

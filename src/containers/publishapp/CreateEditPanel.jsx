@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './CreateEditPanel.scss'
 import CreateEditHeader from '../../components/common/CreateEditHeader'
-import {Form,Upload,Input,Button,Icon,Spin,notification} from 'antd'
+import {Form,Upload,Input,Button,Icon,Spin,notification,Switch} from 'antd'
 import PropTypes from 'prop-types'
 import {uploadToOSS} from 'actions/common'
 import _ from 'lodash'
@@ -49,6 +49,7 @@ class CreateEditPanel extends React.Component {
 			formData.append('version',getFieldValue('version'))
 			formData.append('updateHint',getFieldValue('updateHint'))
 			formData.append('appFile',res)
+			formData.append('ifUpdate',getFieldValue('ifUpdate')?1:0)
 			this.props.onSubmit(formData).then(res => {
 				this.setState({
 					spin:false
@@ -86,6 +87,17 @@ class CreateEditPanel extends React.Component {
 							initialValue:appInfo.get('updateHint')
 						})(
 							<Input />
+						)}
+						</FormItem>
+						<FormItem
+						  label="是否强制更新"
+						  labelCol={{span:2}}
+						  wrapperCol={{span:4}}
+						>{getFieldDecorator('ifUpdate',{
+							valuePropName:'checked',
+							initialValue:appInfo.get('ifUpdate')==1,
+						})(
+							<Switch />
 						)}
 						</FormItem>
 						<FormItem

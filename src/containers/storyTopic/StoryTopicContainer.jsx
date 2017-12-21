@@ -28,6 +28,10 @@ class StoryTopicContainer extends React.Component {
 	}
 	getTableData = () => {
 		const columns = [{
+			title:'id',
+			dataIndex:'id',
+			key:'id'
+		},{
 			title:'标题',
 			dataIndex:'title',
 			key:'title'

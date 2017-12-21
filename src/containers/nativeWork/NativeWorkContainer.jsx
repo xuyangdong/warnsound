@@ -18,7 +18,7 @@ class NativeWorkContainer extends React.Component {
 	}
 	componentDidMount(){
 		if(this.props.nativeWork.get('data').isEmpty()){
-			this.props.getNativeWork(0,10)
+			this.props.getNativeWork(0,10,{orderRule:0,fieldName:'listenCount'})
 		}
 	}
 	getTableData = () => {
@@ -55,7 +55,13 @@ class NativeWorkContainer extends React.Component {
 		},{
 			title:'listenCount',
 			dataIndex:'listenCount',
-			key:'listenCount'
+			key:'listenCount',
+			sorter: true
+		},{
+			title:'createTime',
+			dataIndex:'createTime',
+			key:'createTime',
+			sorter: true
 		},{
 			title:'操作',
 			key:'operate',
@@ -89,13 +95,27 @@ class NativeWorkContainer extends React.Component {
 					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{
 						total:this.props.nativeWork.getIn(['otherData','totalSize']),
 						current:this.props.nativeWork.getIn(['otherData','offset'])+1,
-						onChange:(page,pageSize) => {
-							this.setState({
-								current:page-1,
-								pageSize:pageSize
-							})
-							this.props.getNativeWork(page-1,pageSize)
-						}
+						// onChange:(page,pageSize) => {
+						// 	this.setState({
+						// 		current:page-1,
+						// 		pageSize:pageSize
+						// 	})
+						// 	this.props.getNativeWork(page-1,pageSize,{
+						// 		orderRule:this.props.nativeWork.getIn(['otherData','orderRule']),
+						// 		fieldName:this.props.nativeWork.getIn(['otherData','fieldName'])
+						// 	})
+						// }
+					}} onChange={(pagination,filters,sorter) => {
+						this.setState({
+							current:pagination.current-1,
+							pageSize:pagination.pageSize,
+							orderRule:sorter.order=='descend'?0:1,
+							fieldName:sorter.field
+						})
+						this.props.getNativeWork(pagination.current-1,pagination.pageSize,{
+							orderRule:sorter.order?(sorter.order=='descend'?0:1):this.props.nativeWork.getIn(['otherData','orderRule']),
+							fieldName:sorter.field?sorter.field:this.props.nativeWork.getIn(['otherData','fieldName'])
+						})
 					}}/>
 				</div>
 			</div>

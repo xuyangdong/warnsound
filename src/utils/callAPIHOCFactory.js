@@ -34,6 +34,13 @@ import {notification} from 'antd'
 // 	}
 // }
 
+/**
+返回一个function,如果传递给该function的参数是一个object那么将返回一个新的function，
+这个新的function是可以配置的callAPI
+eg:
+1、callAPIHOCFactory('nativeWork')(page,pageSize)
+2、callAPIHOCFactory('nativeWork')(configData)(page,pageSize)
+*/
 export default function callAPIHOCFactory(actionName){
 	return (...args) => {
 		if(args.length >= 2 || args.length == 0){

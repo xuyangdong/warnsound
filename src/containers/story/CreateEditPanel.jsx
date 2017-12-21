@@ -158,7 +158,7 @@ class CreateEditPanel extends React.Component {
 			formData.append('press',getFieldValue('publish'))
 			formData.append('guide',JSON.stringify(this.refs.readGuide.getData()))
 			formData.append('readGuide',getFieldValue('readGuide')||'')
-			formData.append('readGuide',JSON.stringify(this.refs.readGuide.getData()))
+			// formData.append('readGuide',JSON.stringify(this.refs.readGuide.getData()))
 			formData.append('coverFile',coverFile)
 			formData.append('preCoverFile',preCoverFile)
 			formData.append('backgroundFile',backgroundFile)

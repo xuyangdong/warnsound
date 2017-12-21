@@ -320,6 +320,7 @@ export default class DraftComponent extends React.Component {
 	}
     getDataWithCover = () => {
         // (this.editedContent.length==0 || !this.editedContent[0].content)?[]:this.editedContent
+        console.log("--->:",this.editedContent)
         return this.editedContent
     }
     handleClearSoundEffect = () => {
