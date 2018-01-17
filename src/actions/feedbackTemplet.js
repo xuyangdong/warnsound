@@ -4,19 +4,19 @@ import _ from 'lodash'
 import callAPIHOCFactory from 'callAPIHOCFactory'
 import {notification} from 'antd'
 
-const callAPIHOC = callAPIHOCFactory('nativeWork')
+const callAPIHOC = callAPIHOCFactory('feedbackTemplet')
 
-export const GET_NAVITEWORK = actionNames('GET_NAVITEWORK')
-export function getNativeWork(page,pageSize,configData){
+export const GET_FEEDBACKTEMPLET = actionNames('GET_FEEDBACKTEMPLET')
+export function getFeedbackTemplet(page,pageSize){
 	return {
-		types:GET_NAVITEWORK,
-		callAPI:callAPIHOC(configData)(page,pageSize)
+		types:GET_FEEDBACKTEMPLET,
+		callAPI:callAPIHOC(page,pageSize)
 	}
 }
 
-export function addNativeWork(formData){
+export function addFeedbackTemplet(formData){
 	return dispatch => {
-		return fetch(config.api.nativeWork.add,{
+		return fetch(config.api.feedbackTemplet.add,{
 			method:'post',
 			headers:{
 				'authorization':sessionStorage.getItem('auth')
@@ -27,17 +27,17 @@ export function addNativeWork(formData){
 				notification.error({message:res.errorMes})
 			}else{
 				dispatch({
-					types:GET_NAVITEWORK,
-					callAPI:callAPIHOC({orderRule:0,fieldName:'listenCount'})()
+					types:GET_FEEDBACKTEMPLET,
+					callAPI:callAPIHOC()
 				})
 			}
 		})
 	}
 }
 
-export function editNativeWork(formData){
+export function editFeedbackTemplet(formData){
 	return dispatch => {
-		return fetch(config.api.nativeWork.edit,{
+		return fetch(config.api.feedbackTemplet.edit,{
 			method:'post',
 			headers:{
 				'authorization':sessionStorage.getItem('auth')
@@ -48,17 +48,17 @@ export function editNativeWork(formData){
 				notification.error({message:res.errorMes})
 			}else{
 				dispatch({
-					types:GET_NAVITEWORK,
-					callAPI:callAPIHOC({orderRule:0,fieldName:'listenCount'})()
+					types:GET_FEEDBACKTEMPLET,
+					callAPI:callAPIHOC()
 				})
 			}
 		})
 	}
 }
 
-export function deleteNativeWork(id){
+export function deleteFeedbackTemplet(id){
 	return dispatch => {
-		return fetch(config.api.nativeWork.delete(id),{
+		return fetch(config.api.feedbackTemplet.delete(id),{
 			method:'delete',
 			headers:{
 				'authorization':sessionStorage.getItem('auth')
@@ -68,8 +68,8 @@ export function deleteNativeWork(id){
 				notification.error({message:res.errorMes})
 			}else{
 				dispatch({
-					types:GET_NAVITEWORK,
-					callAPI:callAPIHOC({orderRule:0,fieldName:'listenCount'})()
+					types:GET_FEEDBACKTEMPLET,
+					callAPI:callAPIHOC()
 				})
 			}
 		})

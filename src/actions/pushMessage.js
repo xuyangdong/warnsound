@@ -72,9 +72,12 @@ export function deletePushMessage(id){
 	}
 }
 
-export function publishMessage(id){
+export function publishMessage(id,userid){
 	return dispatch => {
 		let formData = new FormData(id)
+		if(userid){
+			formData.append('userId',userid)
+		}
 		formData.append('id',id)
 		return fetch(config.api.pushMessage.publish,{
 			method:'post',

@@ -55,6 +55,10 @@ class OpinionContainer extends React.Component {
 			dataIndex:'userId',
 			key:'userId',
 		},{
+			title:'用户名',
+			dataIndex:'userName',
+			key:'userName'
+		},{
 			title:'描述',
 			dataIndex:'description',
 			key:'description',

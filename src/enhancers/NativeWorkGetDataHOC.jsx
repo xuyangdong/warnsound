@@ -17,7 +17,7 @@ export default (CreateEditPanel) => {
 			}
 		}
 		componentDidMount(){
-			fetch(config.api.user.get(0,1000000),{
+			fetch(config.api.user.get(0,9000000),{
 				headers:{
 					'authorization':sessionStorage.getItem('auth')
 				}

@@ -2,7 +2,7 @@ import React from 'react'
 import CreateEditHeader from '../../components/common/CreateEditHeader'
 import styles from './CreateEditPanel.scss'
 import {fromJS} from 'immutable'
-import {Form,Input,Select,Checkbox,Upload,Button,Icon,Row,Col,Spin,Tag,notification,TreeSelect} from 'antd'
+import {Form,Input,InputNumber,Select,Checkbox,Upload,Button,Icon,Row,Col,Spin,Tag,notification,TreeSelect} from 'antd'
 import EnhanceInput from '../../components/common/EnhanceInput'
 import EnhanceSelect from '../../components/common/EnhanceSelect'
 import config from '../../config'
@@ -41,6 +41,7 @@ class CreateEditPanel extends React.Component {
 						uid:-1,
 						url:nextProps.storySurroundInfo.get('videourl')
 					})]:[],
+					storySurroundInfoTitle:nextProps.storySurroundInfo.get('title')
 				})
 			}
 		}
@@ -68,8 +69,9 @@ class CreateEditPanel extends React.Component {
 		const {getFieldValue} = this.props.form
 		const jsonData = {
 			storyId:getFieldValue('storyId'),
-			title:getFieldValue('title'),
-			content:this.refs.readGuide.getData()
+			title:this.state.storySurroundInfoTitle,
+			content:this.refs.readGuide.getData(),
+			price:getFieldValue('price')
 		}
 		Promise.all([
 			this.uploadIcon(),
@@ -111,15 +113,36 @@ class CreateEditPanel extends React.Component {
 					)}
 					</FormItem>
 					<FormItem
+						labelCol={{span:2}}
+						wrapperCol={{span:4}}
+						label={<span>金币</span>}
+					>
+					{
+						getFieldDecorator('price',{
+							initialValue:storySurroundInfo.get('price')
+						})(
+							<InputNumber />
+						)
+					}
+					</FormItem>
+					<FormItem
 					  labelCol={{span:2}}
 					  wrapperCol={{span:4}}
 					  label={<span>标题</span>}
 					>
-					{getFieldDecorator('title',{
+					{/*
+						getFieldDecorator('title',{
 						initialValue:storySurroundInfo.get('title')
 					})(
-						this.props.type=='edit'?<Input/>:<EnhanceInput />
-					)}
+						this.props.type=='edit'?<Input/>:<Input />
+					)
+					*/
+				}
+						<Input value={this.state.storySurroundInfoTitle} onChange={(e) => {
+							this.setState({
+								storySurroundInfoTitle:e.target.value
+							})
+						}} />
 					</FormItem>
 					<FormItem
 					  labelCol={{span:2}}

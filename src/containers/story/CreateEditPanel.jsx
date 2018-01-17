@@ -140,6 +140,8 @@ class CreateEditPanel extends React.Component {
 		if(storySetId.length==0){
 			storySetId = 0
 		}
+		const contentWithCover = fromJS(this.refs.draft.getDataWithCover()).toJS()
+		console.log("asdfasdf:contentWithCover",contentWithCover)
 		Promise.all([
 			this.uploadCoverFileList(),
 			this.uploadPreviewFileList(),
@@ -147,11 +149,11 @@ class CreateEditPanel extends React.Component {
 			this.uploadOriginSoundFileList(),
 			this.uploadGuideSoundFileList()
 		]).then(([coverFile,preCoverFile,backgroundFile,originSoundFile,guideSoundFile]) => {
-			console.log("11-->:",coverFile,preCoverFile,backgroundFile,originSoundFile,guideSoundFile)
+			console.log("11-->:",contentWithCover)
 			formData.append('title',getFieldValue('title'))
 			formData.append('author',getFieldValue('author'))
 			// formData.append('soundEffects_id',getFieldValue('soundEffect'))
-			formData.append('content',JSON.stringify(this.refs.draft.getDataWithCover()))
+			formData.append('content',JSON.stringify(contentWithCover))
 			// TODO: 啥意思
 			formData.append('draft',isDraft)
 			formData.append('tagList',this.state.storyTags.join(','))
@@ -187,7 +189,7 @@ class CreateEditPanel extends React.Component {
 					this.handleAddStoryIntroduction(getFieldValue('storyIntroduction'),res.obj.id)
 				}
 				// this.context.router.goBack(0)
-				// window.location.reload()
+				window.location.reload()
 			})
 		})
 	}

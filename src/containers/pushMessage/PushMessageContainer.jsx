@@ -7,6 +7,10 @@ import EnhanceTable from '../../components/common/EnhanceTable'
 import {getPushMessage,publishMessage} from 'actions/pushMessage'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router'
+import {Input,Modal,Select,notification} from 'antd'
+import config from '../../config'
+const SearchInput = Input.Search
+const Option = Select.Option
 
 class PushMessageContainer extends React.Component {
 	static contextTypes = {
@@ -14,7 +18,8 @@ class PushMessageContainer extends React.Component {
 	}
 	state = {
 		current:0,
-		pageSize:10
+		pageSize:10,
+		searchUserResult:[]
 	}
 	componentDidMount(){
 		if(this.props.pushMessage.get('data',[]).isEmpty()){
@@ -50,6 +55,8 @@ class PushMessageContainer extends React.Component {
 				switch (''+t) {
 					case '1':
 						return '广播'
+					case '2':
+						return '单独发送'
 					default:
 						return ''
 				}
@@ -72,7 +79,8 @@ class PushMessageContainer extends React.Component {
 					<a onClick={(e) => {
 						e.preventDefault()
 						console.log("Adfasdf:",r)
-						this.props.publishMessage(r.id)
+						this.handlePushMessage(r.id,r.pushtype)
+
 					}}>发布</a>
 					</div>
 				)
@@ -86,6 +94,47 @@ class PushMessageContainer extends React.Component {
 			columns,
 			dataSource
 		}
+	}
+	handlePushMessage = (id,pushtype) => {
+		if(pushtype == 1){
+			this.props.publishMessage(id)
+		}else{
+			this._selectedPushMessage = id
+			this.setState({
+				displayPushMessageModal:true
+			})
+		}
+	}
+	handleSearchUser = (value) => {
+		notification.info({message:'正在查询用户'})
+		fetch(config.api.user.get(0,10000,value),{
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			}
+		}).then(res => res.json()).then(res => {
+			if(res.status == 2){
+				notification.error({message:res.errorMes})
+			}else{
+				notification.success({message:'用户检索成功'})
+				this.setState({
+					searchUserResult: res.obj
+				})
+			}
+
+		})
+	}
+	renderUserSearchResult = () => {
+		return (
+			<Select style={{width:100}} onSelect={(value) => {
+				this.selectedUser = value
+			}}>
+			{this.state.searchUserResult.map((v,k) => {
+				return (
+					<Option value={''+v.id} key={k}>{v.nickname}</Option>
+				)
+			})}
+			</Select>
+		)
 	}
 	render(){
 		const {columns,dataSource} = this.getTableData()
@@ -113,6 +162,21 @@ class PushMessageContainer extends React.Component {
 						}
 					}}/>
 				</div>
+				<Modal visible={this.state.displayPushMessageModal} title='推送的用户列表'
+				onOk={() => {
+					this.props.publishMessage(this._selectedPushMessage,this.selectedUser)
+					this.setState({
+						displayPushMessageModal:false
+					})
+				}}
+				onCancel={() => this.setState({displaySendPanel:false})}
+				>
+				<SearchInput
+				placeholder="输入用户名"
+				style={{ width: 200 }}
+				onSearch={this.handleSearchUser}/>
+				{this.renderUserSearchResult()}
+				</Modal>
 			</div>
 		)
 	}

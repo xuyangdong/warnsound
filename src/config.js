@@ -337,7 +337,25 @@ const config = _.extend({
             add:`${baseURL}/manage/workTag/insertWorkTag`,
             delete:id => `${baseURL}/manage/workTag/deleteWorkTag/${id}`,
             query:id => `${baseURL}/manage/workTag/selectWorkTagById?id=${id}`,
-            edit:`${baseURL}/manage/workTag/update`
+            edit:`${baseURL}/manage/workTag/update`,
+            work:{
+                get:(id,page,pageSize) => `${baseURL}/manage/getWorksListByTagId?tagId=${id}`
+            }
+        },
+        comment:{
+            get:(page,pageSize,ambitusId) =>`${baseURL}/manage/getCommentsByAmbitusId?page=${page}&pageSize=${pageSize}&ambitusId=${ambitusId}`,
+            delete:commentId => `${baseURL}/manage/deleteComment?commentId=${commentId}`,
+            removeBlackHouse:commentId => `${baseURL}/manage/releaseComment?commentId=${commentId}`,
+            addJing:commentId => `${baseURL}/manage/commentAddCream?commentId=${commentId}`,
+            cancelJing:commentId => `${baseURL}/manage/cancelCream?commentId=${commentId}`
+        },
+        feedbackTemplet:{
+            add:`${baseURL}/manage/saveFeedbackTemplet`,
+            get:(page,pageSize) => `${baseURL}/manage/selectFeedbackTemplet?page=${page}&pageSize=${pageSize}`,
+            query:id => `${baseURL}/manage/selectFeedbackTempletById?id=${id}`,
+            edit:`${baseURL}/manage/updateFeedbackTemplet`,
+            delete:id => `${baseURL}/manage/deleteFeedbackTempletById?id=${id}`,
+            publish:(userId,feedbackTempletId) => `${baseURL}/manage/sendSystemNoticeToUser?userId=${userId}&feedbackTempletId=${feedbackTempletId}`
         }
     }
 })

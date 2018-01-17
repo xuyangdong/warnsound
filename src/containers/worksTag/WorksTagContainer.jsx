@@ -52,11 +52,7 @@ class WorksTagContainer extends React.Component {
 				return (
 					<div>
 					<Link to={`/worksTag/edit/${r.id}`}>编辑</Link>&nbsp;
-					<a onClick={(e) => {
-						e.preventDefault()
-						console.log("Adfasdf:",r)
-						this.props.publishMessage(r.id)
-					}}>发布</a>
+					<Link to={`/worksTag/work/show/${r.id}`}>作品</Link>
 					</div>
 				)
 			}

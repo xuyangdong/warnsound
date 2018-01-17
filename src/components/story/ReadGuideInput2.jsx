@@ -6,6 +6,7 @@ import {notification} from 'antd'
 
 const baseUrl = 'http://120.79.0.217'
 export default class ReadGuideInput2 extends React.Component {
+	_inited = false
 	static propTypes = {
 		id:PropTypes.string
 	}
@@ -44,6 +45,20 @@ export default class ReadGuideInput2 extends React.Component {
 				}
 		    }
 		}
+		this.editor.customConfig.colors = [
+			'#000000',
+			'#00af66',
+	        '#eeece0',
+	        '#1c487f',
+	        '#4d80bf',
+	        '#c24f4a',
+	        '#8baa4a',
+	        '#7b5ba1',
+	        '#46acc8',
+	        '#f9963b',
+	        '#ffffff'
+
+		]
 		this.editor.create()
 	}
 	getData = () => {
@@ -52,31 +67,34 @@ export default class ReadGuideInput2 extends React.Component {
 	}
 	componentDidUpdate(){
 		let html = this.props.value
-		if(!html){
-			return
-		}
-		try{
-			let array = JSON.parse(this.props.value)
-			if(typeof array == 'array' || typeof array == 'object'){
-				html = array.reduce((p,c) => {
-					if(c.type==0){
-						p = p + `<p>${c.content}<\/p>`
-					}else if(c.type==1){
-						p = p + `<img src='${c.content}'\/>`
-					}else if(c.type==2){
-						p = p + `<video src=${c.content}\/>`
-					}else {
-						throw new Error('错误的类型')
-					}
-					return p
-				},'')
-			}else{
-				html = this.props.value.slice(1,this.props.value.length-1)
+		if(!this._inited){
+			if(!html){
+				return
 			}
-		}catch(e){
-			notification.error({message:'解析出错'})
+			try{
+				let array = JSON.parse(this.props.value)
+				if(typeof array == 'array' || typeof array == 'object'){
+					html = array.reduce((p,c) => {
+						if(c.type==0){
+							p = p + `<p>${c.content}<\/p>`
+						}else if(c.type==1){
+							p = p + `<img src='${c.content}'\/>`
+						}else if(c.type==2){
+							p = p + `<video src=${c.content}\/>`
+						}else {
+							throw new Error('错误的类型')
+						}
+						return p
+					},'')
+				}else{
+					html = this.props.value.slice(1,this.props.value.length-1)
+				}
+			}catch(e){
+				notification.error({message:'解析出错'})
+			}
+			this.editor.txt.html(html)
+			this._inited = true
 		}
-		this.editor.txt.html(html)
 		// console.log(this.editor)
 	}
 	render(){

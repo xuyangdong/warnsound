@@ -85,7 +85,7 @@ class CreateEditPanel extends React.Component {
 						  label={<span>跳转地</span>}
 						>
 						{getFieldDecorator('destinationId',{
-							initialValue:''+pushMessageInfo.get('destinationId','')
+							initialValue:''+pushMessageInfo.get('destinationid','')
 						})(
 							<Select>
 							{destinationList.map((v,k) => {
@@ -136,6 +136,7 @@ class CreateEditPanel extends React.Component {
 						})(
 							<Select style={{width:'100%'}}>
 								<Option value='1' key='1'>广播</Option>
+								<Option value='2' key='2'>单独发送</Option>
 							</Select>
 						)}
 						</FormItem>

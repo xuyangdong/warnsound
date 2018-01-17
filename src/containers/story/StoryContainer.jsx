@@ -114,6 +114,24 @@ class StoryContainer extends React.Component{
 				)
 			}
 		},{
+			title:'朗读指导',
+			dataIndex:'readGuide',
+			key:'readGuide',
+			// width:300,
+			render:(t,r) => {
+				if(!t){
+					t = ''
+				}
+				const content = (
+					<p>{t}</p>
+				)
+				return (
+					<Popover content={content}>
+					  <p>{t.length>22?`${t.substring(0,10)}...${t.substring(t.length-10)}`:t}</p>
+					</Popover>
+				)
+			}
+		},{
 			title:'是否为草稿',
 			dataIndex:'draft',
 			key:'draft',

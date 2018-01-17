@@ -102,12 +102,17 @@ class StorySurroundContainer extends React.Component {
 			dataIndex:'videourl',
 			key:'videourl'
 		},{
+			title:'创建时间',
+			dataIndex:'createtime',
+			key:'createtime'
+		},{
 			title:'操作',
 			key:'operate',
 			render:(t,r) => {
 				return (
 				<div>
-					<Link to={`/storySurround/edit/${r.id}`}>编辑</Link>
+					<Link to={`/storySurround/edit/${r.id}`}>编辑</Link>&nbsp;
+					<Link to={`/storySurround/comment/${r.id}`}>评论</Link>
 				</div>
 				)
 			}

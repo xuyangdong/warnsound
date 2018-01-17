@@ -5,7 +5,7 @@ import {Form,Select,Upload,Input,InputNumber,Button,Spin,notification,Radio,Casc
 import _ from 'lodash'
 import UploadAvatar from '../../components/common/UploadAvatar'
 import UploadAudio from '../../components/common/UploadAudio'
-import {uploadIcon,uploadMutil} from 'actions/common'
+import {uploadIcon,uploadMutil,uploadToOSS} from 'actions/common'
 import {jsonToFormData} from 'project-utils'
 import {fromJS} from 'immutable'
 const FormItem = Form.Item
@@ -44,10 +44,38 @@ class CreateEditPanel extends React.Component {
 			})
 		}
 	}
+	uploadAudioFileList = () => {
+		if(this.state.audioFileList[0] && this.state.audioFileList[0].size>0){
+			return uploadToOSS(this.state.audioFileList[0]).then(res => {
+				return res
+			})
+		}else{
+			return Promise.resolve(this.props.nativeWorkInfo.get('url'))
+		}
+	}
+	uploadHeadImgList = () => {
+		if(this.state.headImgList[0] && this.state.headImgList[0].size>0){
+			return uploadToOSS(this.state.headImgList[0]).then(res => {
+				return res
+			})
+		}else{
+			return Promise.resolve(this.props.nativeWorkInfo.get('headImgUrl'))
+		}
+	}
+	uploadCoverList = () => {
+		if(this.state.coverList[0] && this.state.coverList[0].size>0){
+			return uploadToOSS(this.state.coverList[0]).then(res => {
+				return res
+			})
+		}else{
+			return Promise.resolve(this.props.nativeWorkInfo.get('coverUrl'))
+		}
+	}
 	uploadFile = () => {
-		const {audioFileList,headImgList,coverList} = this.state
-		return uploadMutil([
-			audioFileList[0],headImgList[0],coverList[0]
+		return Promise.all([
+			this.uploadAudioFileList(),
+			this.uploadHeadImgList(),
+			this.uploadCoverList()
 		])
 	}
 	handleSubmit = (e) => {

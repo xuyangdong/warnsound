@@ -101,11 +101,18 @@ import PushMessageCreateEditPanel from './containers/pushMessage/CreateEditPanel
 
 import WorksTagContainer from './containers/worksTag/WorksTagContainer'
 import WorksTagCreateEditPanel from './containers/worksTag/CreateEditPanel'
+
+import CommentContainer from './containers/storySurround/comment/CommentContainer'
+
+import FeedbackTempletContainer from './containers/feedbackTemplet/FeedbackTempletContainer'
+import FeedbackTempletCreateEditPanel from './containers/feedbackTemplet/CreateEditPanel'
 /** -------------------- Test Component ------------------- **/
 import TestContainer from './containers/test/TestContainer'
 import UeditorComponent from './components/UeditorComponent'
 import OssUploadComponent from './components/common/OssUploadComponent'
 import WangEditorComponent from './components/story/WangEditorTestWrapper'
+import ReadGuideInput3 from './components/story/ReadGuideInput3'
+import ReadGuideInput4 from './components/story/ReadGuideInput4'
 /** -------------------- Test ------------------- **/
 
 /** -------------------- HOC ------------------- **/
@@ -167,12 +174,16 @@ const DestinationCreateEditPanelWithData = CreateEditGetDataHOCFactory('destinat
 const PushMessageCreateEditPanelWithData = CreateEditGetDataHOCFactory('pushMessage')(PushMessageCreateEditPanel)
 
 const WorksTagCreateEditPanelWithData = CreateEditGetDataHOCFactory('worksTag')(WorksTagCreateEditPanel)
+
+const FeedbackTempletCreateEditPanelWithData = CreateEditGetDataHOCFactory('feedbackTemplet')(FeedbackTempletCreateEditPanel)
 /** -------------------- HOC ------------------- **/
 
 /** -------------------- HOC ------------------- **/
 const UserWorkContainerHOC = WorkEnhancerFactory('user')(WorkContainer)
 
 const StoryWorkContainerHOC = WorkEnhancerFactory('story')(WorkContainer)
+
+const WorksTagWorkContainerHOC = WorkEnhancerFactory('worksTag')(WorkContainer)
 
 const WorkCreateEditPanelWithData = CreateEditGetDataHOCFactory('userWork')(WorkCreateEditPanel)
 /** -------------------- HOC ------------------- **/
@@ -243,6 +254,7 @@ const routes = (<Router history={hashHistory}>
 			<Route path='storySurround' component={StorySurroundContainer} />
 			<Route path='storySurround/create' component={(props) => <StorySurroundCreateEditPanelWithData type='create' {...props}/>}/>
 			<Route path='storySurround/edit/(:id)' component={(props) => <StorySurroundCreateEditPanelWithData type='edit' {...props}/>}/>
+			<Route path='storySurround/comment/(:ambitusId)' component={CommentContainer} />
 
 			<Route path='readPlan' component={ReadPlanContainer} />
 			<Route path='readPlan/create' component={(props) => <ReadPlanCreateEditPanelWithData type='create' {...props}/>}/>
@@ -296,6 +308,11 @@ const routes = (<Router history={hashHistory}>
 			<Route path='worksTag' component={WorksTagContainer} />
 			<Route path='worksTag/create' component={props => <WorksTagCreateEditPanelWithData type='create' {...props} /> } />
 			<Route path='worksTag/edit/(:id)' component={props => <WorksTagCreateEditPanelWithData type='edit' {...props} /> } />
+			<Route path='worksTag/work/show/(:id)' component={ WorksTagWorkContainerHOC } />
+
+			<Route path='feedbackTemplet' component={FeedbackTempletContainer} />
+			<Route path='feedbackTemplet/create' component={props => <FeedbackTempletCreateEditPanelWithData type='create' {...props} />} />
+			<Route path='feedbackTemplet/edit/(:id)' component={props => <FeedbackTempletCreateEditPanelWithData type='edit' {...props} />} />
 		</Route>
 
 		<Route path="app" component={App}/>
@@ -306,6 +323,8 @@ const routes = (<Router history={hashHistory}>
 			<Route path="ueditor" component={UeditorComponent} />
 			<Route path="oss" component={OssUploadComponent} />
 			<Route path="wange" component={WangEditorComponent}/>
+			<Route path="readGuideInput3" component={ReadGuideInput3} />
+			<Route path="readGuideInput4" component={ReadGuideInput4} />
 		</Route>
 
 	</Router>)
