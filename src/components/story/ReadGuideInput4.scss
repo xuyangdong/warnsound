@@ -1,6 +1,8 @@
 :local(.wrapper){
-	height: 1000px;
-	:local(.image){
-		border:1px solid red;
+	:local(.editor){
+	    font-size: 12px;
+	    text-indent: 2em;
+	    border: 1px solid #efefef;
+	    padding: 5px;
 	}
 }

@@ -8,6 +8,7 @@ import EnhanceSelect from '../../components/common/EnhanceSelect'
 import config from '../../config'
 import ReadGuideInput from '../../components/story/ReadGuideInput'
 import ReadGuideInput2 from '../../components/story/ReadGuideInput2'
+import ReadGuideInput4 from '../../components/story/ReadGuideInput4'
 import UploadAvatar from '../../components/common/UploadAvatar'
 import {uploadIcon} from 'actions/common'
 import UploadVideo from '../../components/common/UploadVideo'
@@ -149,7 +150,7 @@ class CreateEditPanel extends React.Component {
 					  wrapperCol={{span:14}}
 					  label={<span>内容</span>}
 					>
-					<ReadGuideInput2 ref='readGuide' id='readGuide' value={storySurroundInfo.get('content')}/>
+					<ReadGuideInput4 ref='readGuide' id='readGuide' value={storySurroundInfo.get('content')}/>
 					</FormItem>
 					<FormItem
 					  labelCol={{span:2}}

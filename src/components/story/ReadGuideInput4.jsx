@@ -16,7 +16,8 @@ export default class EditorConvertToHTML extends Component {
 	_convertFromServerToEditor = (props) => {
 		let html = props.value||'<p></p>'
 		try{
-			let array = JSON.parse(this.props.value)
+
+			let array = JSON.parse(html)
 			if(typeof array == 'array' || typeof array == 'object'){
 				html = array.reduce((p,c) => {
 					if(c.type==0){
@@ -31,7 +32,7 @@ export default class EditorConvertToHTML extends Component {
 					return p
 				},'')
 			}else{
-				html = this.props.value.slice(1,this.props.value.length-1)
+				html = props.value.slice(1,props.value.length-1)
 			}
 		}catch(e){
 			notification.error({message:'解析出错'})
@@ -43,6 +44,10 @@ export default class EditorConvertToHTML extends Component {
 		return editorState
 	}
 
+	getData = () => {
+		return draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()))
+	}
+
 	componentDidMount() {
 		const editorState = this._convertFromServerToEditor(this.props)
 		this.setState({
@@ -51,10 +56,12 @@ export default class EditorConvertToHTML extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const editorState = this._convertFromServerToEditor(nextProps)
-		this.setState({
-			editorState,
-		})
+		if(this.props.value != nextProps.value){
+			const editorState = this._convertFromServerToEditor(nextProps)
+			this.setState({
+				editorState,
+			})
+		}
 	}
 
     onEditorStateChange : Function = ( editorState ) => {
@@ -89,7 +96,7 @@ export default class EditorConvertToHTML extends Component {
                 <Editor
 				editorState={editorState}
 				wrapperClassName={styles.wrapper}
-				editorClassName="demo-editor"
+				editorClassName={styles.editor}
 				onEditorStateChange={this.onEditorStateChange}
 				toolbar={toolbar}
 				localization={{
