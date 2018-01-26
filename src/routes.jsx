@@ -103,9 +103,18 @@ import WorksTagContainer from './containers/worksTag/WorksTagContainer'
 import WorksTagCreateEditPanel from './containers/worksTag/CreateEditPanel'
 
 import CommentContainer from './containers/storySurround/comment/CommentContainer'
+import CommentCreateEditPanel from './containers/storySurround/comment/CreateEditPanel'
 
 import FeedbackTempletContainer from './containers/feedbackTemplet/FeedbackTempletContainer'
 import FeedbackTempletCreateEditPanel from './containers/feedbackTemplet/CreateEditPanel'
+
+import UserGoldAccountContainer from './containers/userGoldAccount/UserGoldAccountContainer'
+
+import GoldRewardRuleContainer from './containers/goldRewardRule/GoldRewardRuleContainer'
+import GoldRewardRuleCreateEditPanel from './containers/goldRewardRule/CreateEditPanel'
+
+import RewardGoldPromptContainer from './containers/rewardGoldPrompt/RewardGoldPromptContainer'
+import RewardGoldPromptCreateEditPanel from './containers/rewardGoldPrompt/CreateEditPanel'
 /** -------------------- Test Component ------------------- **/
 import TestContainer from './containers/test/TestContainer'
 import UeditorComponent from './components/UeditorComponent'
@@ -176,6 +185,12 @@ const PushMessageCreateEditPanelWithData = CreateEditGetDataHOCFactory('pushMess
 const WorksTagCreateEditPanelWithData = CreateEditGetDataHOCFactory('worksTag')(WorksTagCreateEditPanel)
 
 const FeedbackTempletCreateEditPanelWithData = CreateEditGetDataHOCFactory('feedbackTemplet')(FeedbackTempletCreateEditPanel)
+
+const CommentCreateEditPanelWithData = CreateEditGetDataHOCFactory('comment')(CommentCreateEditPanel)
+
+const GoldRewardRuleCreateEditPanelWithData = CreateEditGetDataHOCFactory('goldRewardRule')(GoldRewardRuleCreateEditPanel)
+
+const RewardGoldPromptCreateEditPanelWithData = CreateEditGetDataHOCFactory('rewardGoldPrompt')(RewardGoldPromptCreateEditPanel)
 /** -------------------- HOC ------------------- **/
 
 /** -------------------- HOC ------------------- **/
@@ -255,6 +270,7 @@ const routes = (<Router history={hashHistory}>
 			<Route path='storySurround/create' component={(props) => <StorySurroundCreateEditPanelWithData type='create' {...props}/>}/>
 			<Route path='storySurround/edit/(:id)' component={(props) => <StorySurroundCreateEditPanelWithData type='edit' {...props}/>}/>
 			<Route path='storySurround/comment/(:ambitusId)' component={CommentContainer} />
+			<Route path='storySurround/(:storySurroundId)/comment/create' component={props => <CommentCreateEditPanelWithData type='create' {...props}/>} />
 
 			<Route path='readPlan' component={ReadPlanContainer} />
 			<Route path='readPlan/create' component={(props) => <ReadPlanCreateEditPanelWithData type='create' {...props}/>}/>
@@ -313,6 +329,16 @@ const routes = (<Router history={hashHistory}>
 			<Route path='feedbackTemplet' component={FeedbackTempletContainer} />
 			<Route path='feedbackTemplet/create' component={props => <FeedbackTempletCreateEditPanelWithData type='create' {...props} />} />
 			<Route path='feedbackTemplet/edit/(:id)' component={props => <FeedbackTempletCreateEditPanelWithData type='edit' {...props} />} />
+
+			<Route path='userGoldAccount' component={UserGoldAccountContainer} />
+
+			<Route path='goldRewardRule' component={GoldRewardRuleContainer} />
+			<Route path='goldRewardRule/create' component={props => <GoldRewardRuleCreateEditPanelWithData type='create' {...props}/>} />
+			<Route path='goldRewardRule/edit/(:id)' component={props => <GoldRewardRuleCreateEditPanelWithData type='edit' {...props}/>} />
+
+			<Route path='rewardGoldPrompt' component={RewardGoldPromptContainer} />
+			<Route path='rewardGoldPrompt/create' component={props => <RewardGoldPromptCreateEditPanelWithData type='create' {...props}/>} />
+			<Route path='rewardGoldPrompt/edit/(:id)' component={props => <RewardGoldPromptCreateEditPanelWithData type='edit' {...props}/>} />
 		</Route>
 
 		<Route path="app" component={App}/>

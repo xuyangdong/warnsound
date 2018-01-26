@@ -1,0 +1,7 @@
+:local(.container){
+	position: relative;
+	:local(.colorPicker){
+		position: absolute;
+		z-index: 10;
+	}
+}

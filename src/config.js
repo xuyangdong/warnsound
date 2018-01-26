@@ -227,7 +227,7 @@ const config = _.extend({
             }
         },
         storySurround:{
-            get:(page,pageSize,storyId='') => `${baseURL}/manage/getStoryAmbitusByStoryId?storyId=${storyId}&page=${page}&pageSize=${pageSize}`,
+            get:(page,pageSize,storyId='',type='') => `${baseURL}/manage/getStoryAmbitusByStoryId?storyId=${storyId}&page=${page}&pageSize=${pageSize}&type=${type}`,
             add:`${baseURL}/manage/saveStoryAmbitus`,
             edit:`${baseURL}/manage/updataStoryAmbitusById`,
             delete:id => `${baseURL}/manage/deleteStoryAmbitusById/${id}`,
@@ -345,6 +345,7 @@ const config = _.extend({
         comment:{
             get:(page,pageSize,ambitusId) =>`${baseURL}/manage/getCommentsByAmbitusId?page=${page}&pageSize=${pageSize}&ambitusId=${ambitusId}`,
             delete:commentId => `${baseURL}/manage/deleteComment?commentId=${commentId}`,
+            add:`${baseURL}/manage/dummyAddComment`,
             removeBlackHouse:commentId => `${baseURL}/manage/releaseComment?commentId=${commentId}`,
             addJing:commentId => `${baseURL}/manage/commentAddCream?commentId=${commentId}`,
             cancelJing:commentId => `${baseURL}/manage/cancelCream?commentId=${commentId}`
@@ -356,6 +357,24 @@ const config = _.extend({
             edit:`${baseURL}/manage/updateFeedbackTemplet`,
             delete:id => `${baseURL}/manage/deleteFeedbackTempletById?id=${id}`,
             publish:(userId,feedbackTempletId) => `${baseURL}/manage/sendSystemNoticeToUser?userId=${userId}&feedbackTempletId=${feedbackTempletId}`
+        },
+        userGoldAccount: {
+            get:(page,pageSize) => `${baseURL}/manage/userGoldAccount/getAllUserGoldAccountByPage?page=${page}&pageSize=${pageSize}`
+        },
+        goldRewardRule: {
+            get:typeName => `${baseURL}/manage/goldRewardRule/getGoldRewardRuleByType?typeName=${typeName}`,
+            add:`${baseURL}/manage/goldRewardRule/addGoldRewardRule`,
+            edit:`${baseURL}/manage/goldRewardRule/updateGoldRewardRule`,
+            query:id => `${baseURL}/manage/goldRewardRule/getGoldRewardRuleById?id=${id}`,
+            type: {
+                get: `${baseURL}/manage/goldRewardRule/getAllType`
+            }
+        },
+        rewardGoldPrompt: {
+            get:(page,pageSize) => `${baseURL}/manage/rewardGoldPrompt/getAllRewardGoldPrompt?page=${page}&pageSize=${pageSize}`,
+            add:`${baseURL}/manage/rewardGoldPrompt/addRewardGoldPrompt`,
+            edit:`${baseURL}/manage/rewardGoldPrompt/updateRewardGoldPrompt`,
+            query:id => `${baseURL}/manage/rewardGoldPrompt/getRewardGoldPromptById?id=${id}`
         }
     }
 })

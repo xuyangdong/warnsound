@@ -34,6 +34,9 @@ import DestinationGetDataHOC from './DestinationGetDataHOC.jsx'
 import PushMessageGetDataHOC from './PushMesageGetDataHOC'
 import WorksTagGetDataHOC from './WorksTagGetDataHOC.jsx'
 import FeedbackTempletGetDataHOC from './FeedbackTempletGetDataHOC'
+import CommentGetDataHOC from './CommentGetDataHOC'
+import GoldRewardRUleGetDataHOC from './GoldRewardRuleGetDataHOC'
+import RewardGoldPromptGetDataHOC from './RewardGoldPromptGetDataHOC'
 
 function buildTree(listData,parentId=0){
 	let result = fromJS([])
@@ -128,7 +131,7 @@ export default (type) => {
 							}).then(res => res.json()).then(res => {
 								return {
 									soundEffectTag:v,
-									soundEffect:res.obj
+									soundEffect:res.obj||{}
 								}
 							}))
 						})
@@ -439,5 +442,11 @@ export default (type) => {
 		return WorksTagGetDataHOC
 	}else if(type == 'feedbackTemplet'){
 		return FeedbackTempletGetDataHOC
+	}else if(type == 'comment'){
+		return CommentGetDataHOC
+	}else if(type == 'goldRewardRule'){
+		return GoldRewardRUleGetDataHOC
+	}else if(type == 'rewardGoldPrompt'){
+		return RewardGoldPromptGetDataHOC
 	}
 }

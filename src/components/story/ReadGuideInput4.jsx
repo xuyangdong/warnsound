@@ -7,6 +7,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import styles from './ReadGuideInput4.scss'
 import { uploadToOSS } from 'actions/common'
 import {notification} from 'antd'
+import ColorPic from '../common/ColorPic'
 
 export default class EditorConvertToHTML extends Component {
     state = {
@@ -71,6 +72,7 @@ export default class EditorConvertToHTML extends Component {
     render( ) {
         const { editorState } = this.state;
 		const toolbar = {
+            colorPicker: { component: ColorPic },
 			image: {
 				alignmentEnabled: 'LEFT',
 				uploadCallback: ( file ) => {

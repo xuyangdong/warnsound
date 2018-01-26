@@ -32,7 +32,10 @@ const modulePermission = {
 	destination:5,
 	pushMessage:5,
 	worksTag:5,
-	feedbackTemplet:5
+	feedbackTemplet:5,
+	userGoldAccount:5,
+	goldRewardRule:5,
+	rewardGoldPrompt:5
 }
 
 export default class Permission {

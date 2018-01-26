@@ -533,7 +533,7 @@ class CreateEditPanel extends React.Component {
 					)}
 					</FormItem>):null}
 					{this.props.type=='edit'?<FormItem
-					  labelCol={{span:2}}
+					  labelCol={{span:3}}
 					  wrapperCol={{span:8}}
 					  label={<span>朗读次数（热搜）</span>}
 					>
@@ -680,6 +680,17 @@ class CreateEditPanel extends React.Component {
 					>
 					{getFieldDecorator('price',{
 						initialValue:storyInfo.get('price')
+					})(
+						<Input />
+					)}
+					</FormItem>
+					<FormItem
+					  labelCol={{span:2}}
+					  wrapperCol={{span:4}}
+					  label={<span>租赁时间</span>}
+					>
+					{getFieldDecorator('leaseTerm',{
+						initialValue:storyInfo.get('leaseTerm')
 					})(
 						<Input />
 					)}

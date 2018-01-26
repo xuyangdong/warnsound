@@ -152,7 +152,7 @@ class CommentContainer extends React.Component {
 					 searchBar={[]}
 					 functionBar={['create']}
 					 onCreate={()=>{
-						 this.context.router.push(`/comment/create`)
+						 this.context.router.push(`storySurround/${this.props.params.ambitusId}/comment/create`)
 					 }}
 					 />
 				</div>

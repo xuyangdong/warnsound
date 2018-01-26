@@ -50,6 +50,11 @@ const BaseContainer = React.createClass({
                                         {PermissionControlEnhance(user.get('permission'),'backgroundMusic')(<Menu.Item key="6"><Link to='/backgroundmusics'><Icon type="sound" />背景音乐</Link></Menu.Item>)}
                                         {PermissionControlEnhance(user.get('permission'),'soundEffectTag')(<Menu.Item key="5"><Link to='/soundeffecttags'><Icon type="notification" />音效标签</Link></Menu.Item>)}
                                     </SubMenu>
+                                    <SubMenu key="sub3" title={<span><Icon type="appstore" /><span>金币模块</span></span>}>
+                                        {PermissionControlEnhance(user.get('permission'),'userGoldAccount')(<Menu.Item key="31"><Link to='/userGoldAccount'><Icon type="book" />用户金币</Link></Menu.Item>)}
+                                        {PermissionControlEnhance(user.get('permission'),'goldRewardRule')(<Menu.Item key="32"><Link to='/goldRewardRule'><Icon type="book" />金币规则</Link></Menu.Item>)}
+                                        {PermissionControlEnhance(user.get('permission'),'rewardGoldPrompt')(<Menu.Item key="33"><Link to='/rewardGoldPrompt'><Icon type="book" />奖励提示语</Link></Menu.Item>)}
+                                    </SubMenu>
                                     {PermissionControlEnhance(user.get('permission'),'app')(<Menu.Item key="7"><Link to='/publishapp'><Icon type="sync" />APP管理</Link></Menu.Item>)}
                                     {PermissionControlEnhance(user.get('permission'),'discover')(<Menu.Item key="8"><Link to='/discover'><Icon type="search" />发现管理</Link></Menu.Item>)}
                                     {PermissionControlEnhance(user.get('permission'),'recommend')(<Menu.Item key="9"><Link to='/recommend'><Icon type="search" />推荐管理</Link></Menu.Item>)}
@@ -71,6 +76,7 @@ const BaseContainer = React.createClass({
                                     {PermissionControlEnhance(user.get('permission'),'pushMessage')(<Menu.Item key="28"><Link to='/pushMessage'><Icon type="book" />推送消息模块</Link></Menu.Item>)}
                                     {PermissionControlEnhance(user.get('permission'),'worksTag')(<Menu.Item key="29"><Link to='/worksTag'><Icon type="book" />作品标签</Link></Menu.Item>)}
                                     {PermissionControlEnhance(user.get('permission'),'feedbackTemplet')(<Menu.Item key="30"><Link to='/feedbackTemplet'><Icon type="book" />反馈模板</Link></Menu.Item>)}
+
         						</Menu>
                             </div>
                             <div style={{

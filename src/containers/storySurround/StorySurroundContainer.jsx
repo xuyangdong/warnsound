@@ -27,7 +27,7 @@ class StorySurroundContainer extends React.Component {
 	}
 	componentDidMount(){
 		if(this.props.storySurround.get('data').isEmpty()){
-			this.props.getStorySurround(0,10)
+			this.props.getStorySurround(0,10,{storyId:'',type:''})
 		}
 		fetch(config.api.story.all(0,10000),{
 			headers:{
@@ -74,7 +74,13 @@ class StorySurroundContainer extends React.Component {
 		},{
 			title:'标题',
 			dataIndex:'title',
-			key:'title'
+			key:'title',
+			filters:[
+				{text: '阅读指导', value: '阅读指导'},
+				{text: '手工', value: '手工'},
+				{text: '出行', value: '出行'},
+				{text: '游戏', value: '游戏'}
+			]
 		},{
 			title:'内容',
 			dataIndex:'content',
@@ -141,15 +147,27 @@ class StorySurroundContainer extends React.Component {
 				<div className={styles.mainPanel}>
 					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{
 						total:this.props.storySurround.getIn(['otherData','totalSize']),
-						onChange:(page,pageSize) => {
-							this.setState({
-								current:page-1,
-								pageSize:pageSize
-							})
-							this.props.getStorySurround(page-1,pageSize,this.state.storyId)
-						},
+						// onChange:(page,pageSize) => {
+						// 	this.setState({
+						// 		current:page-1,
+						// 		pageSize:pageSize
+						// 	})
+						// 	this.props.getStorySurround(page-1,pageSize,this.state.storyId)
+						// },
 						showQuickJumper:true
-					}}/>
+					}}
+					onChange={(pagination, filter, sorter) => {
+						this.setState({
+							current:pagination.current-1,
+							pageSize:pagination.pageSize,
+							filter:filter
+						})
+						this.props.getStorySurround(pagination.current-1,pagination.pageSize,{
+							storyId:this.state.storyId,
+							type:filter.title?filter.title[0]:''
+						})
+					}}
+					/>
 				</div>
 			</div>
 		)

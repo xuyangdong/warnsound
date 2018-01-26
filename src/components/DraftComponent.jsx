@@ -416,7 +416,7 @@ export default class DraftComponent extends React.Component {
                 label:''+v.getIn(['soundEffectTag','content']),
                 value:''+v.getIn(['soundEffectTag','id']),
                 key:''+v.getIn(['soundEffectTag','id']),
-                children:v.get('soundEffect').map(v2 => {
+                children:v.get('soundEffect',fromJS([])).map(v2 => {
                     return {
                         label:''+v2.get('description'),
                         value:''+v2.get('id'),

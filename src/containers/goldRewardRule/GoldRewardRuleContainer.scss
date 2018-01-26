@@ -1,0 +1,22 @@
+@import '~mixins.scss';
+
+:local(.container){
+	@include mainPanelContainer;
+
+	:local(.contentPanel){
+		padding: 10px 20px;
+
+		:local(.infoItem) {
+			display: flex;
+
+			:local(.infoItemLabel) {
+				font-size: 12px;
+			}
+
+			:local(.infoItemValue) {
+				font-size: 12px;
+			}
+		}
+	}
+
+}

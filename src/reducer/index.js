@@ -35,6 +35,9 @@ import worksTag from './worksTag'
 import comment from './comment'
 import feedbackTemplet from './feedbackTemplet'
 import worksTagWork from './worksTagWork'
+import userGoldAccount from './userGoldAccount'
+import goldRewardRule from './goldRewardRule'
+import rewardGoldPrompt from './rewardGoldPrompt'
 
 const reducer = combineReducers({
 	user,
@@ -70,7 +73,10 @@ const reducer = combineReducers({
 	worksTag,
 	comment,
 	feedbackTemplet,
-	worksTagWork
+	worksTagWork,
+	userGoldAccount,
+	goldRewardRule,
+	rewardGoldPrompt
 	// auth,
 	// alliance,
 	// affair,

@@ -99,3 +99,23 @@ export function removeBlackHouse(id){
 		})
 	}
 }
+
+export function addComment(formData) {
+	return (dispatch,getState) => {
+		return fetch(config.api.comment.add,{
+			method:'post',
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			},
+			body:formData
+		}).then(res => res.json()).then(res => {
+			if(res.status == 2){
+				notification.error({message:res.errorMes})
+			}
+			dispatch({
+				types:GET_COMMENT,
+				callAPI:callAPIHOC({ambitusId:getState().getIn(['comment','otherData','ambitusId'])})()
+			})
+		})
+	}
+}
