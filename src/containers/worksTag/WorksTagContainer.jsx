@@ -7,6 +7,7 @@ import EnhanceTable from '../../components/common/EnhanceTable'
 import {getWorksTag} from 'actions/worksTag'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router'
+import {Tag} from 'antd'
 
 class WorksTagContainer extends React.Component {
 	static contextTypes = {
@@ -45,6 +46,17 @@ class WorksTagContainer extends React.Component {
 			title:'ParentId',
 			dataIndex:'parentId',
 			key:'parentId'
+		},{
+			title:'描述',
+			dataIndex:'description',
+			key:'description'
+		},{
+			title:'是否有效',
+			dataIndex:'valid',
+			key:'valid',
+			render:(t,r) => {
+				return t==1?<Tag color='green'>有效</Tag>:<Tag>无效</Tag>
+			}
 		},{
 			title:'操作',
 			key:'operate',

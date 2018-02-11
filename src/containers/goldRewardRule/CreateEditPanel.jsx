@@ -53,7 +53,7 @@ class CreateEditPanel extends React.Component {
 						})(
 							<Select style={{width:200}}>
 							{typeList.map((v,k) => (
-								<Option value={v} key={k}>{v}</Option>
+								<Option value={v.get('type')} key={k}>{v.get('name')}</Option>
 							))}
 							</Select>
 						)}

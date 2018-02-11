@@ -16,17 +16,17 @@ const modulePermission = {
 	recommend:14,
 	permission:15,
 	storySet:5,//暂时没有，用5代替
-	album:5,//暂时没有，用5代替
-	user:5,//暂时没有，用5代替
-	storySurround:5,
-	readPlan:5,
-	babyRead:5,
-	storyTopic:5,
-	notice:5,
-	admin:5,
+	album:25,//暂时没有，用5代替
+	user:19,//暂时没有，用5代替
+	storySurround:17,
+	readPlan:23,
+	babyRead:24,
+	storyTopic:21,
+	notice:20,
+	admin:26,
 	initImage:5,
 	icon:5,
-	nativeWork:5,
+	nativeWork:18,
 	opinion:5,
 	continuousLoginPrompt:5,
 	destination:5,

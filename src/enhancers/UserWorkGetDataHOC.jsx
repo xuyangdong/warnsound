@@ -36,7 +36,8 @@ export default (CreateEditPanel) => {
 					userList:fromJS(res.obj)
 				})
 			})
-			if(this.props.userWork.get('user').isEmpty()){
+			//bug userId没什么影响
+			if(this.props.params.userId && this.props.userWork.get('user').isEmpty()){
 				this.props.getUserInfo(this.props.params.userId)
 			}
 			if(this.props.type=='edit'){
@@ -65,11 +66,12 @@ export default (CreateEditPanel) => {
 		render(){
 			const {workInfo,storyList,userList} = this.state
 			const {userWork} = this.props
+			console.log("asdfasdf:",userWork.toJS())
 			const props = {
 				workInfo,
 				storyList,
 				userList,
-				userInfo:userWork.getIn(['user','info'])
+				userInfo:userWork.getIn(['user','info'],fromJS({}))||fromJS({})
 			}
 			return (
 				<CreateEditPanel type={this.props.type} indexType={this.props.indexType} title={this.props.type=='edit'?'编辑作品':'创建作品'} onSubmit={this.props.type=='create'?this.handleCreate:this.handleEdit} onDelete={this.handleDelete} {...props}/>

@@ -22,7 +22,8 @@ class StorySurroundContainer extends React.Component {
 		this.state = {
 			storyList:fromJS([]),
 			current:0,
-			pageSize:10
+			pageSize:10,
+			filter:{}
 		}
 	}
 	componentDidMount(){
@@ -45,7 +46,10 @@ class StorySurroundContainer extends React.Component {
 		})
 	}
 	handleFilter = (value) => {
-		this.props.getStorySurround(this.state.current,this.state.pageSize,value)
+		this.props.getStorySurround(this.state.current,this.state.pageSize,{
+			storyId:value,
+			type:this.state.filter.title?this.state.filter.title[0]:''
+		})
 		this.setState({
 			storyId:value
 		})

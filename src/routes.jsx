@@ -109,6 +109,7 @@ import FeedbackTempletContainer from './containers/feedbackTemplet/FeedbackTempl
 import FeedbackTempletCreateEditPanel from './containers/feedbackTemplet/CreateEditPanel'
 
 import UserGoldAccountContainer from './containers/userGoldAccount/UserGoldAccountContainer'
+import UserBillContainer from './containers/userGoldAccount/UserBillContainer'
 
 import GoldRewardRuleContainer from './containers/goldRewardRule/GoldRewardRuleContainer'
 import GoldRewardRuleCreateEditPanel from './containers/goldRewardRule/CreateEditPanel'
@@ -325,12 +326,14 @@ const routes = (<Router history={hashHistory}>
 			<Route path='worksTag/create' component={props => <WorksTagCreateEditPanelWithData type='create' {...props} /> } />
 			<Route path='worksTag/edit/(:id)' component={props => <WorksTagCreateEditPanelWithData type='edit' {...props} /> } />
 			<Route path='worksTag/work/show/(:id)' component={ WorksTagWorkContainerHOC } />
+			<Route path='worksTag/(:userId)/work/edit/(:id)' component={(props) => <WorkCreateEditPanelWithData indexType='worksTag' type='edit' {...props}/>}/>
 
 			<Route path='feedbackTemplet' component={FeedbackTempletContainer} />
 			<Route path='feedbackTemplet/create' component={props => <FeedbackTempletCreateEditPanelWithData type='create' {...props} />} />
 			<Route path='feedbackTemplet/edit/(:id)' component={props => <FeedbackTempletCreateEditPanelWithData type='edit' {...props} />} />
 
 			<Route path='userGoldAccount' component={UserGoldAccountContainer} />
+			<Route path='userGoldAccount/bill/(:userId)' component={UserBillContainer} />
 
 			<Route path='goldRewardRule' component={GoldRewardRuleContainer} />
 			<Route path='goldRewardRule/create' component={props => <GoldRewardRuleCreateEditPanelWithData type='create' {...props}/>} />

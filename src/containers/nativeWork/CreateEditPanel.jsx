@@ -94,7 +94,8 @@ class CreateEditPanel extends React.Component {
 				coverUrl:urls[2],
 				reviewCount:getFieldValue('reviewCount')||0,
 				listenCount:getFieldValue('listenCount')||0,
-				duration:getFieldValue('duration')
+				duration:getFieldValue('duration'),
+				price:getFieldValue('price')
 			}
 			let formData = jsonToFormData(jsonData)
 			this.props.onSubmit(formData).then(res => {
@@ -176,7 +177,17 @@ class CreateEditPanel extends React.Component {
 							<InputNumber />
 						)}
 						</FormItem>
-
+						<FormItem
+						  labelCol={{span:2}}
+						  wrapperCol={{span:4}}
+						  label={<span>金币</span>}
+						>
+						{getFieldDecorator('price',{
+							initialValue:nativeWorkInfo.get('price')
+						})(
+							<InputNumber />
+						)}
+						</FormItem>
 						<FormItem
 						  labelCol={{span:2}}
 						  wrapperCol={{span:4}}

@@ -43,7 +43,8 @@ const config = _.extend({
                 author: '',
                 press: '',
                 content: '',
-                tag: ''
+                tag: '',
+                price:''
             }) => {
                 let queryString = {
                     ...query,
@@ -57,6 +58,9 @@ const config = _.extend({
             edit: (id) => `${baseURL}/manage/v3/stories/${id}`,
             delete: (id) => `${baseURL}/manage/stories/${id}`,
             default: (id) => `${baseURL}/manage/addDefaultStory?storyId=${id}`,
+            price:{
+                update:`${baseURL}/manage/updateStoryPriceByStoryId`,
+            },
             tag:{
                 add:(storyId,tagId) => `${baseURL}/manage/stories/${storyId}/storyTags/${tagId}`,
                 delete:(storyId,tagId) => `${baseURL}/manage/stories/${storyId}/storyTags/${tagId}`,
@@ -367,7 +371,8 @@ const config = _.extend({
             edit:`${baseURL}/manage/goldRewardRule/updateGoldRewardRule`,
             query:id => `${baseURL}/manage/goldRewardRule/getGoldRewardRuleById?id=${id}`,
             type: {
-                get: `${baseURL}/manage/goldRewardRule/getAllType`
+                get: `${baseURL}/manage/goldRewardRule/getAllType`,
+                getWithDesc:`${baseURL}/manage/userGoldBill/getTypeAndItsName`
             }
         },
         rewardGoldPrompt: {
@@ -375,6 +380,9 @@ const config = _.extend({
             add:`${baseURL}/manage/rewardGoldPrompt/addRewardGoldPrompt`,
             edit:`${baseURL}/manage/rewardGoldPrompt/updateRewardGoldPrompt`,
             query:id => `${baseURL}/manage/rewardGoldPrompt/getRewardGoldPromptById?id=${id}`
+        },
+        bill: {
+            get:(page,pageSize,userId) => `${baseURL}/manage/userGoldBill/getBillByPageAndUser?userId=${userId}&page=${page}&pageSize=${pageSize}`
         }
     }
 })

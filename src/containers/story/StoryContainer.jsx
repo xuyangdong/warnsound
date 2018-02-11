@@ -33,6 +33,7 @@ class StoryContainer extends React.Component{
 			press:'',
 			content:'',
 			tag:'',
+			price:'',
 			current:0,
 			pageSize:10,
 
@@ -139,6 +140,21 @@ class StoryContainer extends React.Component{
 				return t==1?<span style={{color:'red'}}>是</span>:'否'
 			}
 		},{
+			title:'金币',
+			dataIndex:'price',
+			key:'price',
+			width:100,
+			render:(t,r) => {
+				return (
+					<div>
+						{t}:
+						<Input style={{width:50}} onPressEnter={(e) => {
+							this.handleChangePrice(r.id,e.target.value)
+						}}/>
+					</div>
+				)
+			}
+		},{
 			title:'所属故事集',
 			key:'storySet',
 			dataIndex:'setId',
@@ -197,6 +213,32 @@ class StoryContainer extends React.Component{
 			dataSource
 		}
 	}
+	handleChangePrice = (id,price) => {
+		let form = new FormData()
+		form.append('id',id)
+		form.append('price',price)
+		fetch(config.api.story.price.update,{
+			method:'post',
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			},
+			body:form
+		}).then(res => res).then(res => {
+			if(res.status == 2){
+				notification.error({message:res.errorMes})
+			}else{
+				notification.success({message:'修改成功'})
+			}
+			this.props.getStories(this.state.current,this.state.pageSize,{
+				title:this.state.titleS,
+				author:this.state.author,
+				press:this.state.press,
+				content:this.state.content,
+				tag:this.state.tag,
+				price:this.state.price
+			})
+		})
+	}
 	handleCreate(){
 		this.context.router.push('/stories/create')
 	}
@@ -223,6 +265,7 @@ class StoryContainer extends React.Component{
 		})
 	}
 	handleChangeSearchCondition = (key,value) => {
+		console.log(key,value)
 		if(!!value.target){
 			this.setState({
 				[key]:value.target.value
@@ -236,7 +279,7 @@ class StoryContainer extends React.Component{
 	}
 	render(){
 		const {columns,dataSource} = this.getTableData()
-		const {titleS,author,press,content,tag} = this.state
+		const {titleS,author,press,content,tag,price} = this.state
 		return (
 			<div className={styles.container}>
 				<div className={styles.header}>
@@ -249,7 +292,8 @@ class StoryContainer extends React.Component{
 							 author:'',
 							 press:'',
 							 content:'',
-							 tag:''
+							 tag:'',
+							 price:''
 						 })
 					 }}>
 					<Input
@@ -261,7 +305,8 @@ class StoryContainer extends React.Component{
 							author:this.state.author,
 							press:this.state.press,
 							content:this.state.content,
-							tag:this.state.tag
+							tag:this.state.tag,
+							price:this.state.price
 						})}
 						onChange={this.handleChangeSearchCondition.bind(this,'titleS')}/>
 					<Input
@@ -273,7 +318,8 @@ class StoryContainer extends React.Component{
 							author:this.state.author,
 							press:this.state.press,
 							content:this.state.content,
-							tag:this.state.tag
+							tag:this.state.tag,
+							price:this.state.price
 						})}
 						onChange={this.handleChangeSearchCondition.bind(this,'author')}/>
 					<Input
@@ -285,7 +331,8 @@ class StoryContainer extends React.Component{
 							author:this.state.author,
 							press:this.state.press,
 							content:this.state.content,
-							tag:this.state.tag
+							tag:this.state.tag,
+							price:this.state.price
 						})}
 						onChange={this.handleChangeSearchCondition.bind(this,'press')}/>
 					<Input
@@ -297,9 +344,23 @@ class StoryContainer extends React.Component{
 							author:this.state.author,
 							press:this.state.press,
 							content:this.state.content,
-							tag:this.state.tag
+							tag:this.state.tag,
+							price:this.state.price
 						})}
 						onChange={this.handleChangeSearchCondition.bind(this,'content')}/>
+					<Input
+						style={{width:150}}
+						addonBefore='金币'
+						value={price}
+						onPressEnter={this.hanleFilterData.bind(this,{
+							title:this.state.titleS,
+							author:this.state.author,
+							press:this.state.press,
+							content:this.state.content,
+							tag:this.state.tag,
+							price:this.state.price
+						})}
+						onChange={this.handleChangeSearchCondition.bind(this,'price')}/>
 					<TreeSelect
 						style={{width:200}}
 						dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
@@ -313,7 +374,8 @@ class StoryContainer extends React.Component{
 						author:this.state.author,
 						press:this.state.press,
 						content:this.state.content,
-						tag:this.state.tag
+						tag:this.state.tag,
+						price:this.state.price
 					})}>查询</Button>
 					</TableHeader>
 				</div>

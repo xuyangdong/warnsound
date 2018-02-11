@@ -1,14 +1,14 @@
 import React from 'react'
-import styles from './UserGoldAccountContainer.scss'
+import styles from './UserBillContainer.scss'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import TableHeader from '../../components/common/TableHeader'
 import EnhanceTable from '../../components/common/EnhanceTable'
-import {getUserGoldAccount} from 'actions/userGoldAccount'
+import {getUserBill} from 'actions/userGoldAccount'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router'
 
-class UserGoldAccountContainer extends React.Component {
+class UserBillContainer extends React.Component {
 	static contextTypes = {
 		router:PropTypes.object
 	}
@@ -17,8 +17,8 @@ class UserGoldAccountContainer extends React.Component {
 		pageSize:10
 	}
 	componentDidMount(){
-		if(this.props.userGoldAccount.get('data',[]).isEmpty()){
-			this.props.getUserGoldAccount(0,10)
+		if(this.props.bill.get('data',[]).isEmpty()){
+			this.props.getUserBill(0,10,{userId:this.props.params.userId})
 		}
 	}
 	getTableData = () => {
@@ -27,31 +27,41 @@ class UserGoldAccountContainer extends React.Component {
 			dataIndex:'id',
 			key:'id'
 		},{
-			title:'用户ID',
-			dataIndex:'userId',
-			key:'userId'
-		},{
-			title:'用户名',
-			dataIndex:'nickname',
-			key:'nickname'
-		},{
-			title:'金币数量',
+			title:'amount',
 			dataIndex:'amount',
 			key:'amount'
-		},
-		{
-			title:'操作',
-			key:'operate',
-			render:(t,r) => {
-				return (
-					<div>
-					<Link to={`/userGoldAccount/bill/${r.id}`}>账单</Link>
-					</div>
-				)
-			}
+
+		},{
+			title:'des',
+			dataIndex:'des',
+			key:'des'
+		},{
+			title:'description',
+			dataIndex:'description',
+			key:'description'
+		},{
+			title:'prompt',
+			dataIndex:'prompt',
+			key:'prompt'
+		},{
+			title:'relativeId',
+			dataIndex:'relativeId',
+			key:'relativeId'
+		},{
+			title:'relativeUserId',
+			dataIndex:'relativeUserId',
+			key:'relativeUserId'
+		},{
+			title:'type',
+			dataIndex:'type',
+			key:'type'
+		},{
+			title:'userId',
+			dataIndex:'userId',
+			key:'userId'
 		}
 	]
-		const dataSource = this.props.userGoldAccount.get('data').map((v,k) => ({
+		const dataSource = this.props.bill.get('data').map((v,k) => ({
 			...v.toJS(),
 			key:k
 		})).toJS()
@@ -67,22 +77,24 @@ class UserGoldAccountContainer extends React.Component {
 				<div className={styles.header}>
 					<TableHeader title={`作品列表`}
 					 searchBar={[]}
-					 functionBar={['create']}
+					 functionBar={[]}
 					 onCreate={()=>{
 
 					 }}
-					 />
+					 >
+					 	<Link to='/userGoldAccount'>返回</Link>
+					 </TableHeader>
 				</div>
 				<div className={styles.mainPanel}>
 					<EnhanceTable columns={columns} dataSource={dataSource} pagination={{
-						total:this.props.userGoldAccount.getIn(['otherData','totalSize']),
-						current:this.props.userGoldAccount.getIn(['otherData','offset'])+1,
+						total:this.props.bill.getIn(['otherData','totalSize']),
+						current:this.props.bill.getIn(['otherData','offset'])+1,
 						onChange:(page,pageSize) => {
 							this.setState({
 								current:page-1,
 								pageSize:pageSize
 							})
-							this.props.getUserGoldAccount(page-1,pageSize)
+							this.props.getUserBill(page-1,pageSize)
 						}
 					}}/>
 				</div>
@@ -92,7 +104,7 @@ class UserGoldAccountContainer extends React.Component {
 }
 
 export default connect(state => ({
-	userGoldAccount:state.get('userGoldAccount')
+	bill:state.get('bill')
 }),dispatch => ({
-	getUserGoldAccount:bindActionCreators(getUserGoldAccount,dispatch),
-}))(UserGoldAccountContainer)
+	getUserBill:bindActionCreators(getUserBill,dispatch),
+}))(UserBillContainer)

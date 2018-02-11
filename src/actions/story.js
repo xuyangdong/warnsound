@@ -10,7 +10,8 @@ export function getStories(offset, limit, query = {
     author: '',
     press: '',
     content: '',
-    tag: ''
+    tag: '',
+    price:''
 }) {
     return {
         types: GET_STORIES,

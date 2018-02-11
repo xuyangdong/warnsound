@@ -1,7 +1,7 @@
 import React from 'react'
 import CreateEditHeader from '../../components/common/CreateEditHeader'
 import styles from './CreateEditPanel.scss'
-import {Form,Select,Input,Button,Spin,notification,DatePicker} from 'antd'
+import {Form,Select,Input,Button,Spin,notification,DatePicker,Switch} from 'antd'
 import _ from 'lodash'
 import {jsonToFormData} from 'project-utils'
 import {fromJS} from 'immutable'
@@ -22,8 +22,11 @@ class CreateEditPanel extends React.Component {
 	handleSubmit = (e) => {
 		e.preventDefault()
 		const {getFieldValue} = this.props.form
+		const worksTagInfo = this.props.worksTagInfo
 		let formData = new FormData()
-		formData.append('content',getFieldValue('content'))
+		getFieldValue('content')==worksTagInfo.get('content')?null:formData.append('content',getFieldValue('content'))
+		getFieldValue('description')==worksTagInfo.get('description')?null:formData.append('description',getFieldValue('description')||'')
+		formData.append('valid',getFieldValue('valid')?1:0)
 		this.props.onSubmit(formData).then(res => {
 			this.context.router.goBack(0)
 		})
@@ -48,6 +51,29 @@ class CreateEditPanel extends React.Component {
 							initialValue:worksTagInfo.get('content',' ')
 						})(
 							<Input />
+						)}
+						</FormItem>
+						<FormItem
+						  labelCol={{span:2}}
+						  wrapperCol={{span:4}}
+						  label={<span>描述</span>}
+						>
+						{getFieldDecorator('description',{
+							initialValue:worksTagInfo.get('description',' ')
+						})(
+							<Input />
+						)}
+						</FormItem>
+						<FormItem
+						  labelCol={{span:2}}
+						  wrapperCol={{span:4}}
+						  label={<span>有效</span>}
+						>
+						{getFieldDecorator('valid',{
+							valuePropName:'checked',
+							initialValue:worksTagInfo.get('valid','0')==1
+						})(
+							<Switch />
 						)}
 						</FormItem>
 						<FormItem

@@ -16,7 +16,7 @@ export default (CreateEditPanel) => {
 			}
 		}
 		componentDidMount(){
-			fetch(config.api.goldRewardRule.type.get,{
+			fetch(config.api.goldRewardRule.type.getWithDesc,{
 				headers:{
 					'authorization':sessionStorage.getItem('auth')
 				}

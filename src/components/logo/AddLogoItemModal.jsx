@@ -19,7 +19,8 @@ class AddLogoItemModal extends React.Component {
 			setFieldsValue({
 				name:data.name,
 				description:data.description,
-				measure:data.measure
+				measure:data.measure,
+				extra:data.extra
 			})
 			this.setState({
 				fileList:data.icon?[_.extend(new File([],''),{
@@ -45,7 +46,8 @@ class AddLogoItemModal extends React.Component {
 			name:getFieldValue('name'),
 			measure:getFieldValue('measure'),
 			description:getFieldValue('description'),
-			file:this.state.fileList[0]
+			file:this.state.fileList[0],
+			extra:getFieldValue('extra')
 		})
 	}
 	render(){
@@ -91,6 +93,14 @@ class AddLogoItemModal extends React.Component {
 					wrapperCol={{span: 6}}
 					>{
 						getFieldDecorator('measure')(<Input />)
+					}
+					</FormItem>
+					<FormItem
+					label='extra'
+					labelCol={{span: 4}}
+					wrapperCol={{span: 6}}
+					>{
+						getFieldDecorator('extra')(<Input />)
 					}
 					</FormItem>
 				</Form>

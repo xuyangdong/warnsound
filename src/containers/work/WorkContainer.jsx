@@ -22,6 +22,10 @@ export default class UserWorkPage extends React.Component {
 			dataIndex:'storyTitle',
 			key:'storyTitle'
 		},{
+			title:'用户名',
+			dataIndex:'username',
+			key:'username'
+		},{
 			title:'点赞数',
 			dataIndex:'likeCount',
 			key:'likeCount'

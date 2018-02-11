@@ -39,6 +39,10 @@ class NativeWorkContainer extends React.Component {
 			dataIndex:'likeCount',
 			key:'likeCount'
 		},{
+			title:'金币',
+			dataIndex:'price',
+			key:'price'
+		},{
 			title:'封面',
 			dataIndex:'coverUrl',
 			render:(t,r) => {

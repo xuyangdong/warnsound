@@ -24,7 +24,7 @@ class GoldRewardRuleContainer extends React.Component {
 		chosenType:'FINISH_TODAY_READING_PLAN'
 	}
 	componentDidMount(){
-		fetch(config.api.goldRewardRule.type.get,{
+		fetch(config.api.goldRewardRule.type.getWithDesc,{
 			headers:{
 				'authorization':sessionStorage.getItem('auth')
 			}
@@ -77,7 +77,7 @@ class GoldRewardRuleContainer extends React.Component {
 					 >
 					 	<Select onSelect={this.handleSelect} placeholder='选择类型' style={{width:200}}>
 						{this.state.typeList.map((v,k) => (
-							<Option value={v} key={k}>{v}</Option>
+							<Option value={v.get('type')} key={k}>{v.get('name')}</Option>
 						))}
 						</Select>
 					 </TableHeader>

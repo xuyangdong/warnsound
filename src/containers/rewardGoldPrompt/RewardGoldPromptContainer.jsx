@@ -9,6 +9,7 @@ import PropTypes from 'prop-types'
 import {Link} from 'react-router'
 import {Popover,Modal,Select,Input,notification} from 'antd'
 import config from '../../config'
+import {fromJS} from 'immutable'
 const Option = Select.Option
 const SearchInput = Input.Search
 
@@ -19,9 +20,19 @@ class RewardGoldPromptContainer extends React.Component {
 	state = {
 		current:0,
 		pageSize:10,
-		searchUserResult:[]
+		searchUserResult:[],
+		typeList:fromJS([])
 	}
 	componentDidMount(){
+		fetch(config.api.goldRewardRule.type.getWithDesc,{
+			headers:{
+				'authorization':sessionStorage.getItem('auth')
+			}
+		}).then(res => res.json()).then(res => {
+			this.setState({
+				typeList:fromJS(res.obj)
+			})
+		})
 		if(this.props.rewardGoldPrompt.get('data').isEmpty()){
 			this.props.getRewardGoldPrompt(0,10)
 		}
@@ -36,6 +47,12 @@ class RewardGoldPromptContainer extends React.Component {
 			title:'类型',
 			dataIndex:'type',
 			key:'type'
+		},{
+			title:'描述',
+			key:'desc',
+			render:(t,r) => {
+				return this.state.typeList.find(v => v.get('type')==r.type).get('name')
+			}
 		},{
 			title:'提示语',
 			dataIndex:'prompt',

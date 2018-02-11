@@ -77,7 +77,6 @@ class CreateEditPanel extends React.Component {
 	render(){
 		const {getFieldDecorator} = this.props.form
 		const {userInfo,storyList,workInfo,userList} = this.props
-		console.log("asdf:",workInfo.toJS())
 		return (
 			<div className={styles.container}>
 				<div>
