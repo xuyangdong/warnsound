@@ -25,7 +25,7 @@ export default (WorkContainer) => {
 			work={this.props.worksTagWork}
 			title={`${this.props.worksTagWork.getIn(['worksTag','info','content'])}的标签的作品`}
 			getWork={this.getWork}
-			prefix={`worksTag/${this.props.worksTagWork.getIn(['worksTag','info','id'])}`}
+			prefix={`worksTag`}
 			{...this.props}
 			/>)
 		}

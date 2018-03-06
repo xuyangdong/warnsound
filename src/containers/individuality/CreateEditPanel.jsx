@@ -1,19 +1,20 @@
 import React from 'react'
 import styles from './CreateEditPanel.scss'
 import CreateEditHeader from '../../components/common/CreateEditHeader'
-import {Form,Input,Icon, Button, notification } from 'antd'
+import {Form,Input,Icon, Button, notification, Select } from 'antd'
 import UploadAvatar from '../../components/common/UploadAvatar'
 import _ from 'lodash'
 import StoryTagSelector from '../../components/storyTag/StoryTagSelector'
 const FormItem = Form.Item
+const Option = Select.Option
 
 class CreateEditPanel extends React.Component {
 	static contextTypes = {
 		router:React.PropTypes.object
 	}
-	uuid = 0
 	constructor(){
 		super()
+    this.uuid = 0
 		this.state = {
 			questionFileList:[]
 		}
@@ -21,9 +22,9 @@ class CreateEditPanel extends React.Component {
 	componentWillReceiveProps(nextProps){
 		if(!nextProps.individualityInfo.isEmpty()){
 			this.setState({
-				questionFileList:nextProps.individualityInfo.get('icon')?[_.extend(new File([],''),{
+				questionFileList:nextProps.individualityInfo.get('pic')?[_.extend(new File([],''),{
 					uid:-1,
-					url:nextProps.individualityInfo.get('icon')
+					url:nextProps.individualityInfo.get('pic')
 				})]:[]
 			})
 		}
@@ -31,8 +32,9 @@ class CreateEditPanel extends React.Component {
 	handleAdd = () => {
 		const {getFieldDecorator,getFieldValue,setFieldsValue} = this.props.form
 		const keys = getFieldValue('keys')
-		this.uuid ++
-		const nextKeys = keys.concat(this.uuid);
+    this.uuid = this.uuid + 1
+    const nextKeys = keys.concat(this.uuid);
+
 		setFieldsValue({
 	      keys: nextKeys,
 	    });
@@ -69,8 +71,11 @@ class CreateEditPanel extends React.Component {
 		let jsonData = {
 			questionName,
 			questionFile,
-			icon:this.state.questionFileList[0]?this.state.questionFileList[0].size>0?'':this.state.questionFileList[0].url:'',
-			answerItems
+			// icon:this.state.questionFileList[0]?this.state.questionFileList[0].size>0?'':this.state.questionFileList[0].url:'',
+      icon:this.state.questionFileList[0]?this.state.questionFileList[0].size>0?'':this.state.questionFileList[0].url:'',
+			answerItems,
+      quesType:getFieldValue('questionType'),
+      style:getFieldValue('style')
 		}
 		notification.info({message:'请求已提交'})
 		this.props.onSubmit(jsonData)
@@ -94,11 +99,12 @@ class CreateEditPanel extends React.Component {
 				}
 			})
 			getFieldDecorator('keys', { initialValue: answerItemsRemote.map((v,k) => k) });
+      this.uuid = answerItemsRemote.length
 		}catch(e){
 			//just for data bind, to bind keys -> []
 			getFieldDecorator('keys', { initialValue: [] });
 		}
-		this.uuid = answerItemsRemote.length
+
 
 		const keys = getFieldValue('keys')
 		// console.log("-->:",answerItemsRemote)
@@ -179,6 +185,35 @@ class CreateEditPanel extends React.Component {
 							/>
 						</div>
 						</FormItem>
+            <FormItem
+              label="排版"
+              labelCol={{span:2}}
+              wrapperCol={{span:7}}
+            >
+            {getFieldDecorator('style',{
+              initialValue:''+individualityInfo.get('style')
+            })(
+							<Select>
+                <Option value='0' key='0'>双列</Option>
+                <Option value='1' key='1'>单列</Option>
+                <Option value='2' key='2'>单列紧缩</Option>
+              </Select>
+						)}
+            </FormItem>
+            <FormItem
+              label="是单选(多选)"
+              labelCol={{span:2}}
+              wrapperCol={{span:7}}
+            >
+            {getFieldDecorator('questionType',{
+              initialValue:''+individualityInfo.get('quesType')
+            })(
+							<Select>
+                <Option value='0' key='0'>单选</Option>
+                <Option value='1' key='1'>多选</Option>
+              </Select>
+						)}
+            </FormItem>
 						{answerItems}
 						<FormItem
 						  label=""

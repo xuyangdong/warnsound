@@ -63,7 +63,9 @@ export default (CreateEditPanel) => {
 						const iconUrls = res.obj.multiUrls
 						let jsonData = {
 							name:data.questionName,
-							icon:data.questionFile&&data.questionFile.size>0?iconUrls[0]:data.icon,
+              quesType:data.quesType,
+              style:data.style,
+							pic:data.questionFile&&data.questionFile.size>0?iconUrls[0]:data.icon,
 							extra:[]
 						}
 						//fileIndex=1是上传了题目ICON，fileIndex=0,是没有上传题目ICON
@@ -92,7 +94,9 @@ export default (CreateEditPanel) => {
 			}else{
 				let jsonData = {
 					name:data.questionName,
-					icon:data.icon,
+					pic:data.icon,
+          quesType:data.quesType,
+          style:data.style,
 					extra:JSON.stringify(answerItems.map(v => ({
 						answerName:v.answerName,
 						icon:v.icon,

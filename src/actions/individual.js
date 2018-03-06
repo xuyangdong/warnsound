@@ -81,8 +81,8 @@ export function editQuestion(jsonData,id){
 		        types: GET_INDIVIDUALITY,
 		        callAPI: (getState) => {
 					const state = getState()
-					const offset = state.getIn(['individuality','otherData','offset'])
-					const limit = state.getIn(['individuality','otherData','limit'])
+					const offset = state.getIn(['individuality','otherData','offset'],0)
+					const limit = state.getIn(['individuality','otherData','limit'],10)
 		            return fetch(config.api.individual.get(offset,limit),{
 						headers: {
 		                    'authorization': sessionStorage.getItem('auth')

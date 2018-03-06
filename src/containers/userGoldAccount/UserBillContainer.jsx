@@ -17,7 +17,7 @@ class UserBillContainer extends React.Component {
 		pageSize:10
 	}
 	componentDidMount(){
-		if(this.props.bill.get('data',[]).isEmpty()){
+		if(this.props.bill.get('data',[]).isEmpty() || this.props.params.userId != this.props.bill.getIn(['otherData','userId'])){
 			this.props.getUserBill(0,10,{userId:this.props.params.userId})
 		}
 	}
@@ -75,7 +75,7 @@ class UserBillContainer extends React.Component {
 		return (
 			<div className={styles.container}>
 				<div className={styles.header}>
-					<TableHeader title={`作品列表`}
+					<TableHeader title={`用户账单`}
 					 searchBar={[]}
 					 functionBar={[]}
 					 onCreate={()=>{
@@ -94,7 +94,7 @@ class UserBillContainer extends React.Component {
 								current:page-1,
 								pageSize:pageSize
 							})
-							this.props.getUserBill(page-1,pageSize)
+							this.props.getUserBill(page-1,pageSize,{userId:this.props.bill.getIn(['otherData','userId'])})
 						}
 					}}/>
 				</div>

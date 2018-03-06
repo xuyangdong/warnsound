@@ -25,7 +25,7 @@ export default (WorkContainer) => {
 			work={this.props.storyWork}
 			title={`${this.props.storyWork.getIn(['story','title'])}的故事的作品`}
 			getWork={this.getWork}
-			prefix={`stories/${this.props.storyWork.getIn(['story','id'])}`}
+			prefix={`stories`}
 			{...this.props}
 			/>)
 		}

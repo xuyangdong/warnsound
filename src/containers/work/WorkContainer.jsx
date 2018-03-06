@@ -51,7 +51,7 @@ export default class UserWorkPage extends React.Component {
 			title:'操作',
 			key:'operate',
 			render:(t,r) => {
-				return (<Link to={`/${this.props.prefix}/work/edit/${r.id}`}>编辑</Link>)
+				return (<Link to={`/${this.props.prefix}/${r.userId}/work/edit/${r.id}`}>编辑</Link>)
 			}
 		}]
 		const dataSource = this.props.work.get('data').map((v,k) => ({

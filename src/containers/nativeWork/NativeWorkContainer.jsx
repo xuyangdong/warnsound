@@ -41,7 +41,8 @@ class NativeWorkContainer extends React.Component {
 		},{
 			title:'金币',
 			dataIndex:'price',
-			key:'price'
+			key:'price',
+			sorter: true
 		},{
 			title:'封面',
 			dataIndex:'coverUrl',

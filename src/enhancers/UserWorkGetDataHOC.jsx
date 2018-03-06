@@ -66,7 +66,6 @@ export default (CreateEditPanel) => {
 		render(){
 			const {workInfo,storyList,userList} = this.state
 			const {userWork} = this.props
-			console.log("asdfasdf:",userWork.toJS())
 			const props = {
 				workInfo,
 				storyList,

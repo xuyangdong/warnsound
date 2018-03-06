@@ -23,7 +23,7 @@ class IndividualityContainer extends React.Component {
 			key:'name'
 		},{
 			title:'ICON',
-			dataIndex:'icon',
+			dataIndex:'pic',
 			render:(t,r) => {
 				if(t){
 					return <img src={t} style={{maxHeight:100}}/>

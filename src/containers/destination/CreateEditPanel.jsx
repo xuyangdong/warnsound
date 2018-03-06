@@ -82,6 +82,9 @@ class CreateEditPanel extends React.Component {
 		const selectedActivity = this.contentTypeList.find((v,k) => {
 			return k == this.state.content
 		})
+		if(!selectedActivity){
+			return null;
+		}
 		return selectedActivity.args.map((v,k) => {
 			if(!!v.value){
 				//默认参数
@@ -123,14 +126,7 @@ class CreateEditPanel extends React.Component {
 				</div>
 				<div>
 					<Form onSubmit={this.handleSubmit}>
-						<FormItem
-						  labelCol={{span:2}}
-						  wrapperCol={{span:4}}
-						  label={<span>跳转地内容</span>}
-						>
-						{this.renderDestinationContent()}
-						</FormItem>
-						{this.state.destinationType==2?this.renderArgsPanel():null}
+
 						<FormItem
 						  labelCol={{span:2}}
 						  wrapperCol={{span:4}}
@@ -146,6 +142,14 @@ class CreateEditPanel extends React.Component {
 								<Option value='3' key='3'>跳转到一个URL里面</Option>
 							</Select>
 						</FormItem>
+						<FormItem
+						  labelCol={{span:2}}
+						  wrapperCol={{span:4}}
+						  label={<span>跳转地内容</span>}
+						>
+						{this.renderDestinationContent()}
+						</FormItem>
+						{this.state.destinationType==2?this.renderArgsPanel():null}
 						<FormItem
 						  labelCol={{span:2}}
 						  wrapperCol={{span:4}}

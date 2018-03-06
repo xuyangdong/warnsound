@@ -45,7 +45,7 @@ class UserGoldAccountContainer extends React.Component {
 			render:(t,r) => {
 				return (
 					<div>
-					<Link to={`/userGoldAccount/bill/${r.id}`}>账单</Link>
+					<Link to={`/userGoldAccount/bill/${r.userId}`}>账单</Link>
 					</div>
 				)
 			}
@@ -65,7 +65,7 @@ class UserGoldAccountContainer extends React.Component {
 		return (
 			<div className={styles.container}>
 				<div className={styles.header}>
-					<TableHeader title={`作品列表`}
+					<TableHeader title={`用户金币`}
 					 searchBar={[]}
 					 functionBar={['create']}
 					 onCreate={()=>{
